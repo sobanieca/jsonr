@@ -1,0 +1,13 @@
+GET http://www.google.com
+Content-Type: application/json
+
+{
+  "query": "
+    something {
+      nodes {
+        userId
+      }
+    }
+  "
+}
+
