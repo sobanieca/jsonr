@@ -1,0 +1,26 @@
+sample usage:
+
+req -i "something: value1" -h "Authorization: Bearer XXX" -r 200 -t "Success" -c "./config" -e "test" -m POST -v sample.http|https://www.google.com
+
+-i Provide value for input variables
+
+ERROR: No value for @@something@@ provided! Use the -v "something: {value}" parameter.
+
+-h Provide value for additional headers
+
+-r Expected response code
+
+-t Expected text that should be contained within response body
+
+-c Configuration folder with json files (key:value objects) for holding variables values
+
+-e environment - name of the file from -c configuration folder (no .json extension required)
+
+-m HTTP method
+
+-v Verbose mode - more details in output + response headers
+
+param:
+  fileName in current working directory, or absolute path or uri of the resource
+
+
