@@ -1,3 +1,3 @@
 # jsonr
-Simple CLI tool for sending HTTP requests and working with JSON API's
+Simple CLI tool for sending HTTP JSON requests
 
