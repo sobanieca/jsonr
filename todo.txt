@@ -22,6 +22,7 @@ jsonr -i "something: value1" -m GET www.google.com
 
 -p request [p]rocessor file - if you want to decorate request with anything (like Authorization headers), you can write simple
 javascript file that exports default function that takes as an input request object and as an output response object.
+Use regular Javascript for coding.
 
 Sample file content:
 
