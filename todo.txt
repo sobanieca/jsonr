@@ -5,15 +5,48 @@ jsonr -i "something: value1" -h "Authorization: Bearer XXX" -r 200 -t "Success" 
 
 ERROR: No value for @@something@@ provided! Use the -v "something: {value}" parameter.
 
-
-
 -h Provide value for additional [h]eaders
 
--s Expected response [s]tatus code
+--expected-status Expected response [s]tatus code
 
--t Expected text that should be contained within response body
+--expected-text Expected text that should be contained within response body
 
--c Configuration folder with json files (key:value objects) for holding variables values (it will be persisted, no need to repeat this param in future)
+-t [t]est scenarios file - you can use test scenarios files for smoke tests, where multiple
+requests will be run against given assertions. Such file needs to have each line corresponding to single
+jsonr execution. Jsonr will run each of them and prepare some statistics. Also, non-zero exit code
+will be provided if any of the requests will fail. Sample file content:
+
+```
+jsonr -i "something: value1" -m GET www.google.com
+```
+
+-p request [p]rocessor file - if you want to decorate request with anything (like Authorization headers), you can write simple
+javascript file that exports default function that takes as an input request object and as an output response object.
+
+Sample file content:
+
+```
+export default (request, configuration) => {
+  console.log("This is request that I' about to modify in some way");
+  return request;
+}
+```
+
+`request` parameter contains following: 
+```
+{
+  method: "",
+  url: "",
+  headers: {
+    "headerType1": "headerValue1"
+  }
+}
+```
+
+`configuration` object contains standard key-value object read by -c option.
+
+-c Configuration folder with json files (key:value objects) for holding variables values (it will be persisted, no need to repeat this param in future).
+By default jsonr will search for ./config folder, if found it will assume
 
 -e environment - name of the file from -c configuration folder (no .json extension required)
 
@@ -29,6 +62,8 @@ ERROR: No value for @@something@@ provided! Use the -v "something: {value}" para
  (if such header won't be present in definition) so you don't need to repeat it. Use this option to disable
 this behaviour
 
+--help display this help message
+
 -o [o]utput file for response details (status code, total execution time, body, headers), if omitted outputs to stdout. 
 Caution: If file exists it will overwrite it. If no extension provided, it will automatically append .json
 
@@ -38,3 +73,17 @@ param:
   fileName in current working directory, or absolute path or uri of the resource
 
 
+.jsonr file
+
+You can create your own .jsonr file in HOME directory. Jsonr will also start looking for this file in the
+current working directory you're in. If found, it won't look further for HOME .jsonr file. If found it will
+append all parameters provided there. The idea of the file is - provide options in each line.
+
+EXAMPLE:
+
+```
+-c ./path/to/configuration/file/in/single/line
+-p ./path/to/processor/file/for/each/request
+```
+
+TODO: jsonr and configuration files - shouldn't be the same?
