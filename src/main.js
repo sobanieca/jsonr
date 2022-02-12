@@ -1,3 +1,6 @@
-console.log("Current working directory:");
-console.log(Deno.cwd());
+import parse from "./parser.js";
+
+let jsonr = parse(Deno.args);
+
+console.log(jsonr);
 
