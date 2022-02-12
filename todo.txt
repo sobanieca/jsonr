@@ -11,15 +11,6 @@ ERROR: No value for @@something@@ provided! Use the -v "something: {value}" para
 
 --expected-text Expected text that should be contained within response body
 
--t [t]est scenarios file - you can use test scenarios files for smoke tests, where multiple
-requests will be run against given assertions. Such file needs to have each line corresponding to single
-jsonr execution. Jsonr will run each of them and prepare some statistics. Also, non-zero exit code
-will be provided if any of the requests will fail. Sample file content:
-
-```
-jsonr -i "something: value1" -m GET www.google.com
-```
-
 -p request [p]rocessor file - if you want to decorate request with anything (like Authorization headers), you can write simple
 javascript file that exports default function that takes as an input request object and as an output response object.
 Use regular Javascript for coding.
@@ -46,10 +37,7 @@ export default (request, configuration) => {
 
 `configuration` object contains standard key-value object read by -c option.
 
--c Configuration folder with json files (key:value objects) for holding variables values (it will be persisted, no need to repeat this param in future).
-By default jsonr will search for ./config folder, if found it will assume
-
--e environment - name of the file from -c configuration folder (no .json extension required)
+-e environment name from `jsonr environments list` (no .json extension required)
 
 -m HTTP method
 
@@ -88,3 +76,24 @@ EXAMPLE:
 ```
 
 TODO: jsonr and configuration files - shouldn't be the same?
+
+jsonr environments list
+jsonr environments create
+jsonr environments delete
+
+sample env file:
+
+{
+  "input": {
+    "somevariable1": "somevalue1"
+  },
+  "headers": {
+    "Content-Type": "text/json"
+  },
+  "processor": "./sampleprocessor1"
+}
+
+TODO: write documentation about how to write smoke tests
+TODO: how to disable processor? `-p null`
+
+
