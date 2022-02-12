@@ -1,24 +1,38 @@
 sample usage:
+jsonr -i "something: value1" -h "Authorization: Bearer XXX" -r 200 -t "Success" -c "./config" -e "test" -m POST -v sample.http|https://www.google.com
 
-req -i "something: value1" -h "Authorization: Bearer XXX" -r 200 -t "Success" -c "./config" -e "test" -m POST -v sample.http|https://www.google.com
-
--i Provide value for input variables
+-i Provide value for [i]nput variables
 
 ERROR: No value for @@something@@ provided! Use the -v "something: {value}" parameter.
 
--h Provide value for additional headers
 
--r Expected response code
+
+-h Provide value for additional [h]eaders
+
+-s Expected response [s]tatus code
 
 -t Expected text that should be contained within response body
 
--c Configuration folder with json files (key:value objects) for holding variables values
+-c Configuration folder with json files (key:value objects) for holding variables values (it will be persisted, no need to repeat this param in future)
 
 -e environment - name of the file from -c configuration folder (no .json extension required)
 
 -m HTTP method
 
--v Verbose mode - more details in output + response headers
+-v Verbose mode - more details in output (full request with headers) + response headers
+
+-d Debug mode - provide all logs from jsonr (use it only if you have issues with application, you can send such logs to help troubleshooting)
+
+-b request body (if not  willing to use http file)
+
+--no-auto-json-header by default jsonr will append Content-Type "application/json" header to all requests
+ (if such header won't be present in definition) so you don't need to repeat it. Use this option to disable
+this behaviour
+
+-o [o]utput file for response details (status code, total execution time, body, headers), if omitted outputs to stdout. 
+Caution: If file exists it will overwrite it. If no extension provided, it will automatically append .json
+
+EXAMPLE: jsonr ... -o my-response => saves to ./my-response.json, overwrites file if it already exists!
 
 param:
   fileName in current working directory, or absolute path or uri of the resource
