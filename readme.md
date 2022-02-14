@@ -86,7 +86,7 @@ path to .http file name or url
 
   This parameter works in a very similar way as the -s param. With one remark - it checks response body and searches if it's response contains specified text. It's a simple text search, no regular expressions available. If text is not contained - jsonr will report error. It may be useful for smoke tests scripts.
 
--p request [p]rocessor file
+-p request [p]rocessor file path
 
   If you want to decorate request with anything that requires more complex steps, you can write simple javascript file that exports default function that takes as an input request object and outputs modified request object. You can use it for instance, if you need to prepare something before running request, like enabling port-forwarding, or obtaining bearer token for authorization.
 
@@ -94,17 +94,15 @@ path to .http file name or url
 
   Sample file content:
 
-  ```processor.js
   export default (request) => {
     request.headers["Authorization"] = "{token obtained from other function}"
     return request;
   }
-  ```
 
   You can export async function if needed.
 
   `request` parameter contains following:
-  ```
+
   {
     method: "",
     url: "",
@@ -112,7 +110,6 @@ path to .http file name or url
       "headerType1": "headerValue1"
     }
   }
-  ```
 
   HINT
   You can use request properties like url to determine to which resources you need to connect to. For example, if url is from TEST environment, connect to TEST database to get Authorization header value.
