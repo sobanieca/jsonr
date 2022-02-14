@@ -100,6 +100,9 @@ It's a simple search, no regular expressions involved here. If text is not conta
   }
   ```
 
+  HINT
+  You can use request properties like url to determine to which resources you need to connect to. For example, if url is from environment TEST, connect to TEST database to get Authorization header value.
+
 -e [e]nvironment name from `jsonr environments list` (no .json extension required)
 
   TODO: explain environments concept
