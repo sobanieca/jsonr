@@ -15,6 +15,7 @@ Deno runtime environment
 
 ## Usage
 
+```
 Sample command:
 
 jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
@@ -206,6 +207,7 @@ path to .http file name or url
   EXAMPLE: jsonr ... -o my-response => saves to ./my-response.json, overwrites file if it already exists!
 
 
+```
 
 ## Contribution
 
