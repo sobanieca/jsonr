@@ -1,6 +1,7 @@
 import parse from "./parser.js";
+import logger from "./logger.js";
 
-let command = parse(Deno.args);
+const command = parse(Deno.args);
 
-console.log(jsonr);
+logger.info("Test");
 

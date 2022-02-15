@@ -9,12 +9,12 @@ await log.setup({
   loggers: {
     default: {
       level: logLevel,
-      handlers: [ console ]
+      handlers: [ "console" ]
     }
   }
 });
 
 const logger = log.getLogger();
 
-export { logger };
+export default logger;
 
