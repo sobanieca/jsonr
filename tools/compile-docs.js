@@ -1,12 +1,12 @@
-const usage = await Deno.readTextFile("../docs/usage.txt");
+const help = await Deno.readTextFile("../docs/help.txt");
 const readmeTemplate = await Deno.readTextFile("../docs/readme-template.md");
-const helpTemplate = await Deno.readTextFile("../docs/help-template");
+const helpTemplate = await Deno.readTextFile("../docs/help-template.js");
 
-const readme = readmeTemplate.replaceAll("@@usage@@", usage);
+const readme = readmeTemplate.replaceAll("@@help@@", help);
 
 await Deno.writeTextFile("../readme.md", readme);
 
-const help = helpTemplate.replaceAll("@@help@@", usage);
+const helpModule = helpTemplate.replaceAll("@@help@@", help);
 
-await Deno.writeTextFile("../src/help.js", help);
+await Deno.writeTextFile("../src/help.js", helpModule);
 

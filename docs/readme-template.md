@@ -18,7 +18,7 @@ Deno runtime environment
 Check all details on usage by typing `jsonr --help`:
 
 ```
-@@usage@@
+@@help@@
 ```
 
 ## Contribution

@@ -83,7 +83,7 @@ path to .http file name or url
 
   You can export async function if needed.
 
-  `request` parameter contains following:
+  (request) parameter contains following:
 
   {
     method: "",
@@ -96,7 +96,7 @@ path to .http file name or url
   HINT
   You can use request properties like url to determine to which resources you need to connect to. For example, if url is from TEST environment, connect to TEST database to get Authorization header value.
 
--e [e]nvironment name from `jsonr environments list` (no .json extension required)
+-e [e]nvironment name from (jsonr environments list) (no .json extension required)
 
   Environment is the set of variables or additional configuration that allows you to reuse existing .http files. For instance you can have following sample.http file:
 
