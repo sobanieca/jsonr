@@ -1,8 +1,8 @@
 import parseHelp from "./parsers/help.js";
 
 export default (args) => {
-  let jsonr = parseHelp(args, {});
+  let command = parseHelp(args, {});
 
-  return jsonr
+  return command
 }
 

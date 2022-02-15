@@ -1,6 +1,7 @@
 export default (args, jsonr) => {
-  if(args.indexOf("--help") != -1)
+  if(args.includes("--help")) {
     jsonr.help = true;
+  }
 
   return jsonr;
 }

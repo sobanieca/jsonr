@@ -1,6 +1,6 @@
 import parse from "./parser.js";
 
-let jsonr = parse(Deno.args);
+let command = parse(Deno.args);
 
 console.log(jsonr);
 
