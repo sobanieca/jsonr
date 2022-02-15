@@ -1,7 +1,7 @@
-export default (args, jsonr) => {
+export default (args, command) => {
   if(args.includes("--help")) {
-    jsonr.help = true;
+    command.help = true;
   }
 
-  return jsonr;
+  return command;
 }
