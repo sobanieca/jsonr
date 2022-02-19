@@ -1,12 +1,14 @@
-import parse from "./parser.js";
+import { parse } from "./deps.js";
 import logger from "./logger.js";
 import help from "./help.js";
 
-const command = parse(Deno.args);
+const parsedArgs = parse(Deno.args);
 
-if (command.help) {
+if (parsedArgs.help) {
    help();
 }
+
+console.log(parsedArgs);
 
 logger.info("Test");
 
