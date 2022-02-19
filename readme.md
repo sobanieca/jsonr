@@ -17,7 +17,19 @@ Deno runtime environment
 
 ## Usage
 
+Sample usage:
+
 `jsonr -h "Authorization: Bearer MyToken} my-request.http`
+
+my-request.http file content:
+
+```
+POST http://my-api.com/endpoint
+
+{
+  "someKey": "someValue"
+}
+```
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
