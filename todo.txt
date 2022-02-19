@@ -1,2 +1,15 @@
 jsonr todo:
 
+* module to read http file and transform it to request object
+* decorator for http method
+* decorator for input variables
+* decorator for request body
+* decorator for additional headers (remember about no default app/json header flag)
+* handling verbose mode
+* handling expected status code
+* handling expected text in response body
+* module for handling request processor (remember about --no-processor flag)
+* handling environments
+* handling version
+* handling output response file
+

@@ -1,6 +1,6 @@
 import { log } from "./deps.js";
 
-const logLevel = Deno.args.includes("-v") ? "DEBUG" : "WARNING"
+const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "WARNING"
 
 await log.setup({
   handlers: {

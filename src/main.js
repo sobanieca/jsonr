@@ -1,14 +1,14 @@
-import { parse } from "./deps.js";
+import command from "./command.js";
 import logger from "./logger.js";
-import help from "./help.js";
+import help from "./commands/help.js";
 
-const parsedArgs = parse(Deno.args);
-
-if (parsedArgs.help) {
+if (command.help) {
    help();
 }
 
-console.log(parsedArgs);
+// TODO: environments commands
+
+console.log(command);
 
 logger.info("Test");
 
