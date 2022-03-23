@@ -3,7 +3,8 @@ import logger from "./logger.js";
 import help from "./commands/help.js";
 
 if (command.help) {
-   help();
+  help();
+  Deno.exit(0);
 }
 
 // TODO: environments commands
