@@ -8,7 +8,6 @@ jsonr todo:
 * handling verbose mode
 * handling expected status code
 * handling expected text in response body
-* module for handling request processor (remember about --no-processor flag)
 * handling environments
 * handling version
 * handling output response file

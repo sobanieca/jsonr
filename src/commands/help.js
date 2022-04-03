@@ -68,34 +68,6 @@ path to .http file name or url
 
   This parameter works in a very similar way as the -s param. With one remark - it checks response body and searches if it's response contains specified text. It's a simple text search, no regular expressions available. If text is not contained - jsonr will report error. It may be useful for smoke tests scripts.
 
--p request [p]rocessor file path
-
-  If you want to decorate request with anything that requires more complex steps, you can write simple javascript file that exports default function that takes as an input request object and outputs modified request object. You can use it for instance, if you need to prepare something before running request, like enabling port-forwarding, or obtaining bearer token for authorization.
-
-  Use regular Javascript for coding and all methods from Deno runtime (https://deno.land for docs)
-
-  Sample file content:
-
-  export default (request) => {
-    request.headers["Authorization"] = "{token obtained from other function}"
-    return request;
-  }
-
-  You can export async function if needed.
-
-  (request) parameter contains following:
-
-  {
-    method: "",
-    url: "",
-    headers: {
-      "headerType1": "headerValue1"
-    }
-  }
-
-  HINT
-  You can use request properties like url to determine to which resources you need to connect to. For example, if url is from TEST environment, connect to TEST database to get Authorization header value.
-
 -e [e]nvironment name from (jsonr environments list) (no .json extension required)
 
   Environment is the set of variables or additional configuration that allows you to reuse existing .http files. For instance you can have following sample.http file:
@@ -139,15 +111,8 @@ path to .http file name or url
     },
     "headers": {
       "Authorization": "ApiKey 123"
-    },
-    "processor": {
-      "/home/user1/some-request-processor.js"
     }
   } 
-
---no-processor
-
-  If request processor (see -p parameter above) was defined earlier (for instance in environemnt file), you can cancel it.
 
 -m HTTP [m]ethod
 
