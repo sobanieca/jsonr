@@ -1,5 +1,5 @@
-export default () => {
-  // TODO: implement deleting environment
-  console.log("delete environment...");
+export default {
+  execute: () => console.log("Delete environment..."),
+  match: () => true
 }
 

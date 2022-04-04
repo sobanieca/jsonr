@@ -1,6 +1,5 @@
-export default () => {
-  // TODO: implement sending request
-  console.log("Sending request...");
+export default {
+  execute: () => console.log("Sending request..."),
+  match: () => true
 }
-
 

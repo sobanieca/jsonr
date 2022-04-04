@@ -1,5 +1,5 @@
-export default () => {
-  // TODO: implement listing environments
-  console.log("listing environments...");
+export default {
+  execute: () => console.log("Listing environments..."),
+  match: () => true
 }
 

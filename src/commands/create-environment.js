@@ -1,5 +1,5 @@
-export default () => {
-  // TODO: implement creating environment
-  console.log("creating environments...");
+export default {
+  execute: () => console.log("Creating environments..."),
+  match: () => true
 }
 

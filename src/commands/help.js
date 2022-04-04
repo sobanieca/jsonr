@@ -153,6 +153,7 @@ path to .http file name or url
 
 `;
 
-export default () => {
-  console.log(help);
+export default {
+  execute: () => console.log(help),
+  match: (command) => command.help ? true : false
 }
