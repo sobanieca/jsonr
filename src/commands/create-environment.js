@@ -1,5 +1,5 @@
 export default {
-  execute: () => console.log("Creating environments..."),
-  match: () => true
+  execute: (args) => console.log("Creating environments..."),
+  match: (args) => args["_"]?.join(";").toLowerCase() == "create;environment"
 }
 

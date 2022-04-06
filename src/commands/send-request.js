@@ -1,5 +1,5 @@
 export default {
-  execute: () => console.log("Sending request..."),
-  match: () => true
+  execute: (args) => console.log("Sending request..."),
+  match: (args) => true
 }
 

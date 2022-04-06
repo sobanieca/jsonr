@@ -1,5 +1,5 @@
 export default {
-  execute: () => console.log("Delete environment..."),
-  match: () => true
+  execute: (args) => console.log("Delete environment..."),
+  match: (args) => args["_"]?.join(";").toLowerCase() == "delete;environment"
 }
 

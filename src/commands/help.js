@@ -154,6 +154,6 @@ path to .http file name or url
 `;
 
 export default {
-  execute: () => console.log(help),
-  match: (command) => command.help ? true : false
+  execute: (args) => console.log(help),
+  match: (args) => args.help ? true : false
 }
