@@ -7,20 +7,20 @@ import deleteEnvironment from "./commands/delete-environment.js";
 import sendRequest from "./commands/send-request.js";
 
 const commands = [
-  help,
-  listEnvironments,
-  createEnvironment,
-  deleteEnvironment,
-  sendRequest
+  { name: "help", engine: help },
+  { name: "list-environments", engine: listEnvironments },
+  { name: "create-environment", engine: createEnvironment },
+  { name: "delete-environment", engine: deleteEnvironment },
+  { name: "send-request", engine: sendRequest }
 ]
 
-// TODO: introduce more debug logs, including commands match etc.
-logger.debug("Obtained following list or args:");
+logger.debug("Args provided:");
 logger.debug(args);
 
 for(const command of commands) {
-  if(command.match(args)) {
-    await command.execute(args);
+  logger.debug(`Trying to match with command ${command.name}`);
+  if(command.engine.match(args)) {
+    await command.engine.execute(args);
     Deno.exit(0);
   }
 }
