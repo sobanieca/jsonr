@@ -1,7 +1,7 @@
 import { parse } from "./deps.js";
 
 const args = parse(Deno.args, {
-  boolean: [ "help" ],
+  boolean: [ "help", "debug" ],
   "--": true
 });
 
