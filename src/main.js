@@ -20,6 +20,7 @@ logger.debug(args);
 for(const command of commands) {
   logger.debug(`Trying to match with command ${command.name}`);
   if(command.engine.match(args)) {
+    logger.debug(`Match found for command ${command.name}. Executing...`);
     await command.engine.execute(args);
     Deno.exit(0);
   }
