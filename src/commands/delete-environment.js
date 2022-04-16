@@ -7,6 +7,7 @@ const deleteEnvironment = (args) => {
     throw new Error("No environment name provided!");
   }
 
+  environmentName = environmentName.toLowerCase();
   logger.debug(`Trying to delete environment ${environmentName}`);
 
   const existingEnvironmentFile = localStorage.getItem(environmentName);

@@ -11,6 +11,7 @@ const createEnvironment = (args) => {
     throw new Error("No environment data file path provided!");
   }
 
+  environmentName = environmentName.toLowerCase();
   logger.debug(
     `Trying to create environment ${environmentName} with data in file ${environmentFile}`,
   );
