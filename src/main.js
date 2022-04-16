@@ -11,18 +11,26 @@ const commands = [
   { name: "list-environments", engine: listEnvironments },
   { name: "create-environment", engine: createEnvironment },
   { name: "delete-environment", engine: deleteEnvironment },
-  { name: "send-request", engine: sendRequest }
-]
+  { name: "send-request", engine: sendRequest },
+];
 
 logger.debug("Args provided:");
 logger.debug(args);
 
-for(const command of commands) {
+for (const command of commands) {
   logger.debug(`Trying to match with command ${command.name}`);
-  if(command.engine.match(args)) {
+  if (command.engine.match(args)) {
     logger.debug(`Match found for command ${command.name}. Executing...`);
-    await command.engine.execute(args);
+
+    try {
+      await command.engine.execute(args);
+    } catch (err) {
+      logger.error(err.message);
+      logger.debug(err);
+    }
+
     Deno.exit(0);
+  } else {
+    logger.debug("No match found");
   }
 }
-

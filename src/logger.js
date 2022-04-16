@@ -1,20 +1,19 @@
 import { log } from "./deps.js";
 
-const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "WARNING"
+const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "WARNING";
 
 await log.setup({
   handlers: {
-    console: new log.handlers.ConsoleHandler("DEBUG")
+    console: new log.handlers.ConsoleHandler("DEBUG"),
   },
   loggers: {
     default: {
       level: logLevel,
-      handlers: [ "console" ]
-    }
-  }
+      handlers: ["console"],
+    },
+  },
 });
 
 const logger = log.getLogger();
 
 export default logger;
-
