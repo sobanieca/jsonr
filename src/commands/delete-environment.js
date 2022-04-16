@@ -1,7 +1,7 @@
 import logger from "../logger.js";
 
 const deleteEnvironment = (args) => {
-  const environmentName = args["_"][2];
+  let environmentName = args["_"][2];
 
   if (!environmentName) {
     throw new Error("No environment name provided!");
