@@ -4,7 +4,9 @@ const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "WARNING";
 
 await log.setup({
   handlers: {
-    console: new log.handlers.ConsoleHandler("DEBUG"),
+    console: new log.handlers.ConsoleHandler("DEBUG", {
+      formatter: "{msg}"
+    }),
   },
   loggers: {
     default: {
