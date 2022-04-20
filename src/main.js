@@ -1,16 +1,16 @@
 import args from "./args.js";
 import logger from "./logger.js";
 import help from "./commands/help.js";
-import listEnvironments from "./commands/list-environments.js";
-import createEnvironment from "./commands/create-environment.js";
-import deleteEnvironment from "./commands/delete-environment.js";
+import listEnvironments from "./commands/environments-list.js";
+import createEnvironment from "./commands/environments-create.js";
+import deleteEnvironment from "./commands/environments-delete.js";
 import sendRequest from "./commands/send-request.js";
 
 const commands = [
   { name: "help", engine: help },
-  { name: "list-environments", engine: listEnvironments },
-  { name: "create-environment", engine: createEnvironment },
-  { name: "delete-environment", engine: deleteEnvironment },
+  { name: "environments-list", engine: listEnvironments },
+  { name: "environments-create", engine: createEnvironment },
+  { name: "environments-delete", engine: deleteEnvironment },
   { name: "send-request", engine: sendRequest },
 ];
 
