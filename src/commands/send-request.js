@@ -9,7 +9,7 @@ import logger from "../logger.js";
  * e environment name -e "./file.json"
  * m http method -m POST
  * b body -b '{ test: "123" }'
- * --no-default-content-type-header
+ * --omit-default-content-type-header
  * o output file -o output.json
  * input http file / url
  */
@@ -29,8 +29,25 @@ const sendRequest = async (args) => {
     throw new Error("Invalid parameters provided. Provide exactly one url or .http file path.");
   }
 
-  if (!args["default-content-type-header"]) {
-    logger.debug("Parameter--no-default-content-type-header provided - removing default Content-Type header");
+  // TODO: check if args["_"][0] is file (test path), if yes, read it's content into request, 
+  // otherwise set value as url
+  const urlOrFilePath = args["_"][0];
+  if (urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")) {
+    logger.debug("http(s):// at the beginning of the file/url parameter detected. Assuming url.");
+    request.url = urlOrFilePath;
+  } else {
+    try {
+      await Deno.lstat(urlOrFilePath);
+      logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
+    } catch {
+      logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url`);
+      request.url = urlOrFilePath;
+    }
+  }
+
+
+  if (args["omit-default-content-type-header"]) {
+    logger.debug("Parameter--omit-default-content-type-header provided - removing default Content-Type header");
     request.headers.delete("Content-Type");
   }
 
@@ -41,10 +58,27 @@ const sendRequest = async (args) => {
 
   if (args.b) {
     logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.b}`);
+    request.body = args.b;
   }
 
+  if (args.h) {
+    let appendHeader = (headerArg) => {
+      logger.debug(`Adding ${headerArg} header to request`);
+      let [ headerKey, headerValue ] = headerArg.split(":")?.map(x => x.trim());
+      request.headers.append(headerKey, headerValue);
+    };
+    if(Array.isArray(args.h)) {
+      for(let h of args.h) {
+        appendHeader(h);
+      }
+    } else {
+      appendHeader(args.h);
+    }
+  }
 
   logger.debug("Sending request");
+  // TODO: send request + handle output file if args.o provided
+  // TODO: handle args.s and args.t to validate response
 }
 
 export default {

@@ -136,7 +136,7 @@ path to .http file name or url
   EXAMPLE
   jsonr -m POST -b '{ "username": "user@email.com" }' http://myapi.com/values
 
---no-default-content-type-header 
+--omit-default-content-type-header 
 
   By default jsonr will append Content-Type "application/json" header to all requests (if such header won't be present in definition) so you don't need to repeat it. Use this option to disable this behavior.
 
