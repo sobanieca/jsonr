@@ -14,6 +14,19 @@ import logger from "../logger.js";
  * input http file / url
  */
 
+const parseHttpFile = async (filePath) => {
+  const file = await Deno.readTextFile(filePath);
+  const { mainPart, bodyPart } = file.split(/\r?\n\r?\n/);
+
+  let request = {};
+  
+  
+  if (bodyPart) {
+    logger.debug(`Read following request body from file: ${bodyPart}`);
+    request.body = bodyPart;
+  }
+}
+
 const sendRequest = async (args) => {
   let request = {
     method: "GET",
@@ -39,12 +52,13 @@ const sendRequest = async (args) => {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
+      await parseHttpFile(urlOrFilePath);
+      // todo: merge above
     } catch {
       logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url`);
       request.url = urlOrFilePath;
     }
   }
-
 
   if (args["omit-default-content-type-header"]) {
     logger.debug("Parameter--omit-default-content-type-header provided - removing default Content-Type header");

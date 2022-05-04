@@ -7,7 +7,7 @@ Parameters:
 
 path to .http file name or url
 
-  You can use .http files to specify your requests or don't use additional files at all and provide url that should get called. This parameter is always the last one.
+  You can use .http files (utf-8 encoded) to specify your requests or don't use additional files at all and provide url that should get called. This parameter is always the last one.
 
   EXAMPLE
 
@@ -23,7 +23,7 @@ path to .http file name or url
     "username" : "sample.email@sample.com"
   }
 
-  As you can see first line is about http method + url. Below there are http headers listed and at the bottom request body. If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provie more details for the request. If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
+  As you can see first line is about http method + url. Below there are http headers listed and at the bottom request body. If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request. If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
 
 -i provide value for [i]nput variables
 
