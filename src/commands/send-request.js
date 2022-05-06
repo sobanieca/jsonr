@@ -15,15 +15,37 @@ import logger from "../logger.js";
  */
 
 const parseHttpFile = async (filePath) => {
+  logger.debug(`Attempting to read request data from file: ${filePath}`);
+  try {
   const file = await Deno.readTextFile(filePath);
-  const { mainPart, bodyPart } = file.split(/\r?\n\r?\n/);
+  const [ mainPart, bodyPart ] = file.split(/\r?\n\r?\n/);
 
   let request = {};
   
+  const [ mainLine, ...headers ] = mainPart.split(/\r?\n/);
+
+  const [ method, url] = mainLine.split(" ").map(x => x.trim());
+
+  logger.debug(`Read following method: ${method} and url: ${url}`);
+  request.method = method;
+  request.url = url;
+
+  if (headers && headers.length > 0) {
+    for (let header of headers) {
+      const [headerKey, headerValue] = header.split(":").map(x => x.trim());
+      request.headers = [];
+      request.headers.push({ headerKey, headerValue });
+    }
+  }
   
   if (bodyPart) {
-    logger.debug(`Read following request body from file: ${bodyPart}`);
+    logger.debug(`Read following request body: ${bodyPart}`);
     request.body = bodyPart;
+  }
+
+  return request;
+  } catch {
+    throw new Error("Unexpected error occurred when trying to parse http file. Ensure that the file is compatible with RFC2616 standard");
   }
 }
 

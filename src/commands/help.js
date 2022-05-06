@@ -7,7 +7,7 @@ Parameters:
 
 path to .http file name or url
 
-  You can use .http files (utf-8 encoded) to specify your requests or don't use additional files at all and provide url that should get called. This parameter is always the last one.
+  You can use .http files (utf-8 encoded, RFC 2616 standard content) to specify your requests or don't use additional files at all and provide url that should get called. This parameter is always the last one.
 
   EXAMPLE
 
