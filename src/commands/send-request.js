@@ -17,33 +17,33 @@ import logger from "../logger.js";
 const parseHttpFile = async (filePath) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
-  const file = await Deno.readTextFile(filePath);
-  const [ mainPart, bodyPart ] = file.split(/\r?\n\r?\n/);
+    const file = await Deno.readTextFile(filePath);
+    const [ mainPart, bodyPart ] = file.split(/\r?\n\r?\n/);
 
-  let request = {};
-  
-  const [ mainLine, ...headers ] = mainPart.split(/\r?\n/);
+    let request = {};
+    
+    const [ mainLine, ...headers ] = mainPart.split(/\r?\n/);
 
-  const [ method, url] = mainLine.split(" ").map(x => x.trim());
+    const [ method, url] = mainLine.split(" ").map(x => x.trim());
 
-  logger.debug(`Read following method: ${method} and url: ${url}`);
-  request.method = method;
-  request.url = url;
+    logger.debug(`Read following method: ${method} and url: ${url}`);
+    request.method = method;
+    request.url = url;
 
-  if (headers && headers.length > 0) {
-    for (let header of headers) {
-      const [headerKey, headerValue] = header.split(":").map(x => x.trim());
-      request.headers = [];
-      request.headers.push({ headerKey, headerValue });
+    if (headers && headers.length > 0) {
+      for (let header of headers) {
+        const [headerKey, headerValue] = header.split(":").map(x => x.trim());
+        request.headers = [];
+        request.headers.push({ key: headerKey, value: headerValue });
+      }
     }
-  }
-  
-  if (bodyPart) {
-    logger.debug(`Read following request body: ${bodyPart}`);
-    request.body = bodyPart;
-  }
+    
+    if (bodyPart) {
+      logger.debug(`Read following request body: ${bodyPart}`);
+      request.body = bodyPart;
+    }
 
-  return request;
+    return request;
   } catch {
     throw new Error("Unexpected error occurred when trying to parse http file. Ensure that the file is compatible with RFC2616 standard");
   }
@@ -53,9 +53,10 @@ const sendRequest = async (args) => {
   let request = {
     method: "GET",
     redirect: "manual",
-    headers: new Headers({
+    /*headers: new Headers({
       "Content-Type": "application/json"
-    }),
+    }),*/
+    headers: [{ key: "Content-Type", value: "application/json" }],
     body: {},
     url: ""
   };
@@ -74,7 +75,11 @@ const sendRequest = async (args) => {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
-      await parseHttpFile(urlOrFilePath);
+      let fileRequest = await parseHttpFile(urlOrFilePath);
+      request.method = fileRequest.method;
+      request.url = fileRequest.url;
+      request.body = fileRequest.body;
+      //request.headers = request.headers
       // todo: merge above
     } catch {
       logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url`);
