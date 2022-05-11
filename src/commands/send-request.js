@@ -29,11 +29,11 @@ const parseHttpFile = async (filePath) => {
     logger.debug(`Read following method: ${method} and url: ${url}`);
     request.method = method;
     request.url = url;
+    request.headers = [];
 
     if (headers && headers.length > 0) {
       for (let header of headers) {
         const [headerKey, headerValue] = header.split(":").map(x => x.trim());
-        request.headers = [];
         request.headers.push({ key: headerKey, value: headerValue });
       }
     }
@@ -60,6 +60,12 @@ const sendRequest = async (args) => {
     body: {},
     url: ""
   };
+ 
+  if (args["omit-default-content-type-header"]) {
+    logger.debug("Parameter--omit-default-content-type-header provided - removing default Content-Type header");
+    // TODO: remove item from array properly:
+    request.headers.delete("Content-Type");
+  }
 
   if (args["_"].length != 1) {
     throw new Error("Invalid parameters provided. Provide exactly one url or .http file path.");
@@ -79,17 +85,12 @@ const sendRequest = async (args) => {
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
-      //request.headers = request.headers
-      // todo: merge above
+      // TODO: check if fileRequest.headers contains similar first (like Content-Type), if yes, overwrite existing, instead of adding same header
+      request.headers = [...request.headers, ...fileRequest.headers];
     } catch {
       logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url`);
       request.url = urlOrFilePath;
     }
-  }
-
-  if (args["omit-default-content-type-header"]) {
-    logger.debug("Parameter--omit-default-content-type-header provided - removing default Content-Type header");
-    request.headers.delete("Content-Type");
   }
 
   if (args.m) {
@@ -106,7 +107,7 @@ const sendRequest = async (args) => {
     let appendHeader = (headerArg) => {
       logger.debug(`Adding ${headerArg} header to request`);
       let [ headerKey, headerValue ] = headerArg.split(":")?.map(x => x.trim());
-      request.headers.append(headerKey, headerValue);
+      request.headers.push({ key: headerKey, value: headerValue });
     };
     if(Array.isArray(args.h)) {
       for(let h of args.h) {
@@ -117,7 +118,8 @@ const sendRequest = async (args) => {
     }
   }
 
-  logger.debug("Sending request");
+  logger.info(`Request ${request.method} ${request.url} in progress...`);
+  logger.debug("Request headers: ", request.headers);
   // TODO: send request + handle output file if args.o provided
   // TODO: handle args.s and args.t to validate response
 }
