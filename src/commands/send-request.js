@@ -53,9 +53,6 @@ const sendRequest = async (args) => {
   let request = {
     method: "GET",
     redirect: "manual",
-    /*headers: new Headers({
-      "Content-Type": "application/json"
-    }),*/
     headers: [{ key: "Content-Type", value: "application/json" }],
     body: {},
     url: ""
@@ -63,16 +60,13 @@ const sendRequest = async (args) => {
  
   if (args["omit-default-content-type-header"]) {
     logger.debug("Parameter--omit-default-content-type-header provided - removing default Content-Type header");
-    // TODO: remove item from array properly:
-    request.headers.delete("Content-Type");
+    request.headers = [];
   }
 
   if (args["_"].length != 1) {
     throw new Error("Invalid parameters provided. Provide exactly one url or .http file path.");
   }
 
-  // TODO: check if args["_"][0] is file (test path), if yes, read it's content into request, 
-  // otherwise set value as url
   const urlOrFilePath = args["_"][0];
   if (urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")) {
     logger.debug("http(s):// at the beginning of the file/url parameter detected. Assuming url.");
@@ -85,8 +79,11 @@ const sendRequest = async (args) => {
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
-      // TODO: check if fileRequest.headers contains similar first (like Content-Type), if yes, overwrite existing, instead of adding same header
-      request.headers = [...request.headers, ...fileRequest.headers];
+      if (fileRequest.headers.some(x => x.key == "Content-Type")) {
+        request.headers = fileRequest.headers;  
+      } else {
+        request.headers = [...request.headers, ...fileRequest.headers];
+      }
     } catch {
       logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url`);
       request.url = urlOrFilePath;
