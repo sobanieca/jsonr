@@ -15,10 +15,13 @@ import logger from "../logger.js";
  * input http file / url
  */
 
-const parseHttpFile = async (filePath) => {
+const parseHttpFile = async (filePath, variables) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
     const fileContent = await Deno.readTextFile(filePath);
+    for (let variable of variables) {
+      // todo
+    }
     // TODO: read all input variables, build common collection (merge environment + input args)
     // replace all @@variable@@ occurrences with values (case insensitive)
     const [ mainPart, bodyPart ] = fileContent.split(/\r?\n\r?\n/);
@@ -52,6 +55,10 @@ const parseHttpFile = async (filePath) => {
   }
 }
 
+const getVariables = async (args) => {
+  //todo
+}
+
 const sendRequest = async (args) => {
   let request = {
     method: "GET",
@@ -78,7 +85,8 @@ const sendRequest = async (args) => {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
-      let fileRequest = await parseHttpFile(urlOrFilePath);
+      const variables = await getVariables(args);
+      let fileRequest = await parseHttpFile(urlOrFilePath, variables);
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
