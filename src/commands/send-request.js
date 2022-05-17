@@ -8,6 +8,7 @@ import logger from "../logger.js";
  * t expected text in response -t "abc"
  * e environment name -e "./file.json"
  * m http method -m POST
+ * v verbose - more details like response headers
  * b body -b '{ test: "123" }'
  * --omit-default-content-type-header
  * o output file -o output.json
@@ -115,10 +116,69 @@ const sendRequest = async (args) => {
     }
   }
 
-  logger.info(`Request ${request.method} ${request.url} in progress...`);
+  logger.info(`${request.method} ${request.url}...`);
   logger.debug("Request headers: ", request.headers);
-  // TODO: send request + handle output file if args.o provided
-  // TODO: handle args.s and args.t to validate response
+  if(request.body)
+    logger.debug("Request body: ", request.body);
+
+  let timestamp = new Date();
+  let response = await fetch(request.url, {
+    method: request.method,
+    //body: request.body ?? undefined,
+    headers: request.headers.reduce((acc, x) => { 
+      if(!acc) {
+        acc = new Headers();
+      }
+      acc.append(x.key, x.value);
+      return acc;
+    })
+  });
+
+  let elapsed = new Date() - timestamp;
+  logger.info(`Status ${response.status} obtained in ${elapsed}ms`);
+
+  let responseBody = await response.text();
+
+  if (args.s) {
+    if (args.s != response.status) {
+      logger.error(`Response status code (${response.status}) doesn't match expected value (${args.s})`);
+      Deno.exit(1);
+    }
+  }
+
+  if (args.t) {
+    if (!responseBody.includes(args.t)) {
+      logger.error(`Response body doesn't contain expected text (${args.t})`);
+      Deno.exit(1);
+    }
+  }
+
+  try {
+    responseBody = JSON.parse(responseBody);
+  } catch {
+    logger.warning("Non JSON response received!");
+  }
+
+  if (args.v) {
+    logger.info("Response headers:");
+    for(let header of response.headers.entries()) {
+      logger.info(`${header[0]}: ${header[1]}`);
+    }
+  }
+
+  if (responseBody) {
+    if (args.o) {
+      await Deno.writeTextFile(args.o, responseBody);
+      logger.info(`Response body written to file ${args.o}`);
+    } else {
+      responseBody = Deno.inspect(responseBody, { colors: true });
+      logger.info(responseBody);
+    }
+  } else {
+    logger.debug("No response body returned from server");
+  }
+
+  // TODO: handle environments and variable replacement
 }
 
 export default {
