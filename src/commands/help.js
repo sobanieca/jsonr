@@ -38,7 +38,7 @@ path to .http file name or url
     "username": "@@variable@@"
   }
 
-  Keep in mind that variables work as a simple text replacement so you need to remember about " char or similar.
+  Input variables work as a simple text replacement (case insensitive).
 
   For such sample file, you can run:
 

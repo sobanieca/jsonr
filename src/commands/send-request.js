@@ -18,8 +18,10 @@ import logger from "../logger.js";
 const parseHttpFile = async (filePath) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
-    const file = await Deno.readTextFile(filePath);
-    const [ mainPart, bodyPart ] = file.split(/\r?\n\r?\n/);
+    const fileContent = await Deno.readTextFile(filePath);
+    // TODO: read all input variables, build common collection (merge environment + input args)
+    // replace all @@variable@@ occurrences with values (case insensitive)
+    const [ mainPart, bodyPart ] = fileContent.split(/\r?\n\r?\n/);
 
     let request = {};
     
@@ -177,8 +179,6 @@ const sendRequest = async (args) => {
   } else {
     logger.debug("No response body returned from server");
   }
-
-  // TODO: handle environments and variable replacement
 }
 
 export default {
