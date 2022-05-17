@@ -119,13 +119,15 @@ const sendRequest = async (args) => {
   }
 
   logger.info(`${request.method} ${request.url}...`);
-  logger.debug("Request headers: ", request.headers);
+  logger.debug("Request headers: ");
+  request.headers.forEach(x => logger.debug(`${x.key}: ${x.value}`));
   if(request.body)
     logger.debug("Request body: ", request.body);
 
   let timestamp = new Date();
   let response = await fetch(request.url, {
     method: request.method,
+    //todo: adjust for GET methods
     //body: request.body ?? undefined,
     headers: request.headers.reduce((acc, x) => { 
       if(!acc) {
