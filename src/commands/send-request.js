@@ -50,13 +50,15 @@ const parseHttpFile = async (filePath, variables) => {
     }
 
     return request;
-  } catch {
+  } catch(err) {
+    logger.debug(`Error when parsing file: ${err}`);
     throw new Error("Unexpected error occurred when trying to parse http file. Ensure that the file is compatible with RFC2616 standard");
   }
 }
 
 const getVariables = async (args) => {
   //todo
+  return [];
 }
 
 const sendRequest = async (args) => {
@@ -94,8 +96,8 @@ const sendRequest = async (args) => {
       } else {
         request.headers = [...request.headers, ...fileRequest.headers];
       }
-    } catch {
-      logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url`);
+    } catch(err) {
+      logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`);
       request.url = urlOrFilePath;
     }
   }
@@ -146,9 +148,6 @@ const sendRequest = async (args) => {
   }
   if (!request.body)
     delete options.body;
-
-  console.log(request.body);
-  console.log(options);
 
   let response = await fetch(request.url, options);
 

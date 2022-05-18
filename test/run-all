@@ -1,6 +1,6 @@
 ./run sample-get.http
-./run sample-post.http
-./run sample-delete.http
-./run sample-put.http
-./run sample-exception.http
+#./run sample-post.http
+#./run sample-delete.http
+#./run sample-put.http
+#./run sample-exception.http
 
