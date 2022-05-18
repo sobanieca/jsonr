@@ -1,0 +1,2 @@
+deno run --allow-all test-api.js
+

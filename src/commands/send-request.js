@@ -62,9 +62,8 @@ const getVariables = async (args) => {
 const sendRequest = async (args) => {
   let request = {
     method: "GET",
-    redirect: "manual",
     headers: [{ key: "Content-Type", value: "application/json" }],
-    body: {},
+    body: "",
     url: ""
   };
  
@@ -133,10 +132,10 @@ const sendRequest = async (args) => {
     logger.debug("Request body: ", request.body);
 
   let timestamp = new Date();
-  let response = await fetch(request.url, {
+  const options = {
     method: request.method,
-    //todo: adjust for GET methods
-    //body: request.body ?? undefined,
+    body: request.body,
+    redirect: "manual",
     headers: request.headers.reduce((acc, x) => { 
       if(!acc) {
         acc = new Headers();
@@ -144,7 +143,14 @@ const sendRequest = async (args) => {
       acc.append(x.key, x.value);
       return acc;
     })
-  });
+  }
+  if (!request.body)
+    delete options.body;
+
+  console.log(request.body);
+  console.log(options);
+
+  let response = await fetch(request.url, options);
 
   let elapsed = new Date() - timestamp;
   logger.info(`Status ${response.status} obtained in ${elapsed}ms`);
