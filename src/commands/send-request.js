@@ -19,15 +19,14 @@ const parseHttpFile = async (filePath, variables) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
     const fileContent = await Deno.readTextFile(filePath);
-    for (let variable of variables) {
-      // todo
+    for (const [key, value] of variables) {
+      logger.debug(`Replacing @@${key}@@ with ${value} for content of ${filePath}`);
+      fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }
-    // TODO: read all input variables, build common collection (merge environment + input args)
-    // replace all @@variable@@ occurrences with values (case insensitive)
     const [ mainPart, bodyPart ] = fileContent.split(/\r?\n\r?\n/);
 
     let request = {};
-    
+   
     const [ mainLine, ...headers ] = mainPart.split(/\r?\n/);
 
     const [ method, url] = mainLine.split(" ").map(x => x.trim());
@@ -39,8 +38,10 @@ const parseHttpFile = async (filePath, variables) => {
 
     if (headers && headers.length > 0) {
       for (let header of headers) {
-        const [headerKey, headerValue] = header.split(":").map(x => x.trim());
-        request.headers.push({ key: headerKey, value: headerValue });
+        if (header) {
+          const [headerKey, headerValue] = header.split(":").map(x => x.trim());
+          request.headers.push({ key: headerKey, value: headerValue });
+        }
       }
     }
     
@@ -57,8 +58,36 @@ const parseHttpFile = async (filePath, variables) => {
 }
 
 const getVariables = async (args) => {
-  //todo
-  return [];
+  let result = new Map();
+  if (args.e) {
+    const environmentFilePath = localStorage[key];
+    try {
+      let environmentFileVariables = JSON.parse(await Deno.readTextFile(environmentFilePath));
+      for(let variable of Object.keys(environmentFileVariables)) {
+        result.set(variable, environmentFileVariables[variable]);
+      }
+    } catch(err) {
+      logger.debug(err);
+      logger.error(`There was a problem when reading variables for environment ${args.e} from file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`);
+    }
+  }   
+
+  const setInputVariable = (variable) => {
+    const [ key, value ] = variable.split(":").map(x => x.trim());
+    result.set(key, value);
+  }
+
+  if (args.i) {
+    if(Array.isArray(args.i)) {
+      for(let inputVariable of args.i) {
+        setInputVariable(inputVariable);
+      }
+    } else {
+      setInputVariable(args.i);
+    }
+  }
+
+  return result;
 }
 
 const sendRequest = async (args) => {
@@ -144,7 +173,7 @@ const sendRequest = async (args) => {
       }
       acc.append(x.key, x.value);
       return acc;
-    })
+    }, null)
   }
   if (!request.body)
     delete options.body;

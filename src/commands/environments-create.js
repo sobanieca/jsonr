@@ -1,6 +1,6 @@
 import logger from "../logger.js";
 
-const createEnvironment = (args) => {
+const createEnvironment = async (args) => {
   let environmentName = args["_"][2];
   const environmentFile = args["_"][3];
   if (!environmentName) {
@@ -23,10 +23,16 @@ const createEnvironment = (args) => {
         `Delete it first with 'jsonr environments delete ${environmentName}'`,
     );
   } else {
-    localStorage.setItem(environmentName, environmentFile);
-    logger.info(
-      `Environment ${environmentName} with data in file ${environmentFile} created`,
-    );
+    try {
+      await Deno.lstat(environmentFile);
+      localStorage.setItem(environmentName, environmentFile);
+      logger.info(
+        `Environment ${environmentName} with data in file ${environmentFile} created`,
+      );
+    } catch(err) {
+      logger.debug(err);
+      logger.error(`No file found: ${environmentFile}`);
+    }
   }
 };
 
