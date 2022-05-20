@@ -1,4 +1,4 @@
-PUT http://localhost:3000/sample-put
+PUT http://localhost:3000/sample
 
 {
   "name": "Some name",
