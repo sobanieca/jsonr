@@ -175,7 +175,7 @@ const sendRequest = async (args) => {
       return acc;
     }, null)
   }
-  if (!request.body)
+  if (!request.body || !request.body.trim())
     delete options.body;
 
   let response = await fetch(request.url, options);
@@ -185,24 +185,11 @@ const sendRequest = async (args) => {
 
   let responseBody = await response.text();
 
-  if (args.s) {
-    if (args.s != response.status) {
-      logger.error(`Response status code (${response.status}) doesn't match expected value (${args.s})`);
-      Deno.exit(1);
-    }
-  }
-
-  if (args.t) {
-    if (!responseBody.includes(args.t)) {
-      logger.error(`Response body doesn't contain expected text (${args.t})`);
-      Deno.exit(1);
-    }
-  }
-
   try {
     responseBody = JSON.parse(responseBody);
-  } catch {
-    logger.warning("Non JSON response received!");
+  } catch(err) {
+    logger.debug("Exception thrown when parsing response body as JSON");
+    logger.debug(err);
   }
 
   if (args.v) {
@@ -218,10 +205,25 @@ const sendRequest = async (args) => {
       logger.info(`Response body written to file ${args.o}`);
     } else {
       responseBody = Deno.inspect(responseBody, { colors: true });
+      logger.info("Response body:");
       logger.info(responseBody);
     }
   } else {
     logger.debug("No response body returned from server");
+  }
+
+  if (args.s) {
+    if (args.s != response.status) {
+      logger.error(`Response status code (${response.status}) doesn't match expected value (${args.s})`);
+      Deno.exit(1);
+    }
+  }
+
+  if (args.t) {
+    if (!responseBody.includes(args.t)) {
+      logger.error(`Response body doesn't contain expected text (${args.t})`);
+      Deno.exit(1);
+    }
   }
 }
 

@@ -4,4 +4,4 @@
 ./run put.http
 ./run exception.http
 ./run auth.http
-
+./run auth-401.http -s 401

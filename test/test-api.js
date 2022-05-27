@@ -2,6 +2,11 @@ import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 const app = new Application();
 const router = new Router();
 
+app.addEventListener("error", (evt) => {
+  console.log("Unhandled ERROR:");
+  console.log(evt.error);
+});
+
 router.get("/sample", (context) => {
  context.response.body = { id: "sample-get" };
 });
@@ -23,7 +28,7 @@ router.get("/exception", (context) => {
 });
 
 router.get("/auth-required", (context) => {
-  if (context.request.headers().get("Authorization") == "123")
+  if (context.request.headers.get("Authorization") == "123")
     context.response.body = { id: "sample-post" }
   else
     context.response.status = 401;
