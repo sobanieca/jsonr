@@ -181,7 +181,6 @@ const sendRequest = async (args) => {
   let response = await fetch(request.url, options);
 
   let elapsed = new Date() - timestamp;
-  logger.info(`Status ${response.status} obtained in ${elapsed}ms`);
 
   let responseBody = await response.text();
 
@@ -211,6 +210,8 @@ const sendRequest = async (args) => {
   } else {
     logger.debug("No response body returned from server");
   }
+
+  logger.info(`Response status ${response.status} obtained in ${elapsed}ms`);
 
   if (args.s) {
     if (args.s != response.status) {
