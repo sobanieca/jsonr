@@ -18,7 +18,7 @@ import logger from "../logger.js";
 const parseHttpFile = async (filePath, variables) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
-    const fileContent = await Deno.readTextFile(filePath);
+    let fileContent = await Deno.readTextFile(filePath);
     for (const [key, value] of variables) {
       logger.debug(`Replacing @@${key}@@ with ${value} for content of ${filePath}`);
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
