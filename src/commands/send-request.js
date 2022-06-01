@@ -6,7 +6,7 @@ import logger from "../logger.js";
  * h header -h "auth: abc"
  * s expected response status code -s 200
  * t expected text in response -t "abc"
- * e environment name -e "./file.json"
+ * e environment file path -e "./file.json"
  * m http method -m POST
  * v verbose - more details like response headers
  * b body -b '{ test: "123" }'
@@ -60,7 +60,7 @@ const parseHttpFile = async (filePath, variables) => {
 const getVariables = async (args) => {
   let result = new Map();
   if (args.e) {
-    const environmentFilePath = localStorage[key];
+    const environmentFilePath = args.e;
     try {
       let environmentFileVariables = JSON.parse(await Deno.readTextFile(environmentFilePath));
       for(let variable of Object.keys(environmentFileVariables)) {
@@ -68,7 +68,7 @@ const getVariables = async (args) => {
       }
     } catch(err) {
       logger.debug(err);
-      logger.error(`There was a problem when reading variables for environment ${args.e} from file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`);
+      logger.error(`There was a problem when reading variables for environment file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`);
     }
   }   
 
@@ -159,8 +159,10 @@ const sendRequest = async (args) => {
   logger.info(`${request.method} ${request.url}...`);
   logger.debug("Request headers: ");
   request.headers.forEach(x => logger.debug(`${x.key}: ${x.value}`));
-  if(request.body)
-    logger.debug("Request body: ", request.body);
+  if (request.body) {
+    logger.debug("Request body:");
+    logger.debug(request.body);
+  }
 
   let timestamp = new Date();
   const options = {
@@ -175,8 +177,10 @@ const sendRequest = async (args) => {
       return acc;
     }, null)
   }
-  if (!request.body || !request.body.trim())
+  if (!request.body || !request.body.trim()) {
+    logger.debug("No request body provided, removing it from request object.");
     delete options.body;
+  }
 
   let response = await fetch(request.url, options);
 
@@ -184,11 +188,13 @@ const sendRequest = async (args) => {
 
   let responseBody = await response.text();
 
-  try {
-    responseBody = JSON.parse(responseBody);
-  } catch(err) {
-    logger.debug("Exception thrown when parsing response body as JSON");
-    logger.debug(err);
+  if(responseBody.trim()) {
+    try {
+      responseBody = JSON.parse(responseBody);
+    } catch(err) {
+      logger.debug("Exception thrown when parsing response body as JSON");
+      logger.debug(err);
+    }
   }
 
   if (args.v) {
@@ -208,7 +214,7 @@ const sendRequest = async (args) => {
       logger.info(responseBody);
     }
   } else {
-    logger.debug("No response body returned from server");
+    logger.info("No response body returned from server");
   }
 
   logger.info(`Response status ${response.status} obtained in ${elapsed}ms`);

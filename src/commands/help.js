@@ -27,7 +27,7 @@ path to .http file name or url
 
 -i provide value for [i]nput variables
 
-  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. This will allow to either provide it's value via -i flag, or via environments option (read further)
+  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. This will allow to either provide it's value via -i flag, or via environment file option (read further)
 
   EXAMPLE of sample.http file content with variables:
 
@@ -68,9 +68,9 @@ path to .http file name or url
 
   This parameter works in a very similar way as the -s param. With one remark - it checks response body and searches if it's response contains specified text. It's a simple text search, no regular expressions available. If text is not contained - jsonr will report error. It may be useful for smoke tests scripts.
 
--e [e]nvironment name from (jsonr environments list) (no .json extension required)
+-e [e]nvironment file path
 
-  Environment is the set of variables or additional configuration that allows you to reuse existing .http files. For instance you can have following sample.http file:
+  Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files. For instance you can have following sample.http file:
 
   POST https://@@apiUrl@@/value
 
@@ -81,38 +81,12 @@ path to .http file name or url
   Now, you can create environment file test.json:
 
   {
-    "input": {
-      "apiUrl": "my-api-on-test-environment.com"
-    }
+    "apiUrl": "my-api-on-test-environment.com"
   }
 
-  You can register such environment with following command:
+  And use it later as:
 
-  jsonr environments create test ./test.json
-
-  This will create a new environment so you can use it later as:
-
-  jsonr -e test ./sample.http
-
-  NOTE: You don't need to append .json file extension, it will be added automatically.
-
-  All commands related to environemnts:
-
-  jsonr environments list - list all registered environments
-  jsonr environments delete {name} - remove environment with name from registry
-  jsonr environments create {name} {path-to-file} - create/register new environment so it can be used later
-
-  You can provide following data within environment json file:
-
-  {
-    "input": {
-      "variable1": "value1",
-      "variable2": 25
-    },
-    "headers": {
-      "Authorization": "ApiKey 123"
-    }
-  } 
+  jsonr -e ./test.json ./sample.http
 
 -m HTTP [m]ethod
 
@@ -125,7 +99,7 @@ path to .http file name or url
 
 -v [v]erbose mode
 
-  Provide more details in output (like response headers)
+  Provide more details in output (response headers)
 
 --debug Debug mode 
 

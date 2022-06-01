@@ -19,8 +19,9 @@ router.delete("/sample", (context) => {
   context.response.status = 204;
 });
 
-router.put("/sample", (context) => {
-  context.response.body = { id: "sample-put", ...context.request.body };
+router.put("/sample", async (context) => {
+  var body = await context.request.body().value;
+  context.response.body = { id: "sample-put", ...body };
 });
 
 router.get("/exception", (context) => {
