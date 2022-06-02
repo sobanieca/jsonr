@@ -8,7 +8,7 @@ app.addEventListener("error", (evt) => {
 });
 
 router.get("/sample", (context) => {
- context.response.body = { id: "sample-get" };
+  context.response.body = { id: "sample-get" };
 });
 
 router.post("/sample", (context) => {
@@ -20,19 +20,20 @@ router.delete("/sample", (context) => {
 });
 
 router.put("/sample", async (context) => {
-  var body = await context.request.body().value;
+  const body = await context.request.body().value;
   context.response.body = { id: "sample-put", ...body };
 });
 
-router.get("/exception", (context) => {
+router.get("/exception", () => {
   throw new Error("Sample exception");
 });
 
 router.get("/auth-required", (context) => {
-  if (context.request.headers.get("Authorization") == "123")
-    context.response.body = { id: "sample-post" }
-  else
+  if (context.request.headers.get("Authorization") == "123") {
+    context.response.body = { id: "sample-post" };
+  } else {
     context.response.status = 401;
+  }
 });
 
 app.use(router.routes());
@@ -40,4 +41,3 @@ app.use(router.routes());
 const port = 3000;
 console.log(`Listening on port ${port}...`);
 await app.listen({ port });
-

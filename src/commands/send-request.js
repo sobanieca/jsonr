@@ -20,16 +20,18 @@ const parseHttpFile = async (filePath, variables) => {
   try {
     let fileContent = await Deno.readTextFile(filePath);
     for (const [key, value] of variables) {
-      logger.debug(`Replacing @@${key}@@ with ${value} for content of ${filePath}`);
+      logger.debug(
+        `Replacing @@${key}@@ with ${value} for content of ${filePath}`,
+      );
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }
-    const [ mainPart, bodyPart ] = fileContent.split(/\r?\n\r?\n/);
+    const [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
 
-    let request = {};
-   
-    const [ mainLine, ...headers ] = mainPart.split(/\r?\n/);
+    const request = {};
 
-    const [ method, url] = mainLine.split(" ").map(x => x.trim());
+    const [mainLine, ...headers] = mainPart.split(/\r?\n/);
+
+    const [method, url] = mainLine.split(" ").map((x) => x.trim());
 
     logger.debug(`Read following method: ${method} and url: ${url}`);
     request.method = method;
@@ -37,49 +39,57 @@ const parseHttpFile = async (filePath, variables) => {
     request.headers = [];
 
     if (headers && headers.length > 0) {
-      for (let header of headers) {
+      for (const header of headers) {
         if (header) {
-          const [headerKey, headerValue] = header.split(":").map(x => x.trim());
+          const [headerKey, headerValue] = header.split(":").map((x) =>
+            x.trim()
+          );
           request.headers.push({ key: headerKey, value: headerValue });
         }
       }
     }
-    
+
     if (bodyPart) {
       logger.debug(`Read following request body: ${bodyPart}`);
       request.body = bodyPart;
     }
 
     return request;
-  } catch(err) {
+  } catch (err) {
     logger.debug(`Error when parsing file: ${err}`);
-    throw new Error("Unexpected error occurred when trying to parse http file. Ensure that the file is compatible with RFC2616 standard");
+    throw new Error(
+      "Unexpected error occurred when trying to parse http file. Ensure that the file is compatible with RFC2616 standard",
+    );
   }
-}
+};
 
 const getVariables = async (args) => {
-  let result = new Map();
+  const result = new Map();
   if (args.e) {
     const environmentFilePath = args.e;
     try {
-      let environmentFileVariables = JSON.parse(await Deno.readTextFile(environmentFilePath));
-      for(let variable of Object.keys(environmentFileVariables)) {
+      const environmentFileVariables = JSON.parse(
+        await Deno.readTextFile(environmentFilePath),
+      );
+      for (const variable of Object.keys(environmentFileVariables)) {
         result.set(variable, environmentFileVariables[variable]);
       }
-    } catch(err) {
+    } catch (err) {
       logger.debug(err);
-      logger.error(`There was a problem when reading variables for environment file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`);
+      logger.error(
+        `There was a problem when reading variables for environment file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`,
+      );
     }
-  }   
-
-  const setInputVariable = (variable) => {
-    const [ key, value ] = variable.split(":").map(x => x.trim());
-    result.set(key, value);
   }
 
+  const setInputVariable = (variable) => {
+    const [key, value] = variable.split(":").map((x) => x.trim());
+    result.set(key, value);
+  };
+
   if (args.i) {
-    if(Array.isArray(args.i)) {
-      for(let inputVariable of args.i) {
+    if (Array.isArray(args.i)) {
+      for (const inputVariable of args.i) {
         setInputVariable(inputVariable);
       }
     } else {
@@ -88,45 +98,55 @@ const getVariables = async (args) => {
   }
 
   return result;
-}
+};
 
 const sendRequest = async (args) => {
-  let request = {
+  const request = {
     method: "GET",
     headers: [{ key: "Content-Type", value: "application/json" }],
     body: "",
-    url: ""
+    url: "",
   };
- 
+
   if (args["omit-default-content-type-header"]) {
-    logger.debug("Parameter--omit-default-content-type-header provided - removing default Content-Type header");
+    logger.debug(
+      "Parameter--omit-default-content-type-header provided - removing default Content-Type header",
+    );
     request.headers = [];
   }
 
   if (args["_"].length != 1) {
-    throw new Error("Invalid parameters provided. Provide exactly one url or .http file path.");
+    throw new Error(
+      "Invalid parameters provided. Provide exactly one url or .http file path.",
+    );
   }
 
   const urlOrFilePath = args["_"][0];
-  if (urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")) {
-    logger.debug("http(s):// at the beginning of the file/url parameter detected. Assuming url.");
+  if (
+    urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")
+  ) {
+    logger.debug(
+      "http(s):// at the beginning of the file/url parameter detected. Assuming url.",
+    );
     request.url = urlOrFilePath;
   } else {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
       const variables = await getVariables(args);
-      let fileRequest = await parseHttpFile(urlOrFilePath, variables);
+      const fileRequest = await parseHttpFile(urlOrFilePath, variables);
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
-      if (fileRequest.headers.some(x => x.key == "Content-Type")) {
-        request.headers = fileRequest.headers;  
+      if (fileRequest.headers.some((x) => x.key == "Content-Type")) {
+        request.headers = fileRequest.headers;
       } else {
         request.headers = [...request.headers, ...fileRequest.headers];
       }
-    } catch(err) {
-      logger.debug(`Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`);
+    } catch (err) {
+      logger.debug(
+        `Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`,
+      );
       request.url = urlOrFilePath;
     }
   }
@@ -142,13 +162,13 @@ const sendRequest = async (args) => {
   }
 
   if (args.h) {
-    let appendHeader = (headerArg) => {
+    const appendHeader = (headerArg) => {
       logger.debug(`Adding ${headerArg} header to request`);
-      let [ headerKey, headerValue ] = headerArg.split(":")?.map(x => x.trim());
+      const [headerKey, headerValue] = headerArg.split(":")?.map((x) => x.trim());
       request.headers.push({ key: headerKey, value: headerValue });
     };
-    if(Array.isArray(args.h)) {
-      for(let h of args.h) {
+    if (Array.isArray(args.h)) {
+      for (const h of args.h) {
         appendHeader(h);
       }
     } else {
@@ -158,41 +178,44 @@ const sendRequest = async (args) => {
 
   logger.info(`${request.method} ${request.url}...`);
   logger.debug("Request headers: ");
-  request.headers.forEach(x => logger.debug(`${x.key}: ${x.value}`));
+  request.headers.forEach((x) => logger.debug(`${x.key}: ${x.value}`));
   if (request.body) {
     logger.debug("Request body:");
     logger.debug(request.body);
   }
 
-  let timestamp = new Date();
+  const timestamp = new Date();
   const options = {
     method: request.method,
     body: request.body,
     redirect: "manual",
-    headers: request.headers.reduce((acc, x) => { 
-      if(!acc) {
+    headers: request.headers.reduce((acc, x) => {
+      if (!acc) {
         acc = new Headers();
       }
       acc.append(x.key, x.value);
       return acc;
-    }, null)
-  }
+    }, null),
+  };
   if (!request.body || !request.body.trim()) {
     logger.debug("No request body provided, removing it from request object.");
     delete options.body;
   }
 
-  request.url = request.url.startsWith("http://") || request.url.startsWith("https://") ? request.url : `http://${request.url}`;
-  let response = await fetch(request.url, options);
+  request.url =
+    request.url.startsWith("http://") || request.url.startsWith("https://")
+      ? request.url
+      : `http://${request.url}`;
+  const response = await fetch(request.url, options);
 
-  let elapsed = new Date() - timestamp;
+  const elapsed = new Date() - timestamp;
 
   let responseBody = await response.text();
 
-  if(responseBody.trim()) {
+  if (responseBody.trim()) {
     try {
       responseBody = JSON.parse(responseBody);
-    } catch(err) {
+    } catch (err) {
       logger.debug("Exception thrown when parsing response body as JSON");
       logger.debug(err);
     }
@@ -200,7 +223,7 @@ const sendRequest = async (args) => {
 
   if (args.v) {
     logger.info("Response headers:");
-    for(let header of response.headers.entries()) {
+    for (const header of response.headers.entries()) {
       logger.info(`${header[0]}: ${header[1]}`);
     }
   }
@@ -222,20 +245,22 @@ const sendRequest = async (args) => {
 
   if (args.s) {
     if (args.s != response.status) {
-      logger.error(`Response status code (${response.status}) doesn't match expected value (${args.s})`);
+      logger.error(
+        `ERROR: Response status code (${response.status}) doesn't match expected value (${args.s})`,
+      );
       Deno.exit(1);
     }
   }
 
   if (args.t) {
     if (!responseBody.includes(args.t)) {
-      logger.error(`Response body doesn't contain expected text (${args.t})`);
+      logger.error(`ERROR: Response body doesn't contain expected text (${args.t})`);
       Deno.exit(1);
     }
   }
-}
+};
 
 export default {
   execute: async (args) => await sendRequest(args),
-  match: (args) => true,
+  match: () => true,
 };

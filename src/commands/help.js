@@ -127,6 +127,6 @@ path to .http file name or url
 `;
 
 export default {
-  execute: (args) => console.log(help),
+  execute: () => console.log(help),
   match: (args) => args.help ? true : false,
 };
