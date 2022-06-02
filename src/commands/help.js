@@ -99,7 +99,7 @@ path to .http file name or url
 
 -v [v]erbose mode
 
-  Provide more details in output (response headers)
+  Provide more details in output (output response headers)
 
 --debug Debug mode 
 
@@ -112,19 +112,18 @@ path to .http file name or url
 
 --omit-default-content-type-header 
 
-  By default jsonr will append Content-Type "application/json" header to all requests (if such header won't be present in definition) so you don't need to repeat it. Use this option to disable this behavior.
+  By default jsonr will append Content-Type "application/json" header to all requests so you don't need to repeat it. Use this option to disable this behavior.
 
 --help Display this help text
 
 --version Display version info
 
--o [o]utput file for response json, if this parameter is not provided default outputs is stdout. 
+-o [o]utput file for response json, if this parameter is not provided default output is stdout. 
 
-  WARNING: If file exists it will overwrite it. If no extension provided, it will automatically append .json
+  WARNING: If file exists it will overwrite it.
 
-  EXAMPLE: jsonr ... -o my-response => saves to ./my-response.json, overwrites file if it already exists!
-
-
+  EXAMPLE: jsonr ... -o my-response 
+  Saves to ./my-response.json, overwrites file if it already exists!
 `;
 
 export default {
