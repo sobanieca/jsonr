@@ -13,15 +13,15 @@ Deno runtime environment `https://deno.land`
 
 ## Installation
 
-`deno install jsonr`
+`deno install --allow-net --allow-read -n jsonr https://deno.land/x/jsonr/src/main.js`
 
 ## Usage
 
 Sample usage:
 
-`jsonr -h "Authorization: Bearer MyToken} my-request.http`
+`jsonr -h "Authorization: Bearer MyToken" my-request.http`
 
-my-request.http file content:
+`my-request.http` file content:
 
 ```
 POST http://my-api.com/endpoint

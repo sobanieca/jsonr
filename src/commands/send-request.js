@@ -182,6 +182,7 @@ const sendRequest = async (args) => {
     delete options.body;
   }
 
+  request.url = request.url.startsWith("http://") || request.url.startsWith("https://") ? request.url : `http://${request.url}`;
   let response = await fetch(request.url, options);
 
   let elapsed = new Date() - timestamp;

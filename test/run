@@ -1,4 +1,4 @@
 #!/bin/bash
 
-deno run --allow-all ../src/main.js --debug "$@"
+deno run --allow-all ../src/main.js "$@"
 
