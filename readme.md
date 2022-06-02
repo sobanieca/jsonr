@@ -13,12 +13,10 @@ Deno runtime environment `https://deno.land`
 
 ## Installation
 
-`deno install --allow-net --allow-read -n jsonr https://deno.land/x/jsonr/src/main.js`
+`deno install -f -r --allow-net --allow-read --allow-write -n jsonr https://deno.land/x/jsonr/src/main.js`
 
-If you plan to write output of response to files (`-o` parameter, check
-`jsonr --help` for details):
-
-`deno install --allow-net --allow-read --allow-write -n jsonr https://deno.land/x/jsonr/src/main.js`
+`--allow-write` permission is needed only if you are planning to use `-o`
+parameter (write response body to file, check `jsonr --help` for details)
 
 If your requests are failing due to certificate validation errors (and you trust
 target server):

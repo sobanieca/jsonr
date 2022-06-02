@@ -164,7 +164,9 @@ const sendRequest = async (args) => {
   if (args.h) {
     const appendHeader = (headerArg) => {
       logger.debug(`Adding ${headerArg} header to request`);
-      const [headerKey, headerValue] = headerArg.split(":")?.map((x) => x.trim());
+      const [headerKey, headerValue] = headerArg.split(":")?.map((x) =>
+        x.trim()
+      );
       request.headers.push({ key: headerKey, value: headerValue });
     };
     if (Array.isArray(args.h)) {
@@ -254,7 +256,9 @@ const sendRequest = async (args) => {
 
   if (args.t) {
     if (!responseBody.includes(args.t)) {
-      logger.error(`ERROR: Response body doesn't contain expected text (${args.t})`);
+      logger.error(
+        `ERROR: Response body doesn't contain expected text (${args.t})`,
+      );
       Deno.exit(1);
     }
   }
