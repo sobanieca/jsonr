@@ -5,25 +5,6 @@ Simple CLI tool for sending HTTP JSON requests.
 With jsonr you can create collection of requests (for instance inside GIT
 repository) and easily use them. This tool is supposed to be very simple to use
 and already provide you with all utilities need to play with JSON HTTP API's.
-Run `jsonr --help` for details.
-
-## Prerequisites
-
-Deno runtime environment `https://deno.land`
-
-## Installation
-
-`deno install -f -r --allow-net --allow-read --allow-write -n jsonr https://deno.land/x/jsonr/src/main.js`
-
-`--allow-write` permission is needed only if you are planning to use `-o`
-parameter (write response body to file, check `jsonr --help` for details)
-
-If your requests are failing due to certificate validation errors (and you trust
-target server):
-
-`deno install --unsafely-ignore-certificate-errors ...`
-
-## Usage
 
 Sample usage:
 
@@ -40,6 +21,22 @@ POST http://my-api.com/endpoint
 ```
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
+
+## Prerequisites
+
+Deno runtime environment `https://deno.land`
+
+## Installation
+
+`deno install -f -r --allow-net --allow-read --allow-write -n jsonr https://deno.land/x/jsonr/src/main.js`
+
+`--allow-write` permission is needed only if you are planning to use `-o`
+parameter (write response body to file, check `jsonr --help` for details)
+
+If your requests are failing due to certificate validation errors (and you trust
+target server):
+
+`deno install --unsafely-ignore-certificate-errors ...`
 
 ## Contribution
 
