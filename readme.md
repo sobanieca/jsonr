@@ -13,7 +13,7 @@ Deno runtime environment `https://deno.land`
 
 ## Installation
 
-`deno install -f -r --allow-net --allow-read --allow-write -n jsonr https://deno.land/x/jsonr/src/main.js`
+`deno install -f -r --allow-net --allow-read --allow-write https://deno.land/x/jsonr/main.js`
 
 `--allow-write` permission is needed only if you are planning to use `-o`
 parameter (write response body to file, check `jsonr --help` for details)
