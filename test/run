@@ -1,4 +1,4 @@
 #!/bin/bash
 
-deno run --allow-all ../main.js "$@"
+deno run --unsafely-ignore-certificate-errors --allow-all ../main.js "$@"
 

@@ -25,7 +25,7 @@ const parseHttpFile = async (filePath, variables) => {
       );
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }
-    const [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
+    let [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
 
     const request = {};
 
