@@ -51,6 +51,7 @@ const parseHttpFile = async (filePath, variables) => {
 
     if (bodyPart) {
       logger.debug(`Read following request body: ${bodyPart}`);
+      bodyPart = bodyPart.replace(/\r?\n$/g, "");
       request.body = bodyPart;
     }
 
@@ -213,10 +214,12 @@ const sendRequest = async (args) => {
   const elapsed = new Date() - timestamp;
 
   let responseBody = await response.text();
+  let isResponseJson = false;
 
   if (responseBody.trim()) {
     try {
       responseBody = JSON.parse(responseBody);
+      isResponseJson = true;
     } catch (err) {
       logger.debug("Exception thrown when parsing response body as JSON");
       logger.debug(err);
@@ -232,10 +235,20 @@ const sendRequest = async (args) => {
 
   if (responseBody) {
     if (args.o) {
-      await Deno.writeTextFile(args.o, responseBody);
+      await Deno.writeTextFile(
+        args.o,
+        isResponseJson ? JSON.stringify(responseBody) : responseBody,
+      );
       logger.info(`Response body written to file ${args.o}`);
     } else {
-      responseBody = Deno.inspect(responseBody, { colors: true });
+      responseBody = Deno.inspect(
+        responseBody,
+        {
+          colors: true,
+          strAbbreviateSize: 256000,
+          iterableLimit: 20000,
+        },
+      );
       logger.info("Response body:");
       logger.info(responseBody);
     }
