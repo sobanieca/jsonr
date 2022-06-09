@@ -214,12 +214,10 @@ const sendRequest = async (args) => {
   const elapsed = new Date() - timestamp;
 
   let responseBody = await response.text();
-  let isResponseJson = false;
 
   if (responseBody.trim()) {
     try {
       responseBody = JSON.parse(responseBody);
-      isResponseJson = true;
     } catch (err) {
       logger.debug("Exception thrown when parsing response body as JSON");
       logger.debug(err);
@@ -235,10 +233,7 @@ const sendRequest = async (args) => {
 
   if (responseBody) {
     if (args.o) {
-      await Deno.writeTextFile(
-        args.o,
-        isResponseJson ? JSON.stringify(responseBody) : responseBody,
-      );
+      await Deno.writeTextFile(args.o, JSON.stringify(responseBody));
       logger.info(`Response body written to file ${args.o}`);
     } else {
       responseBody = Deno.inspect(
