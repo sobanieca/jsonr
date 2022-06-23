@@ -251,7 +251,7 @@ const sendRequest = async (args) => {
     logger.info("No response body returned from server");
   }
 
-  logger.info(`Response status ${response.status} obtained in ${elapsed}ms`);
+  logger.info(`Response status ${response.status} - ${response.statusText} obtained in ${elapsed}ms`);
 
   if (args.s) {
     if (args.s != response.status) {
