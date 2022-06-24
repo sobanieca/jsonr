@@ -180,11 +180,16 @@ const sendRequest = async (args) => {
   }
 
   logger.info(`${request.method} ${request.url}...`);
-  logger.debug("Request headers: ");
-  request.headers.forEach((x) => logger.debug(`${x.key}: ${x.value}`));
+  let requestLog = (msg) => logger.debug(msg);
+
+  if (args.v)
+    requestLog = (msg) => logger.info(msg);
+
+  requestLog("Request headers:");
+  request.headers.forEach((x) => requestLog(`${x.key}: ${x.value}`));
   if (request.body) {
-    logger.debug("Request body:");
-    logger.debug(request.body);
+    requestLog("Request body:");
+    requestLog(request.body);
   }
 
   const timestamp = new Date();
@@ -242,6 +247,7 @@ const sendRequest = async (args) => {
           colors: true,
           strAbbreviateSize: 256000,
           iterableLimit: 20000,
+          depth: 100
         },
       );
       logger.info("Response body:");
@@ -251,7 +257,7 @@ const sendRequest = async (args) => {
     logger.info("No response body returned from server");
   }
 
-  logger.info(`Response status ${response.status} - ${response.statusText} obtained in ${elapsed}ms`);
+  logger.info(`Response ${response.status} - ${response.statusText} obtained in ${elapsed}ms`);
 
   if (args.s) {
     if (args.s != response.status) {
