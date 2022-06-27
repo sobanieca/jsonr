@@ -12,10 +12,11 @@ import logger from "../logger.js";
  * b body -b '{ test: "123" }'
  * --omit-default-content-type-header
  * o output file -o output.json
+ * r request raw mode
  * input http file / url
  */
 
-const parseHttpFile = async (filePath, variables) => {
+const parseHttpFile = async (filePath, variables, rawMode) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
     let fileContent = await Deno.readTextFile(filePath);
@@ -51,7 +52,9 @@ const parseHttpFile = async (filePath, variables) => {
 
     if (bodyPart) {
       logger.debug(`Read following request body: ${bodyPart}`);
-      bodyPart = bodyPart.replace(/\r?\n$/g, "");
+      if (!rawMode) {
+        bodyPart = bodyPart.replace(/\r?\n|\t/g, "");
+      }
       request.body = bodyPart;
     }
 
@@ -135,7 +138,7 @@ const sendRequest = async (args) => {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
       const variables = await getVariables(args);
-      const fileRequest = await parseHttpFile(urlOrFilePath, variables);
+      const fileRequest = await parseHttpFile(urlOrFilePath, variables, args.r);
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
@@ -180,11 +183,16 @@ const sendRequest = async (args) => {
   }
 
   logger.info(`${request.method} ${request.url}...`);
-  logger.debug("Request headers: ");
-  request.headers.forEach((x) => logger.debug(`${x.key}: ${x.value}`));
+  let requestLog = (msg) => logger.debug(msg);
+
+  if (args.v)
+    requestLog = (msg) => logger.info(msg);
+
+  requestLog("Request:");
+  request.headers.forEach((x) => requestLog(`${x.key}: ${x.value}`));
+  requestLog("");
   if (request.body) {
-    logger.debug("Request body:");
-    logger.debug(request.body);
+    requestLog(request.body);
   }
 
   const timestamp = new Date();
@@ -224,8 +232,9 @@ const sendRequest = async (args) => {
     }
   }
 
+  logger.info("Response:");
+  logger.info("");
   if (args.v) {
-    logger.info("Response headers:");
     for (const header of response.headers.entries()) {
       logger.info(`${header[0]}: ${header[1]}`);
     }
@@ -242,16 +251,16 @@ const sendRequest = async (args) => {
           colors: true,
           strAbbreviateSize: 256000,
           iterableLimit: 20000,
+          depth: 100
         },
       );
-      logger.info("Response body:");
       logger.info(responseBody);
     }
   } else {
     logger.info("No response body returned from server");
   }
 
-  logger.info(`Response status ${response.status} obtained in ${elapsed}ms`);
+  logger.info(`${response.status} - ${response.statusText} obtained in ${elapsed}ms`);
 
   if (args.s) {
     if (args.s != response.status) {

@@ -7,7 +7,7 @@ Parameters:
 
 path to .http file name or url
 
-  You can use .http files (utf-8 encoded, RFC 2616 standard content) to specify your requests or don't use additional files at all and provide url that should get called. This parameter is always the last one.
+  You can use .http files (utf-8 encoded, RFC 2616 standard content) to specify your requests or don't use additional files at all and provide url that should get called.
 
   EXAMPLE
 
@@ -23,11 +23,14 @@ path to .http file name or url
     "username" : "sample.email@sample.com"
   }
 
-  As you can see first line is about http method + url. Below there are http headers listed and at the bottom request body. If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request. If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
+  As you can see first line is about http method + url. Below there are http headers listed and at the bottom request body. 
+  If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request. 
+  If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
 
 -i provide value for [i]nput variables
 
-  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. This will allow to either provide it's value via -i flag, or via environment file option (read further)
+  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. 
+  This will allow to either provide it's value via -i flag, or via environment file option (read further)
 
   EXAMPLE of sample.http file content with variables:
 
@@ -66,11 +69,13 @@ path to .http file name or url
 
 -t expected [t]ext that should be contained within response body
 
-  This parameter works in a very similar way as the -s param. With one remark - it checks response body and searches if it's response contains specified text. It's a simple text search, no regular expressions available. If text is not contained - jsonr will report error. It may be useful for smoke tests scripts.
+  This parameter works in a very similar way as the -s param. With one remark - it checks response body and searches if it's response contains specified text.
+  It's a simple text search, no regular expressions available. If text is not contained - jsonr will report error. It may be useful for smoke tests scripts.
 
 -e [e]nvironment file path
 
-  Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files. For instance you can have following sample.http file:
+  Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files.
+  For instance you can have following sample.http file:
 
   POST https://@@apiUrl@@/value
 
@@ -99,7 +104,12 @@ path to .http file name or url
 
 -v [v]erbose mode
 
-  Provide more details in output (output response headers)
+  Provide more details in output (output request and response headers). It may be useful for reporting issues with endpoints
+
+-r request [r]aw mode
+
+  By default jsonr replaces all new line and tab characters (whitespace characters) in http file so you can use new lines for human-friendly request body formatting. 
+  If you use this flag you will disable this behaviour.
 
 --debug Debug mode 
 
