@@ -44,8 +44,8 @@ Type `jsonr --help` for more details on usage once you have a tool installed.
 
 ## Contribution
 
-If you want to implement/request new features, please keep in mind that this
-tool is supposed to be super simple to use and cover ~80% of use cases for
-playing around with JSON HTTP API's. Instructions (--help) for this tool should
-be possible to read in less than 5 minutes. If more features will be added this
-may be hard to achieve.
+If you want to implement/request new features you are more than welcome to contribute.
+Please keep in mind that this tool is supposed to be super simple to use and cover 
+~80% of use cases for playing around with JSON HTTP API's. Instructions (--help) for 
+this tool should be possible to read in less than 5 minutes. If more features will 
+be added this may be hard to achieve.
