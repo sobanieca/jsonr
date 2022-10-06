@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Fixed console colors so they are compatible with dark background in console. Default ConsoleLogger colors are way too dark.
+
 # 1.1.0
 
 * Response status text added to logs
