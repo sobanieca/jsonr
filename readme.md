@@ -42,6 +42,14 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
+## Hints
+
+If you want to disable colors (at least for main log messages), you can use:
+
+```
+NO_COLOR=1 jsonr ...
+```
+
 ## Contribution
 
 If you want to implement/request new features you are more than welcome to contribute.
