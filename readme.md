@@ -4,7 +4,7 @@ Simple CLI tool for sending HTTP JSON requests.
 
 With jsonr you can create collection of requests (for instance inside GIT
 repository) and easily use them. This tool is supposed to be very simple to use
-and already provide you with all utilities need to play with JSON HTTP API's.
+and already provide you with all utilities needed to play with JSON HTTP API's.
 
 ![image](https://user-images.githubusercontent.com/2606245/197878238-4d421afa-5188-42a2-bd93-2454a4aeb649.png)
 
