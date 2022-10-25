@@ -1,3 +1,7 @@
+# 1.2.1
+
+* Updated readme. Version bump only to update Deno documentation
+
 # 1.2.0
 
 * Fixed console colors so they are compatible with dark background in console. Default ConsoleLogger colors are way too dark.
