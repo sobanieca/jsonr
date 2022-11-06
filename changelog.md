@@ -1,3 +1,7 @@
+# 1.2.2
+
+* Updated readme. Version bump only to update Deno module page
+
 # 1.2.1
 
 * Updated readme. Version bump only to update Deno documentation
