@@ -1,4 +1,4 @@
-import { parse } from "./deps.js";
+import { parse } from "flags/mod.ts";
 
 const args = parse(Deno.args, {
   boolean: ["help", "debug", "omit-default-content-type-header", "v", "r"],

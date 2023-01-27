@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "run": "deno run --allow-all test-api.js"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js"
+  },
+  "imports": {
+    "log/": "https://deno.land/std@0.174.0/log/",
+    "fmt/": "https://deno.land/std@0.174.0/fmt/",
+    "flags/": "https://deno.land/std@0.174.0/flags/"
+  }
+}

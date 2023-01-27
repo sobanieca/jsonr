@@ -1,3 +1,8 @@
+# 1.3.0
+
+* Migration to latest Deno std library
+* Deno import maps used (this means Deno needs to be in version >= 1.30)
+
 # 1.2.3
 
 * Updated readme. Version bump only to update Deno module page (screenshot in readme updated)

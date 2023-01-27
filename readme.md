@@ -12,7 +12,7 @@ Run `jsonr --help` for details.
 
 ## Prerequisites
 
-Deno runtime environment `https://deno.land`
+Deno runtime environment `https://deno.land` in version at least `1.30.0`
 
 ## Installation
 

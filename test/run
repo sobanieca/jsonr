@@ -1,4 +1,0 @@
-#!/bin/bash
-
-deno run --unsafely-ignore-certificate-errors --allow-all ../main.js "$@"
-

@@ -1,4 +1,7 @@
-import { log, LogLevels, BaseHandler, brightBlue, brightRed, brightYellow, bold } from "./deps.js";
+import * as log from "log/mod.ts";
+import { LogLevels} from "log/mod.ts";
+import { BaseHandler } from "log/handlers.ts?s=BaseHandler";
+import { bold, brightRed, brightBlue, brightYellow } from "fmt/colors.ts";
 
 class BrightConsoleHandler extends BaseHandler {
   format(logRecord) {
@@ -30,10 +33,7 @@ class BrightConsoleHandler extends BaseHandler {
   }
 }
 
-
 const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "INFO";
-
-
 
 await log.setup({
   handlers: {
