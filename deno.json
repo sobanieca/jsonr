@@ -1,7 +1,7 @@
 {
   "tasks": {
     "run": "deno run --unsafely-ignore-certificate-errors --allow-all src/main.js",
-    "build": "deno bundle src/main.js dist.js"
+    "build": "deno bundle src/main.js jsonr.js"
   },
   "imports": {
     "log/": "https://deno.land/std@0.174.0/log/",

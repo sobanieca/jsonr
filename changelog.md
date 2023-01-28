@@ -1,3 +1,7 @@
+# 1.3.4
+
+* `deno install` tool name fix
+
 # 1.3.3
 
 * Another fix for `deno install` - fix name of the tool

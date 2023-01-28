@@ -1051,7 +1051,7 @@ const __default = {
     execute: ()=>console.log(help),
     match: (args)=>args.help ? true : false
 };
-const version = "1.3.3";
+const version = "1.3.4";
 const __default1 = {
     execute: ()=>console.log(version),
     match: (args)=>args.version ? true : false
