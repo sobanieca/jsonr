@@ -1,3 +1,7 @@
+# 1.3.1
+
+* Fix for `deno install` - bundling whole app into single js file to handle import maps properly
+
 # 1.3.0
 
 * Migration to latest Deno std library
