@@ -1,4 +1,4 @@
-const version = "1.3.4";
+const version = "1.3.5";
 
 export default {
   execute: () => console.log(version),
