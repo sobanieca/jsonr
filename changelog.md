@@ -1,3 +1,7 @@
+# 1.3.7
+
+* Removed import maps to simplify release process, restored `deps.js` file
+
 # 1.3.6
 
 * Readme update about prerequisites
