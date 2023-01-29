@@ -1,3 +1,7 @@
+# 1.3.6
+
+* Readme update about prerequisites
+
 # 1.3.5
 
 * Readme update about `deno install`
