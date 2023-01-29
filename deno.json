@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "run": "deno run --unsafely-ignore-certificate-errors --allow-all src/main.js"
+    "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js"
   }
 }

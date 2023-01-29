@@ -1,3 +1,7 @@
+# 1.3.8
+
+* Readme updated, `main.js` file moved again to root folder
+
 # 1.3.7
 
 * Removed import maps to simplify release process, restored `deps.js` file
