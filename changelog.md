@@ -1,3 +1,8 @@
+# 1.3.9
+
+* Fixed bug when http header contained `:` in value
+* Updated documentation
+
 # 1.3.8
 
 * Readme updated, `main.js` file moved again to root folder

@@ -16,6 +16,12 @@ import logger from "../logger.js";
  * input http file / url
  */
 
+const getHeaderValues = (header) => {
+  const [headerKey, ...headersValues] = header.split(":");
+  const headerValue = headersValues?.join(":");
+  return { key: headerKey?.trim(), value: headerValue?.trim() };
+}
+
 const parseHttpFile = async (filePath, variables, rawMode) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
@@ -42,10 +48,8 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
     if (headers && headers.length > 0) {
       for (const header of headers) {
         if (header) {
-          const [headerKey, headerValue] = header.split(":").map((x) =>
-            x.trim()
-          );
-          request.headers.push({ key: headerKey, value: headerValue });
+          const headerValues = getHeaderValues(header);
+          request.headers.push(headerValues);
         }
       }
     }
@@ -168,10 +172,8 @@ const sendRequest = async (args) => {
   if (args.h) {
     const appendHeader = (headerArg) => {
       logger.debug(`Adding ${headerArg} header to request`);
-      const [headerKey, headerValue] = headerArg.split(":")?.map((x) =>
-        x.trim()
-      );
-      request.headers.push({ key: headerKey, value: headerValue });
+      const headerValues = getHeaderValues(headerArg);
+      request.headers.push(headerValues);
     };
     if (Array.isArray(args.h)) {
       for (const h of args.h) {

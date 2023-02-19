@@ -122,11 +122,15 @@ path to .http file name or url
 
 --omit-default-content-type-header 
 
-  By default jsonr will append Content-Type "application/json" header to all requests so you don't need to repeat it. Use this option to disable this behavior.
+  By default jsonr will append "Content-Type: application/json" header to all requests so you don't need to repeat it. Use this option to disable this behavior.
 
---help Display this help text
+--help 
 
---version Display version info
+  Display this help text
+
+--version 
+
+  Display version info
 
 -o [o]utput file for response json, if this parameter is not provided default output is stdout. 
 
