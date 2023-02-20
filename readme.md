@@ -25,9 +25,15 @@ Deno runtime environment `https://deno.land`
 parameter (write response body to file, check `jsonr --help` for details)
 
 If your requests are failing due to certificate validation errors (and you trust
-target server):
+target server) you can run `temporary` command like:
 
-`deno install --unsafely-ignore-certificate-errors ...`
+`deno run --allow-net --unsafely-ignore-certificate-errors https://deno.land/x/jsonr/main.js ...`
+
+It will display warning about disable ssl verification, but you should be able to perform requests.
+If you work frequently with such unsafe servers you can consider introducing `jsonr-unsafe` sitting next to
+your main `jsonr` instance:
+
+`deno install -n jsonr-unsafe -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write https://deno.land/x/jsonr/main.js`
 
 ## Usage
 
