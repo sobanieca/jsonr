@@ -2,13 +2,12 @@
 
 * :hourglass_flowing_sand: Are you waiting for ages until your UI http client loads all it's plugins that you don't need?
 * :pager: Are you tired of your UI http client asking you to sign in/sign up so they can create proper `workspace` for you? (and get your email to send you marketing emails)
-* :file_cabinet: Are you spending lots of time trying to find requests you used to send to given api months ago?
+* :file_cabinet: Are you spending lots of time trying to find requests you've sent to given api months ago?
 * :microscope: Are you searching how to change request method in `curl` because you don't use it that often?
-* :clipboard: Are you working with json http api's (including GraphQL as it supports json content)?
+* :clipboard: Are you working with modern json http api's?
 
 If you've answered at least 1 `yes` then you're at right place. `jsonr` is a simple CLI tool for interacting with json http api's. It's available from your terminal
-anytime when you need it (so you don't need to switch context) and it's not aimed to be ultimate solution for everything. That's why it's so simple and saves
-your time.
+anytime when you need it (so you don't need to switch context) and it's not aimed to be an ultimate solution for everything. That's why it's so simple to use.
 
 ![image](./jsonr.png)
 
