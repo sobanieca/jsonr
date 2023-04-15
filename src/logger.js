@@ -1,8 +1,15 @@
-import { log, LogLevels, BaseHandler, brightBlue, brightRed, brightYellow, bold } from "./deps.js";
+import {
+  BaseHandler,
+  bold,
+  brightBlue,
+  brightRed,
+  brightYellow,
+  log,
+  LogLevels,
+} from "./deps.js";
 
 class BrightConsoleHandler extends BaseHandler {
   format(logRecord) {
-
     let msg = super.format(logRecord);
 
     switch (logRecord.level) {

@@ -20,7 +20,7 @@ const getHeaderValues = (header) => {
   const [headerKey, ...headersValues] = header.split(":");
   const headerValue = headersValues?.join(":");
   return { key: headerKey?.trim(), value: headerValue?.trim() };
-}
+};
 
 const parseHttpFile = async (filePath, variables, rawMode) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
@@ -187,8 +187,9 @@ const sendRequest = async (args) => {
   logger.info(`${request.method} ${request.url}...`);
   let requestLog = (msg) => logger.debug(msg);
 
-  if (args.v)
+  if (args.v) {
     requestLog = (msg) => logger.info(msg);
+  }
 
   requestLog("Request:");
   request.headers.forEach((x) => requestLog(`${x.key}: ${x.value}`));
@@ -253,7 +254,7 @@ const sendRequest = async (args) => {
           colors: true,
           strAbbreviateSize: 256000,
           iterableLimit: 20000,
-          depth: 100
+          depth: 100,
         },
       );
       logger.info(responseBody);
@@ -262,7 +263,9 @@ const sendRequest = async (args) => {
     logger.info("No response body returned from server");
   }
 
-  logger.info(`${response.status} - ${response.statusText} obtained in ${elapsed}ms`);
+  logger.info(
+    `${response.status} - ${response.statusText} obtained in ${elapsed}ms`,
+  );
 
   if (args.s) {
     if (args.s != response.status) {
