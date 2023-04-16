@@ -1,63 +1,70 @@
 const routeRules = [];
-const currentRouteRule = null;
+let currentRouteRuleIndex = -1;
 
 const givenApi = (baseUrl) => {
-  const initRuleIfRequired = (method, endpoint) => {
-    if (currentRouteRule) {
-      routeRules.push(currentRouteRule);
-      currentRouteRule = {
-        route: `${baseUrl}${endpoint}`,
-        method: method,
-      };
-    }
+  const initRule = (method, endpoint) => {
+    routeRules.push({
+      route: `${baseUrl}${endpoint}`,
+      method: method,
+    });
+    currentRouteRuleIndex++;
   };
 
   const api = {
     withGetEndpoint: (endpoint) => {
-      initRuleIfRequired("GET", endpoint);
-      console.log("withGetEndpoint");
+      initRule("GET", endpoint);
       return api;
     },
     withPostEndpoint: (endpoint) => {
-      initRuleIfRequired("POST", endpoint);
-      console.log("withPostEndpoint");
+      initRule("POST", endpoint);
       return api;
     },
     withPutEndpoint: (endpoint) => {
-      initRuleIfRequired("PUT", endpoint);
-      console.log("withPutEndpoint");
+      initRule("PUT", endpoint);
       return api;
     },
     withDeleteEndpoint: (endpoint) => {
-      initRuleIfRequired("DELETE", endpoint);
-      console.log("withDeleteEndpoint");
+      initRule("DELETE", endpoint);
       return api;
     },
-    returning: () => {
-      console.log("returning");
+    returning: (status, body) => {
+      routeRules[currentRouteRuleIndex].status = status;
+      routeRules[currentRouteRuleIndex].body = body;
       return api;
     },
-    returningStatus: () => {
-      console.log("returning status");
+    returningStatus: (status) => {
+      routeRules[currentRouteRuleIndex].status = status;
       return api;
-    },
-    returningBody: () => {
-      console.log("returning body");
-      return api;
-    },
-    init: () => {
-      if (currentRouteRule) {
-        routeRules.push(currentRouteRule);
-      }
     },
   };
 
   return api;
 };
 
+globalThis.fetch = async (url, opts) => {
+  if (!opts) {
+    opts.method = "GET";
+  }
+
+  const matchedRoute = routeRules.find((x) =>
+    x.route == url && x.method == opts.method
+  );
+
+  if (matchedRoute) {
+    return {
+      status: matchedRoute.status,
+      json: () => Promise.resolve(matchedRoute.body),
+    };
+  } else {
+    throw new Error(`No matching route for ${url} found.`);
+  }
+};
+
+globalThis.Deno = {};
+
 const jsonr = (cmd) => {
-  console.log("running jsonr with cmd");
-  console.log(cmd);
+  Deno.args = cmd.split(" ");
+  import("../../main.js");
 };
 
 givenApi("http://localhost:3000")
@@ -65,8 +72,7 @@ givenApi("http://localhost:3000")
   .returning({ id: 1, name: "dog" })
   .withPostEndpoint("/pets")
   .returningStatus(500)
-  .returningBody("Unknown exception occurred")
-  .init();
+  .returning("Unknown exception occurred");
 
 Deno.test("When calling post endpoint with status assert jsonr command should fail", () => {
   //jsonr() command behind the scene can call Deno.test?
