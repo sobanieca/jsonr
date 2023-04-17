@@ -27,15 +27,11 @@ const givenApi = (baseUrl) => {
       initRule("DELETE", endpoint);
       return api;
     },
-    returning: (status, body) => {
+    returning: (body, status = 200) => {
       routeRules[currentRouteRuleIndex].status = status;
       routeRules[currentRouteRuleIndex].body = body;
       return api;
-    },
-    returningStatus: (status) => {
-      routeRules[currentRouteRuleIndex].status = status;
-      return api;
-    },
+    }
   };
 
   return api;
@@ -60,10 +56,7 @@ globalThis.fetch = async (url, opts) => {
   }
 };
 
-globalThis.Deno = {};
-
 const jsonr = (cmd) => {
-  Deno.args = cmd.split(" ");
   import("../../main.js");
 };
 
@@ -71,7 +64,6 @@ givenApi("http://localhost:3000")
   .withGetEndpoint("/pets")
   .returning({ id: 1, name: "dog" })
   .withPostEndpoint("/pets")
-  .returningStatus(500)
   .returning("Unknown exception occurred");
 
 Deno.test("When calling post endpoint with status assert jsonr command should fail", () => {
