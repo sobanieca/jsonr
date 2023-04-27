@@ -1,3 +1,5 @@
+import { runtime } from "../../src/deps.js";
+
 const routeRules = [];
 let currentRouteRuleIndex = -1;
 
@@ -54,9 +56,13 @@ globalThis.fetch = async (url, opts) => {
   } else {
     throw new Error(`No matching route for ${url} found.`);
   }
-};
+}
+
+runtime.Deno = {};
+// TODO: replace used runtime variables
 
 const jsonr = (cmd) => {
+
   import("../../main.js");
 };
 

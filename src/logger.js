@@ -6,6 +6,7 @@ import {
   brightYellow,
   log,
   LogLevels,
+  runtime
 } from "./deps.js";
 
 class BrightConsoleHandler extends BaseHandler {
@@ -37,7 +38,7 @@ class BrightConsoleHandler extends BaseHandler {
   }
 }
 
-const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "INFO";
+const logLevel = runtime.Deno.args.includes("--debug") ? "DEBUG" : "INFO";
 
 await log.setup({
   handlers: {

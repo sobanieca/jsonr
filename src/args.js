@@ -1,6 +1,6 @@
-import { parse } from "./deps.js";
+import { parse, runtime } from "./deps.js";
 
-const args = parse(Deno.args, {
+const args = parse(runtime.Deno.args, {
   boolean: ["help", "debug", "omit-default-content-type-header", "v", "r"],
   string: ["i", "b", "h"],
   "--": true,
