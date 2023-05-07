@@ -1,18 +1,31 @@
-export * as log from "https://deno.land/std@0.174.0/log/mod.ts";
-export { BaseHandler } from "https://deno.land/std@0.174.0/log/handlers.ts?s=BaseHandler";
-export {
+import * as log from "https://deno.land/std@0.174.0/log/mod.ts";
+import { BaseHandler } from "https://deno.land/std@0.174.0/log/handlers.ts?s=BaseHandler";
+import {
   bold,
   brightBlue,
   brightRed,
   brightYellow,
 } from "https://deno.land/std@0.174.0/fmt/colors.ts";
-export { parse } from "https://deno.land/std@0.174.0/flags/mod.ts";
-export { LogLevels } from "https://deno.land/std@0.174.0/log/mod.ts";
+import { parse } from "https://deno.land/std@0.174.0/flags/mod.ts";
+import { LogLevels } from "https://deno.land/std@0.174.0/log/mod.ts";
 
-const runtime = {
+const deps = {
   Deno,
-  fetch
+  fetch,
+  console,
+  logging: {
+    log,
+    BaseHandler,
+    LogLevels
+  },
+  colors: {
+    bold,
+    brightBlue,
+    brightRed,
+    brightYellow
+  },
+  parse
 };
 
-export { runtime };
+export { deps };
 

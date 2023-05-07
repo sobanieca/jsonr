@@ -1,5 +1,5 @@
 import logger from "../logger.js";
-import { runtime } from "../deps.js";
+import { deps } from "../deps.js";
 
 /*
  * Available args:
@@ -26,7 +26,7 @@ const getHeaderValues = (header) => {
 const parseHttpFile = async (filePath, variables, rawMode) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
-    let fileContent = await runtime.Deno.readTextFile(filePath);
+    let fileContent = await deps.Deno.readTextFile(filePath);
     for (const [key, value] of variables) {
       logger.debug(
         `Replacing @@${key}@@ with ${value} for content of ${filePath}`,
@@ -78,7 +78,7 @@ const getVariables = async (args) => {
     const environmentFilePath = args.e;
     try {
       const environmentFileVariables = JSON.parse(
-        await runtime.Deno.readTextFile(environmentFilePath),
+        await deps.Deno.readTextFile(environmentFilePath),
       );
       for (const variable of Object.keys(environmentFileVariables)) {
         result.set(variable, environmentFileVariables[variable]);
@@ -140,7 +140,7 @@ const sendRequest = async (args) => {
     request.url = urlOrFilePath;
   } else {
     try {
-      await runtime.Deno.lstat(urlOrFilePath);
+      await deps.Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
       const variables = await getVariables(args);
       const fileRequest = await parseHttpFile(urlOrFilePath, variables, args.r);
@@ -221,7 +221,7 @@ const sendRequest = async (args) => {
     request.url.startsWith("http://") || request.url.startsWith("https://")
       ? request.url
       : `http://${request.url}`;
-  const response = await runtime.fetch(request.url, options);
+  const response = await deps.fetch(request.url, options);
 
   const elapsed = new Date() - timestamp;
 
@@ -246,10 +246,10 @@ const sendRequest = async (args) => {
 
   if (responseBody) {
     if (args.o) {
-      await runtime.Deno.writeTextFile(args.o, JSON.stringify(responseBody));
+      await deps.Deno.writeTextFile(args.o, JSON.stringify(responseBody));
       logger.info(`Response body written to file ${args.o}`);
     } else {
-      responseBody = runtime.Deno.inspect(
+      responseBody = deps.Deno.inspect(
         responseBody,
         {
           colors: true,
@@ -273,7 +273,7 @@ const sendRequest = async (args) => {
       logger.error(
         `ERROR: Response status code (${response.status}) doesn't match expected value (${args.s})`,
       );
-      runtime.Deno.exit(1);
+      deps.Deno.exit(1);
     }
   }
 
@@ -282,7 +282,7 @@ const sendRequest = async (args) => {
       logger.error(
         `ERROR: Response body doesn't contain expected text (${args.t})`,
       );
-      runtime.Deno.exit(1);
+      deps.Deno.exit(1);
     }
   }
 };

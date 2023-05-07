@@ -3,7 +3,7 @@ import logger from "./src/logger.js";
 import help from "./src/commands/help.js";
 import version from "./src/commands/version.js";
 import sendRequest from "./src/commands/send-request.js";
-import { runtime } from "./src/deps.js";
+import { deps } from "./src/deps.js";
 
 const commands = [
   { name: "help", engine: help },
@@ -26,7 +26,7 @@ for (const command of commands) {
       logger.debug(err);
     }
 
-    runtime.Deno.exit(0);
+    deps.Deno.exit(0);
   } else {
     logger.debug("No match found");
   }

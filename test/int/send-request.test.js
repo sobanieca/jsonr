@@ -1,37 +1,34 @@
-import { runtime } from "../../src/deps.js";
+import { deps } from "../../src/deps.js";
 
+// API setup
 const routeRules = [];
-let currentRouteRuleIndex = -1;
 
 const givenApi = (baseUrl) => {
-  const initRule = (method, endpoint) => {
+  const initRule = (method, endpoint, returnedStatus, returnedBody) => {
     routeRules.push({
       route: `${baseUrl}${endpoint}`,
       method: method,
+      status: returnedStatus,
+      body: returnedBody
     });
     currentRouteRuleIndex++;
   };
 
   const api = {
-    withGetEndpoint: (endpoint) => {
-      initRule("GET", endpoint);
+    withGetEndpoint: (endpoint, returnedStatus, returnedBody = null) => {
+      initRule("GET", endpoint, returnedStatus, returnedBody);
       return api;
     },
-    withPostEndpoint: (endpoint) => {
-      initRule("POST", endpoint);
+    withPostEndpoint: (endpoint, returnedStatus, returnedBody) => {
+      initRule("POST", endpoint, returnedStatus, returnedBody);
       return api;
     },
-    withPutEndpoint: (endpoint) => {
-      initRule("PUT", endpoint);
+    withPutEndpoint: (endpoint, returnedStatus, returnedBody) => {
+      initRule("PUT", endpoint, returnedStatus, returnedBody);
       return api;
     },
-    withDeleteEndpoint: (endpoint) => {
-      initRule("DELETE", endpoint);
-      return api;
-    },
-    returning: (body, status = 200) => {
-      routeRules[currentRouteRuleIndex].status = status;
-      routeRules[currentRouteRuleIndex].body = body;
+    withDeleteEndpoint: (endpoint, returnedStatus, returnedBody) => {
+      initRule("DELETE", endpoint, returnedStatus, returnedBody);
       return api;
     }
   };
@@ -39,7 +36,7 @@ const givenApi = (baseUrl) => {
   return api;
 };
 
-globalThis.fetch = async (url, opts) => {
+deps.fetch = async (url, opts) => {
   if (!opts) {
     opts.method = "GET";
   }
@@ -57,25 +54,69 @@ globalThis.fetch = async (url, opts) => {
     throw new Error(`No matching route for ${url} found.`);
   }
 }
+// EO API setup
 
-runtime.Deno = {};
-// TODO: replace used runtime variables
+deps.Deno = {};
 
-const jsonr = (cmd) => {
+// File system setup:
+const files = [];
 
-  import("../../main.js");
+const givenFile = (file, content) => {
+  files.push({ file, content });
+}
+
+deps.Deno.lstat = async (filePath) => {
+  if(!files.find(x => x.file == filePath))
+    throw new Error("File not found");
+
+  return Promise.resolve();
+}
+
+deps.Deno.readTextFile = async (filePath) => {
+  const file = files.find(x => x.file == filePath);
+  return Promise.resolve(file.content);
+}
+
+// EO File system setup
+
+// Deps setup
+deps.Deno.exit = (code) => console.log(`Exiting with code: ${code}`);
+deps.Deno.inspect = () => {};
+
+const output = [];
+
+deps.logging.log.getLogger = () => ({
+  debug: (msg) => {
+    output.push(msg);
+  },
+  info: (msg) => {
+    output.push(msg);
+  },
+  warning: (msg) => {
+    output.push(msg);
+  },
+  error: (msg) => {
+    output.push(msg);
+  }
+});
+// EO Deps setup
+
+const test = (cmd) => {
+  Deno.test(cmd, () => {
+    import("../../main.js");
+  });
 };
 
 givenApi("http://localhost:3000")
-  .withGetEndpoint("/pets")
-  .returning({ id: 1, name: "dog" })
-  .withPostEndpoint("/pets")
-  .returning("Unknown exception occurred");
+  .withGetEndpoint("/pets", 200, { id: 1, name: "dog" })
+  .withPostEndpoint("/pets", 500, "Unknown exception occurred");
 
-Deno.test("When calling post endpoint with status assert jsonr command should fail", () => {
+test("jsonr http://test/posts");
+
+/*Deno.test("When calling post endpoint with status assert jsonr command should fail", () => {
   //jsonr() command behind the scene can call Deno.test?
   jsonr("localhost:3000/pets -m POST -s 200");
   //.shouldExitNonZeroCode()
   //.shouldContainOutput("invalid status returned");
   console.log("testing...");
-});
+});*/
