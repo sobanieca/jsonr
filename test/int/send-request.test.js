@@ -11,7 +11,6 @@ const givenApi = (baseUrl) => {
       status: returnedStatus,
       body: returnedBody
     });
-    currentRouteRuleIndex++;
   };
 
   const api = {
@@ -49,6 +48,7 @@ deps.fetch = async (url, opts) => {
     return {
       status: matchedRoute.status,
       json: () => Promise.resolve(matchedRoute.body),
+      text: () => Promise.resolve(JSON.stringify(matchedRoute.body))
     };
   } else {
     throw new Error(`No matching route for ${url} found.`);
@@ -85,25 +85,31 @@ deps.Deno.inspect = () => {};
 
 const output = [];
 
-deps.logging.log.getLogger = () => ({
-  debug: (msg) => {
-    output.push(msg);
-  },
-  info: (msg) => {
-    output.push(msg);
-  },
-  warning: (msg) => {
-    output.push(msg);
-  },
-  error: (msg) => {
-    output.push(msg);
-  }
-});
+deps.logging.log = {
+  getLogger: () => ({
+    debug: (msg) => {
+      output.push(msg);
+    },
+    info: (msg) => {
+      output.push(msg);
+    },
+    warning: (msg) => {
+      output.push(msg);
+    },
+    error: (msg) => {
+      output.push(msg);
+    }
+  }),
+  setup: () => {}
+};
 // EO Deps setup
 
 const test = (cmd) => {
-  Deno.test(cmd, () => {
-    import("../../main.js");
+  deps.Deno.args = cmd.replace("jsonr ", "").split(" ");
+
+  Deno.test(cmd, async () => {
+    await import("../../main.js");
+    console.log(output);
   });
 };
 
@@ -111,7 +117,7 @@ givenApi("http://localhost:3000")
   .withGetEndpoint("/pets", 200, { id: 1, name: "dog" })
   .withPostEndpoint("/pets", 500, "Unknown exception occurred");
 
-test("jsonr http://test/posts");
+test("jsonr http://localhost:3000/pets");
 
 /*Deno.test("When calling post endpoint with status assert jsonr command should fail", () => {
   //jsonr() command behind the scene can call Deno.test?
