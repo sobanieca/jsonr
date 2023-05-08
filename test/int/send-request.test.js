@@ -88,7 +88,8 @@ const output = [];
 deps.logging.log = {
   getLogger: () => ({
     debug: (msg) => {
-      output.push(msg);
+      if(deps.Deno.args.includes("--debug"))
+        output.push(msg);
     },
     info: (msg) => {
       output.push(msg);
