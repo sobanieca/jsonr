@@ -1,5 +1,6 @@
 {
   "tasks": {
+    "test": "deno run -A main.js",
     "api": "deno run -A test-api.js",
     "get": "deno run -A ../../main.js requests/get.http",
     "post": "deno run -A ../../main.js requests/post.http",
