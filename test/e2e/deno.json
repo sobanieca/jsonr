@@ -1,13 +1,6 @@
 {
   "tasks": {
-    "test": "deno run -A main.js",
-    "api": "deno run -A test-api.js",
-    "get": "deno run -A ../../main.js requests/get.http",
-    "post": "deno run -A ../../main.js requests/post.http",
-    "delete": "deno run -A ../../main.js requests/delete.http",
-    "put": "deno run -A ../../main.js requests/put.http",
-    "exception": "deno run -A ../../main.js requests/exception.http",
-    "auth-401": "deno run -A ../../main.js -s 401 requests/auth-401.http",
-    "auth": "deno run -A ../../main.js -e requests/environments/test.json requests/auth.http"
+    "test": "deno test -A e2e.test.js",
+    "update-snapshots": "deno test -A e2e.test.js -- --update"
   }
 }
