@@ -1,8 +1,8 @@
 import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.ts";
 
 const run = async (cmd) => {
-  const command = new Deno.Command(Deno.execPath(), {
-    args: command.split(" "),
+  const command = new Deno.Command("deno", {
+    args: cmd.replace("deno ", "").split(" "),
     stdout: "piped",
     stderr: "piped",
   });
@@ -11,8 +11,6 @@ const run = async (cmd) => {
   
   const { code, rawOutput, rawError } = await process.output();
   
-  process.kill();
-
   const removeAnsi = (input) => {
     const ansiEscapeSequences = /\u001b\[[0-9;]*[a-zA-Z]/g;
     return input.replace(ansiEscapeSequences, '');
@@ -37,8 +35,8 @@ const run = async (cmd) => {
 }
 
 Deno.test("Given API", async (t) => {
-  const apiCommand = new Deno.Command(Deno.execPath(), {
-    args: "deno run -A test-api.js".split(" ")
+  const apiCommand = new Deno.Command("deno", {
+    args: "run -A test-api.js".split(" ")
   });
 
   const apiProcess = apiCommand.spawn();
