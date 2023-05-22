@@ -10,7 +10,7 @@ const run = async (cmd) => {
   const process = command.spawn();
   
   const { code, rawOutput, rawError } = await process.output();
-  
+
   const removeAnsi = (input) => {
     const ansiEscapeSequences = /\u001b\[[0-9;]*[a-zA-Z]/g;
     return input.replace(ansiEscapeSequences, '');
@@ -24,6 +24,10 @@ const run = async (cmd) => {
   let output = new TextDecoder().decode(rawOutput);
   let outputError = new TextDecoder().decode(rawError);
 
+  //todo: investigate whybempty
+  console.log("output");
+  console.log(output);
+  console.log(code);
   output = removeDuration(removeAnsi(output));
   outputError = removeAnsi(outputError);
 
@@ -48,7 +52,7 @@ Deno.test("Given API", async (t) => {
     await t.step(jsonrCommand, async () => {
       const { code, output, outputError } = await run(jsonrCommand);
 
-      assertSnapshot(t, { code, output, outputError });      
+      await assertSnapshot(t, { code, output, outputError });      
     });
   }
 
