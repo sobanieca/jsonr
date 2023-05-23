@@ -1,15 +1,15 @@
 import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.ts";
 
 const run = async (cmd) => {
-  const command = new Deno.Command("deno", {
+  const command = new Deno.Command(Deno.execPath(), {
     args: cmd.replace("deno ", "").split(" "),
-    stdout: "piped",
-    stderr: "piped",
+    /*stdout: "piped",
+    stderr: "piped",*/
   });
 
-  const process = command.spawn();
+//  const process = command.spawn();
   
-  const { code, rawOutput, rawError } = await process.output();
+  const { code, rawOutput, rawError } = await command.output();
 
   const removeAnsi = (input) => {
     const ansiEscapeSequences = /\u001b\[[0-9;]*[a-zA-Z]/g;
@@ -24,8 +24,9 @@ const run = async (cmd) => {
   let output = new TextDecoder().decode(rawOutput);
   let outputError = new TextDecoder().decode(rawError);
 
-  //todo: investigate whybempty
+  //todo: investigate why empty
   console.log("output");
+  console.log(outputError);
   console.log(output);
   console.log(code);
   output = removeDuration(removeAnsi(output));

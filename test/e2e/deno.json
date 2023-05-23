@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "test": "deno test -A e2e.test.js",
-    "update-snapshots": "deno test -A e2e.test.js -- --update"
+    "test": "deno test -A test.js",
+    "update-snapshots": "deno test -A test.js -- --update"
   }
 }
