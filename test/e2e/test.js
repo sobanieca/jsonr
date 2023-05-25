@@ -3,13 +3,11 @@ import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.t
 const run = async (cmd) => {
   const command = new Deno.Command(Deno.execPath(), {
     args: cmd.replace("deno ", "").split(" "),
-    /*stdout: "piped",
-    stderr: "piped",*/
+    stdout: "piped",
+    stderr: "piped"
   });
 
-//  const process = command.spawn();
-  
-  const { code, rawOutput, rawError } = await command.output();
+  const { code, stdout, stderr } = await command.output();
 
   const removeAnsi = (input) => {
     const ansiEscapeSequences = /\u001b\[[0-9;]*[a-zA-Z]/g;
@@ -21,14 +19,9 @@ const run = async (cmd) => {
     return input.replace(durationRegEx, 'obtained in *ms');
   }
 
-  let output = new TextDecoder().decode(rawOutput);
-  let outputError = new TextDecoder().decode(rawError);
+  let output = new TextDecoder().decode(stdout);
+  let outputError = new TextDecoder().decode(stderr);
 
-  //todo: investigate why empty
-  console.log("output");
-  console.log(outputError);
-  console.log(output);
-  console.log(code);
   output = removeDuration(removeAnsi(output));
   outputError = removeAnsi(outputError);
 
@@ -41,7 +34,9 @@ const run = async (cmd) => {
 
 Deno.test("Given API", async (t) => {
   const apiCommand = new Deno.Command("deno", {
-    args: "run -A test-api.js".split(" ")
+    args: "run -A test-api.js".split(" "),
+    stdout: "piped",
+    stderr: "piped"
   });
 
   const apiProcess = apiCommand.spawn();
@@ -65,5 +60,5 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -s 401 requests/auth-401.http");
   await test("jsonr -e requests/environments/test.json requests/auth.http");
 
-  apiProcess.kill("SIGINT");
+  apiProcess.kill();
 });
