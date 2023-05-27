@@ -70,4 +70,5 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e requests/environments/test.json requests/auth.http");
   
   apiProcess.kill();
+  await apiProcess.output();
 });
