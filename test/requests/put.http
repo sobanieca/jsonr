@@ -1,0 +1,10 @@
+PUT http://localhost:3000/sample
+
+{
+  "name": "Some name",
+  "tags": [
+    "tag1",
+    "tag2"
+  ]
+}
+
