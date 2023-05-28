@@ -68,6 +68,12 @@ Deno.test("Given API", async (t) => {
   await test("jsonr requests/exception.http");
   await test("jsonr -s 401 requests/auth-401.http");
   await test("jsonr -e requests/environments/test.json requests/auth.http");
+  await test(`jsonr -m PUT -b ${JSON.stringify({ name: "test"})} localhost:3000/sample`);
+  await test("jsonr http://localhost:3000/sample");
+  await test("jsonr requests/put.http -s 303");
+  await test("jsonr requests/put.http -s 200");
+  await test("jsonr requests/get.http -t test");
+  await test("jsonr requests/get.http -t sample-get");
   
   apiProcess.kill();
   await apiProcess.output();

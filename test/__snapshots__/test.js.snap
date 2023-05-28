@@ -118,3 +118,109 @@ snapshot[`Given API 7`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 8`] = `
+{
+  code: 0,
+  output: "PUT localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "test" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 9`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 10`] = `
+{
+  code: 1,
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+' +
+    "200 - OK obtained in *ms
+" +
+    "ERROR: Response status code (200) doesn't match expected value (303)
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 11`] = `
+{
+  code: 0,
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 12`] = `
+{
+  code: 1,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+" +
+    "ERROR: Response body doesn't contain expected text (test)
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 13`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
