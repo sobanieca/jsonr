@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "run": "deno run --allow-all test-api.js"
+    "test": "deno test -A test.js",
+    "update-snapshots": "deno test -A test.js -- --update"
   }
 }

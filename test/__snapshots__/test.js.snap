@@ -1,0 +1,226 @@
+export const snapshot = {};
+
+snapshot[`Given API 1`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 2`] = `
+{
+  code: 0,
+  output: "POST http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 3`] = `
+{
+  code: 0,
+  output: "DELETE http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    "No response body returned from server
+" +
+    "204 - No Content obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 4`] = `
+{
+  code: 0,
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 5`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/exception...
+" +
+    "Response:
+" +
+    "
+" +
+    '"Internal Server Error"
+' +
+    "500 - Internal Server Error obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 6`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Response:
+" +
+    "
+" +
+    "No response body returned from server
+" +
+    "401 - Unauthorized obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 7`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 8`] = `
+{
+  code: 0,
+  output: "PUT localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "test" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 9`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 10`] = `
+{
+  code: 1,
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+' +
+    "200 - OK obtained in *ms
+" +
+    "ERROR: Response status code (200) doesn't match expected value (303)
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 11`] = `
+{
+  code: 0,
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 12`] = `
+{
+  code: 1,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+" +
+    "ERROR: Response body doesn't contain expected text (test)
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 13`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;

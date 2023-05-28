@@ -1,13 +1,22 @@
 # About
 
-* :hourglass_flowing_sand: Are you waiting for ages until your UI http client loads all it's plugins that you don't need?
-* :pager: Are you tired of your UI http client asking you to sign in/sign up so they can create proper `workspace` for you? (and get your email to send you marketing emails)
-* :file_cabinet: Are you spending lots of time trying to find requests you've sent to given api months ago?
-* :microscope: Are you searching how to change request method in `curl` because you don't use it that often?
-* :clipboard: Are you working with modern json http api's?
+- :hourglass_flowing_sand: Are you waiting for ages until your UI http client
+  loads all it's plugins that you don't need?
+- :pager: Are you tired of your UI http client asking you to sign in/sign up so
+  they can create proper `workspace` for you? (and get your email to send you
+  marketing emails)
+- :file_cabinet: Are you spending lots of time trying to find requests you've
+  sent to given api months ago?
+- :microscope: Are you searching how to change request method in `curl` because
+  you don't use it that often?
+- :clipboard: Are you working with modern json http api's?
+- :dash: Do you want to write smoke tests for your api?
 
-If you've answered at least 1 `yes` then you're at right place. `jsonr` is a simple CLI tool for interacting with json http api's. It's available from your terminal
-anytime when you need it (so you don't need to switch context) and it's not aimed to be an ultimate solution for everything. That's why it's so simple to use.
+If you've answered at least 1 `yes` then you're at right place. `jsonr` is a
+simple CLI tool for interacting with json http api's and write simple smoke
+tests. It's available from your terminal anytime when you need it (so you don't
+need to switch context) and it's not aimed to be an ultimate solution for
+everything. That's why it's so simple to use.
 
 ![image](./jsonr.png)
 
@@ -29,9 +38,9 @@ target server) you can run `temporary` command like:
 
 `deno run --allow-net --unsafely-ignore-certificate-errors https://deno.land/x/jsonr/main.js ...`
 
-It will display warning about disable ssl verification, but you should be able to perform requests.
-If you work frequently with such unsafe servers you can consider introducing `jsonr-unsafe` sitting next to
-your main `jsonr` instance:
+It will display warning about disable ssl verification, but you should be able
+to perform requests. If you work frequently with such unsafe servers you can
+consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
 
 `deno install -n jsonr-unsafe -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write https://deno.land/x/jsonr/main.js`
 
@@ -63,8 +72,8 @@ NO_COLOR=1 jsonr ...
 
 ## Contribution
 
-If you want to implement/request new features you are more than welcome to contribute.
-Please keep in mind that this tool is supposed to be super simple to use and cover 
-~80% of use cases for playing around with JSON HTTP API's. Instructions (--help) for 
-this tool should be possible to read in less than 5 minutes. If more features will 
-be added this may be hard to achieve.
+If you want to implement/request new features you are more than welcome to
+contribute. Please keep in mind that this tool is supposed to be super simple to
+use and cover ~80% of use cases for playing around with JSON HTTP API's.
+Instructions (--help) for this tool should be possible to read in less than 5
+minutes. If more features will be added this may be hard to achieve.

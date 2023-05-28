@@ -1,22 +1,21 @@
-import { log, LogLevels, BaseHandler, brightBlue, brightRed, brightYellow, bold } from "./deps.js";
+import { deps } from "./deps.js";
 
-class BrightConsoleHandler extends BaseHandler {
+class BrightConsoleHandler extends deps.logging.BaseHandler {
   format(logRecord) {
-
     let msg = super.format(logRecord);
 
     switch (logRecord.level) {
-      case LogLevels.INFO:
-        msg = brightBlue(msg);
+      case deps.logging.LogLevels.INFO:
+        msg = deps.colors.brightBlue(msg);
         break;
-      case LogLevels.WARNING:
-        msg = brightYellow(msg);
+      case deps.logging.LogLevels.WARNING:
+        msg = deps.colors.brightYellow(msg);
         break;
-      case LogLevels.ERROR:
-        msg = brightRed(msg);
+      case deps.logging.LogLevels.ERROR:
+        msg = deps.colors.brightRed(msg);
         break;
-      case LogLevels.CRITICAL:
-        msg = bold(brightRed(msg));
+      case deps.logging.LogLevels.CRITICAL:
+        msg = deps.colors.bold(brightRed(msg));
         break;
       default:
         break;
@@ -32,7 +31,7 @@ class BrightConsoleHandler extends BaseHandler {
 
 const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "INFO";
 
-await log.setup({
+deps.logging.log.setup({
   handlers: {
     console: new BrightConsoleHandler("DEBUG", {
       formatter: "{msg}",
@@ -46,6 +45,6 @@ await log.setup({
   },
 });
 
-const logger = log.getLogger();
+const logger = deps.logging.log.getLogger();
 
 export default logger;
