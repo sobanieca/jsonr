@@ -10,9 +10,6 @@ import { parse } from "https://deno.land/std@0.174.0/flags/mod.ts";
 import { LogLevels } from "https://deno.land/std@0.174.0/log/mod.ts";
 
 const deps = {
-  Deno,
-  fetch,
-  console,
   logging: {
     log,
     BaseHandler,
