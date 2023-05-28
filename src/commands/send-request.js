@@ -1,5 +1,4 @@
 import logger from "../logger.js";
-import { deps } from "../deps.js";
 
 /*
  * Available args:

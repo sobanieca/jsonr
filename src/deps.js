@@ -13,16 +13,15 @@ const deps = {
   logging: {
     log,
     BaseHandler,
-    LogLevels
+    LogLevels,
   },
   colors: {
     bold,
     brightBlue,
     brightRed,
-    brightYellow
+    brightYellow,
   },
-  parse
+  parse,
 };
 
 export { deps };
-
