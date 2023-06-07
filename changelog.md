@@ -1,3 +1,7 @@
+# 1.4.0
+
+- Ignore comments in .http files (lines starting from `#` or `//`)
+
 # 1.3.9
 
 - Fixed bug when http header contained `:` in value

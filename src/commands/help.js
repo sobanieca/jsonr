@@ -23,9 +23,10 @@ path to .http file name or url
     "username" : "sample.email@sample.com"
   }
 
-  As you can see first line is about http method + url. Below there are http headers listed and at the bottom request body. 
+  First line represents http method + url. Below there are http headers and at the bottom (after two empty lines) request body. 
   If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request. 
   If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
+  Http files can include comments. In order to provide comment start a new line with '#' or '//'.
 
 -i provide value for [i]nput variables
 

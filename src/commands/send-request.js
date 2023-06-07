@@ -32,6 +32,7 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
       );
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }
+    fileContent = removeComments(fileContent);
     let [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
 
     const request = {};
@@ -70,6 +71,8 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
     );
   }
 };
+
+const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, '');
 
 const getVariables = async (args) => {
   const result = new Map();
