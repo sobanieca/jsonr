@@ -112,6 +112,10 @@ path to .http file name or url
   By default jsonr replaces all new line and tab characters (whitespace characters) in http file so you can use new lines for human-friendly request body formatting. 
   If you use this flag you will disable this behaviour.
 
+-f [f]ollow redirects
+
+  By default jsonr won't follow redirects when 3xx response is returned from server. Use this flag if you want to automatically follow all redirects, to return response from final destination server.
+
 --debug Debug mode 
 
   Provide more detailed logs (use it only for troubleshooting)

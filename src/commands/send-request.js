@@ -13,6 +13,7 @@ import logger from "../logger.js";
  * --omit-default-content-type-header
  * o output file -o output.json
  * r request raw mode
+ * f follow redirects
  * input http file / url
  */
 
@@ -194,6 +195,12 @@ const sendRequest = async (args) => {
     requestLog = (msg) => logger.info(msg);
   }
 
+  const redirect = "manual";
+
+  if(args.f) {
+    redirect = "follow";
+  }
+
   requestLog("Request:");
   request.headers.forEach((x) => requestLog(`${x.key}: ${x.value}`));
   requestLog("");
@@ -205,7 +212,7 @@ const sendRequest = async (args) => {
   const options = {
     method: request.method,
     body: request.body,
-    redirect: "manual",
+    redirect,
     headers: request.headers.reduce((acc, x) => {
       if (!acc) {
         acc = new Headers();
