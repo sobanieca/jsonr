@@ -48,7 +48,7 @@ Deno.test("Given API", async (t) => {
       (await outputReader.read()).value,
     );
     outputReader.releaseLock();
-    if (apiOutput.indexOf("Listening on port 3000" != -1)) {
+    if (apiOutput.indexOf("Listening on port 3000") != -1) {
       break;
     }
 
@@ -79,6 +79,8 @@ Deno.test("Given API", async (t) => {
   await test("jsonr requests/put.http -s 200");
   await test("jsonr requests/get.http -t test");
   await test("jsonr requests/get.http -t sample-get");
+  await test("jsonr http://localhost:3000/redirect");
+  await test("jsonr http://localhost:3000/redirect -f");
 
   apiProcess.kill();
   await apiProcess.output();

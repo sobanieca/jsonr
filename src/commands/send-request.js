@@ -195,7 +195,7 @@ const sendRequest = async (args) => {
     requestLog = (msg) => logger.info(msg);
   }
 
-  const redirect = "manual";
+  let redirect = "manual";
 
   if(args.f) {
     redirect = "follow";

@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  },
   "tasks": {
     "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js"
   }

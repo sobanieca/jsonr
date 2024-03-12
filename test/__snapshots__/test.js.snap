@@ -224,3 +224,37 @@ snapshot[`Given API 13`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 14`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/redirect...
+" +
+    "Response:
+" +
+    "
+" +
+    '"Redirecting to /redirect-target."
+' +
+    "302 - Found obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 15`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/redirect...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ msg: "redirect-target" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
