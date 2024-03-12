@@ -73,7 +73,7 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
   }
 };
 
-const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, '');
+const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
 
 const getVariables = async (args) => {
   const result = new Map();
@@ -197,7 +197,7 @@ const sendRequest = async (args) => {
 
   let redirect = "manual";
 
-  if(args.f) {
+  if (args.f) {
     redirect = "follow";
   }
 
