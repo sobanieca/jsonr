@@ -215,6 +215,7 @@ const sendRequest = async (args) => {
     redirect,
     headers: request.headers.reduce((acc, x) => {
       if (!acc) {
+        // @ts-ignore too strict typing
         acc = new Headers();
       }
       acc.append(x.key, x.value);
@@ -230,8 +231,11 @@ const sendRequest = async (args) => {
     request.url.startsWith("http://") || request.url.startsWith("https://")
       ? request.url
       : `http://${request.url}`;
+
+  // @ts-ignore too strict typing
   const response = await fetch(request.url, options);
 
+  // @ts-ignore timestamp is Date type
   const elapsed = new Date() - timestamp;
 
   let responseBody = await response.text();

@@ -15,7 +15,7 @@ class BrightConsoleHandler extends deps.logging.BaseHandler {
         msg = deps.colors.brightRed(msg);
         break;
       case deps.logging.LogLevels.CRITICAL:
-        msg = deps.colors.bold(brightRed(msg));
+        msg = deps.colors.bold(deps.colors.brightRed(msg));
         break;
       default:
         break;
