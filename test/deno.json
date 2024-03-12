@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  },
   "tasks": {
     "test": "deno test -A test.js",
     "update-snapshots": "deno test -A test.js -- --update"

@@ -13,6 +13,7 @@ import logger from "../logger.js";
  * --omit-default-content-type-header
  * o output file -o output.json
  * r request raw mode
+ * f follow redirects
  * input http file / url
  */
 
@@ -72,7 +73,7 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
   }
 };
 
-const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, '');
+const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
 
 const getVariables = async (args) => {
   const result = new Map();
@@ -194,6 +195,12 @@ const sendRequest = async (args) => {
     requestLog = (msg) => logger.info(msg);
   }
 
+  let redirect = "manual";
+
+  if (args.f) {
+    redirect = "follow";
+  }
+
   requestLog("Request:");
   request.headers.forEach((x) => requestLog(`${x.key}: ${x.value}`));
   requestLog("");
@@ -205,9 +212,10 @@ const sendRequest = async (args) => {
   const options = {
     method: request.method,
     body: request.body,
-    redirect: "manual",
+    redirect,
     headers: request.headers.reduce((acc, x) => {
       if (!acc) {
+        // @ts-ignore too strict typing
         acc = new Headers();
       }
       acc.append(x.key, x.value);
@@ -223,8 +231,11 @@ const sendRequest = async (args) => {
     request.url.startsWith("http://") || request.url.startsWith("https://")
       ? request.url
       : `http://${request.url}`;
+
+  // @ts-ignore too strict typing
   const response = await fetch(request.url, options);
 
+  // @ts-ignore timestamp is Date type
   const elapsed = new Date() - timestamp;
 
   let responseBody = await response.text();

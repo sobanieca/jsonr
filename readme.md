@@ -1,22 +1,22 @@
 # About
 
-- :hourglass_flowing_sand: Are you waiting for ages until your UI http client
-  loads all it's plugins that you don't need?
 - :pager: Are you tired of your UI http client asking you to sign in/sign up so
   they can create proper `workspace` for you? (and get your email to send you
   marketing emails)
+- :hourglass_flowing_sand: Are you waiting for ages until your UI http client
+  loads all it's functionalities and plugins that you don't need?
 - :file_cabinet: Are you spending lots of time trying to find requests you've
   sent to given api months ago?
 - :microscope: Are you searching how to change request method in `curl` because
-  you don't use it that often?
+  you don't use `curl` that often?
 - :clipboard: Are you working with modern json http api's?
 - :dash: Do you want to write smoke tests for your api?
 
-If you've answered at least 1 `yes` then you're at right place. `jsonr` is a
-simple CLI tool for interacting with json http api's and write simple smoke
+`jsonr` is a simple CLI tool for interacting with json http api's and writing simple smoke
 tests. It's available from your terminal anytime when you need it (so you don't
 need to switch context) and it's not aimed to be an ultimate solution for
-everything. That's why it's so simple to use.
+everything. That's why it's so simple to use. No more need to browse lots of documentation about
+tons of features that you don't need. 5 minutes and you are ready to send any requests.
 
 ![image](./jsonr.png)
 

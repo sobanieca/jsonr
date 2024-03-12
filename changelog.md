@@ -1,3 +1,7 @@
+# 1.5.0
+
+- Add option to automatically follow redirects with `-f` option
+
 # 1.4.0
 
 - Ignore comments in .http files (lines starting from `#` or `//`)

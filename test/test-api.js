@@ -1,4 +1,4 @@
-import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import { Application, Router } from "https://deno.land/x/oak@14.2.0/mod.ts";
 const app = new Application();
 const router = new Router();
 
@@ -20,12 +20,20 @@ router.delete("/sample", (context) => {
 });
 
 router.put("/sample", async (context) => {
-  const body = await context.request.body().value;
+  const body = await context.request.body.json();
   context.response.body = { id: "sample-put", ...body };
 });
 
 router.get("/exception", () => {
   throw new Error("Sample exception");
+});
+
+router.get("/redirect", (context) => {
+  context.response.redirect("/redirect-target");
+});
+
+router.get("/redirect-target", (context) => {
+  context.response.body = { msg: "redirect-target" };
 });
 
 router.get("/auth-required", (context) => {
