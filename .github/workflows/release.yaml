@@ -12,5 +12,7 @@ jobs:
           deno-version: v1.x # Run with latest stable Deno.
       - run: deno fmt --check
       - run: deno lint
+      - run: deno cache --reload main.js
+      - run: cd test && deno cache --reload test.js
       - run: cd test && deno task test
 
