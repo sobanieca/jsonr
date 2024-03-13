@@ -12,11 +12,12 @@
 - :clipboard: Are you working with modern json http api's?
 - :dash: Do you want to write smoke tests for your api?
 
-`jsonr` is a simple CLI tool for interacting with json http api's and writing simple smoke
-tests. It's available from your terminal anytime when you need it (so you don't
-need to switch context) and it's not aimed to be an ultimate solution for
-everything. That's why it's so simple to use. No more need to browse lots of documentation about
-tons of features that you don't need. 5 minutes and you are ready to send any requests.
+`jsonr` is a simple CLI tool for interacting with json http api's and writing
+simple smoke tests. It's available from your terminal anytime when you need it
+(so you don't need to switch context) and it's not aimed to be an ultimate
+solution for everything. That's why it's so simple to use. No more need to
+browse lots of documentation about tons of features that you don't need. 5
+minutes and you are ready to send any requests.
 
 ![image](./jsonr.png)
 
