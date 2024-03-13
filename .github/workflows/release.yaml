@@ -15,4 +15,9 @@ jobs:
       - run: deno cache --reload main.js
       - run: cd test && deno cache --reload test.js
       - run: cd test && deno task test
-
+      - uses: softprops/action-gh-release@v2
+        #if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            readme.md
+            LICENSE
