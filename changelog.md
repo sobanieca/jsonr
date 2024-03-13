@@ -1,3 +1,7 @@
+# 1.5.1
+
+- Fix version number
+
 # 1.5.0
 
 - Add option to automatically follow redirects with `-f` option
