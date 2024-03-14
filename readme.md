@@ -29,6 +29,10 @@ Deno runtime environment `https://deno.land`
 
 ## Installation
 
+Recommended way to install `jsonr` is to install [Deno](https://deno.land). It can be installed with single command on any operating system and serves as modern
+Javascript runtime. If for any reason, you don't wan't to install Deno, you can proceed to [releases](https://github.com/sobanieca/jsonr/releases), where you will find binaries for each operating system and
+x86 or ARM architecture.
+
 `deno install -f -r --allow-net --allow-read --allow-write https://deno.land/x/jsonr/main.js`
 
 `--allow-write` permission is needed only if you are planning to use `-o`
