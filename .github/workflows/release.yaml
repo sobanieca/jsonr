@@ -28,5 +28,5 @@ jobs:
             jsonr-linux-arm
             jsonr-apple
             jsonr-apple-arm
-            jsonr-windows
+            jsonr-windows.exe
 
