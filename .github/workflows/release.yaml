@@ -6,7 +6,7 @@ on:
     branches:
       - main
     tags:
-      - '*'
+      - "*"
 
 jobs:
   build:
@@ -44,4 +44,3 @@ jobs:
             jsonr-apple
             jsonr-apple-arm
             jsonr-windows.exe
-
