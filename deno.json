@@ -1,4 +1,8 @@
 {
+  "name": "@sobanieca/jsonr",
+  "version": "1.5.4",
+  "license": "MIT",
+  "exports": "./main.js",
   "compilerOptions": {
     "checkJs": true,
     "noImplicitAny": false,

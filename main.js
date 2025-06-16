@@ -1,3 +1,4 @@
+/* @ts-self-types="./main.d.ts" */
 import args from "./src/args.js";
 import logger from "./src/logger.js";
 import help from "./src/commands/help.js";
