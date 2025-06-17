@@ -1,13 +1,13 @@
-import * as log from "https://deno.land/std@0.174.0/log/mod.ts";
-import { BaseHandler } from "https://deno.land/std@0.174.0/log/handlers.ts?s=BaseHandler";
+import * as log from "jsr:@std/log@0.224.14";
+import { BaseHandler } from "jsr:@std/log@0.224.14/base-handler";
 import {
   bold,
   brightBlue,
   brightRed,
   brightYellow,
-} from "https://deno.land/std@0.174.0/fmt/colors.ts";
-import { parse } from "https://deno.land/std@0.174.0/flags/mod.ts";
-import { LogLevels } from "https://deno.land/std@0.174.0/log/mod.ts";
+} from "jsr:@std/fmt@1.0.8/colors";
+import { parseArgs } from "jsr:@std/cli@1.0.20/parse-args";
+import { LogLevels } from "jsr:@std/log@0.224.14";
 
 const deps = {
   logging: {
@@ -21,7 +21,7 @@ const deps = {
     brightRed,
     brightYellow,
   },
-  parse,
+  parse: parseArgs,
 };
 
 export { deps };
