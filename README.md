@@ -92,6 +92,18 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
+### Working with Large Responses
+
+When dealing with large response bodies, you can pipe the output to `grep` to filter specific content:
+
+```bash
+# Search for a specific property in a large JSON response
+jsonr my-api-request.http | grep "someProperty" -C 10
+
+# Extract specific fields from JSON responses
+jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
+```
+
 ## Hints
 
 If you want to disable colors (at least for main log messages), you can use:
