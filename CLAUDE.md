@@ -16,6 +16,12 @@ enabled.
 - `cd test && deno task test` - Run all tests
 - `cd test && deno task update-snapshots` - Update test snapshots
 
+### Lint and fmt
+
+- `deno lint` - run linter
+- `deno fmt` - run formatter
+- `deno check` - check type errors
+
 ### Running the Application
 
 - `deno task run` - Run the main application with all permissions
