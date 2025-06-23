@@ -22,7 +22,7 @@ for (const command of commands) {
     try {
       await command.engine.execute(args);
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err instanceof Error ? err.message : String(err));
       logger.debug(err);
     }
 
