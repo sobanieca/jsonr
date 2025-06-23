@@ -59,7 +59,8 @@ chmod +x jsonr
 sudo mv jsonr /usr/local/bin/
 ```
 
-Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`, `jsonr-macos-arm64`
+Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`,
+`jsonr-macos-arm64`
 
 ### SSL Certificate Issues
 
@@ -94,7 +95,8 @@ Type `jsonr --help` for more details on usage once you have a tool installed.
 
 ### Working with Large Responses
 
-When dealing with large response bodies, you can pipe the output to `grep` to filter specific content:
+When dealing with large response bodies, you can pipe the output to `grep` to
+filter specific content:
 
 ```bash
 # Search for a specific property in a large JSON response
