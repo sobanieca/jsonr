@@ -1,3 +1,4 @@
+/* @ts-self-types="./main.d.ts" */
 import args from "./src/args.js";
 import logger from "./src/logger.js";
 import help from "./src/commands/help.js";
@@ -21,7 +22,7 @@ for (const command of commands) {
     try {
       await command.engine.execute(args);
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err instanceof Error ? err.message : String(err));
       logger.debug(err);
     }
 

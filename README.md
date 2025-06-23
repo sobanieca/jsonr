@@ -29,28 +29,50 @@ Deno runtime environment `https://deno.land`
 
 ## Installation
 
-Recommended way to install `jsonr` is to install [Deno](https://deno.land). It
-can be installed with single command on any operating system and serves as
-modern Javascript runtime. If for any reason, you don't wan't to install Deno,
-you can proceed to [releases](https://github.com/sobanieca/jsonr/releases),
-where you will find binaries for each operating system and x86 or ARM
-architecture.
+### Option 1: Install via Deno (Recommended)
 
-`deno install -f -r --allow-net --allow-read --allow-write https://deno.land/x/jsonr/main.js`
+**Prerequisites:**
+
+- Deno runtime environment
+
+**Install Command:**
+
+```bash
+deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
+```
+
+To update to the latest version, run the same installation command.
 
 `--allow-write` permission is needed only if you are planning to use `-o`
 parameter (write response body to file, check `jsonr --help` for details)
 
+### Option 2: Pre-compiled Binaries
+
+Download the latest pre-compiled binary for your operating system from the
+[releases page](https://github.com/sobanieca/jsonr/releases/latest):
+
+**Example for Linux x64:**
+
+```bash
+curl -L -o jsonr https://github.com/sobanieca/jsonr/releases/latest/download/jsonr-linux-x64
+chmod +x jsonr
+sudo mv jsonr /usr/local/bin/
+```
+
+Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`, `jsonr-macos-arm64`
+
+### SSL Certificate Issues
+
 If your requests are failing due to certificate validation errors (and you trust
 target server) you can run `temporary` command like:
 
-`deno run --allow-net --unsafely-ignore-certificate-errors https://deno.land/x/jsonr/main.js ...`
+`deno run --allow-net --unsafely-ignore-certificate-errors jsr:@sobanieca/jsonr ...`
 
 It will display warning about disable ssl verification, but you should be able
 to perform requests. If you work frequently with such unsafe servers you can
 consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
 
-`deno install -n jsonr-unsafe -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write https://deno.land/x/jsonr/main.js`
+`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
 
 ## Usage
 
@@ -69,6 +91,18 @@ POST http://my-api.com/endpoint
 ```
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
+
+### Working with Large Responses
+
+When dealing with large response bodies, you can pipe the output to `grep` to filter specific content:
+
+```bash
+# Search for a specific property in a large JSON response
+jsonr my-api-request.http | grep "someProperty" -C 10
+
+# Extract specific fields from JSON responses
+jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
+```
 
 ## Hints
 

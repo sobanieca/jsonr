@@ -1,3 +1,7 @@
+# 1.5.4
+
+- Move to JSR.io
+
 # 1.5.1
 
 - Fix version number

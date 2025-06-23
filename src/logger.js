@@ -1,6 +1,9 @@
 import { deps } from "./deps.js";
 
 class BrightConsoleHandler extends deps.logging.BaseHandler {
+  /**
+   * @override
+   */
   format(logRecord) {
     let msg = super.format(logRecord);
 
@@ -8,7 +11,7 @@ class BrightConsoleHandler extends deps.logging.BaseHandler {
       case deps.logging.LogLevels.INFO:
         msg = deps.colors.brightBlue(msg);
         break;
-      case deps.logging.LogLevels.WARNING:
+      case deps.logging.LogLevels.WARN:
         msg = deps.colors.brightYellow(msg);
         break;
       case deps.logging.LogLevels.ERROR:
@@ -34,7 +37,7 @@ const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "INFO";
 deps.logging.log.setup({
   handlers: {
     console: new BrightConsoleHandler("DEBUG", {
-      formatter: "{msg}",
+      formatter: (logRecord) => logRecord.msg,
     }),
   },
   loggers: {

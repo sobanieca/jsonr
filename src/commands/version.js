@@ -1,4 +1,4 @@
-const version = "1.5.3";
+import { version } from "../version.js";
 
 export default {
   execute: () => console.log(version),

@@ -1,0 +1,39 @@
+name: Check Version Consistency
+
+on:
+  workflow_call:
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Check version consistency
+        run: |
+          # Extract version from deno.json
+          DENO_VERSION=$(deno eval "console.log(JSON.parse(Deno.readTextFileSync('deno.json')).version)")
+
+          # Extract version from version.js
+          VERSION_JS_VERSION=$(deno eval "import('./src/version.js').then(m => console.log(m.version))")
+
+          echo "deno.json version: $DENO_VERSION"
+          echo "version.js version: $VERSION_JS_VERSION"
+
+          # Compare versions
+          if [ "$DENO_VERSION" != "$VERSION_JS_VERSION" ]; then
+            echo "❌ Version mismatch detected!"
+            echo "deno.json version: $DENO_VERSION"
+            echo "version.js version: $VERSION_JS_VERSION"
+            echo "Please ensure both files have the same version."
+            exit 1
+          else
+            echo "✅ Versions match: $DENO_VERSION"
+          fi

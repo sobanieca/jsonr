@@ -1,0 +1,66 @@
+name: Check and Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-version:
+    uses: ./.github/workflows/check-version.yml
+
+  check:
+    needs: check-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno fmt --check
+      - run: deno lint
+
+  publish:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx jsr publish
+
+  release:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Get version from deno.json
+        id: version
+        run: echo "version=$(deno eval "console.log(JSON.parse(Deno.readTextFileSync('deno.json')).version)")" >> $GITHUB_OUTPUT
+
+      - name: Compile binaries
+        run: |
+          deno compile --allow-net --allow-read --allow-write --target x86_64-unknown-linux-gnu -o jsonr-linux-x64 main.js
+          deno compile --allow-net --allow-read --allow-write --target aarch64-unknown-linux-gnu -o jsonr-linux-arm64 main.js
+          deno compile --allow-net --allow-read --allow-write --target x86_64-apple-darwin -o jsonr-macos-x64 main.js
+          deno compile --allow-net --allow-read --allow-write --target aarch64-apple-darwin -o jsonr-macos-arm64 main.js
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            jsonr-linux-x64
+            jsonr-linux-arm64
+            jsonr-macos-x64
+            jsonr-macos-arm64
