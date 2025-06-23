@@ -41,7 +41,7 @@ Deno runtime environment `https://deno.land`
 deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
 ```
 
-To update to the latest version, run the same installation command.
+To update to the latest version, run the same installation command
 
 `--allow-write` permission is needed only if you are planning to use `-o`
 parameter (write response body to file, check `jsonr --help` for details)
