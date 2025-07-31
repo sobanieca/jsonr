@@ -108,10 +108,16 @@ jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
 
 ## Hints
 
-If you want to disable colors (at least for main log messages), you can use:
+* If you want to disable colors (at least for main log messages), you can use:
 
 ```
 NO_COLOR=1 jsonr ...
+```
+
+* It is recommended to wrap URLs with quotes to avoid shell conflicts:
+
+```bash
+jsonr "https://api.example.com/users?filter=active&sort=name"
 ```
 
 ## Contribution
