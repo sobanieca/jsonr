@@ -112,7 +112,7 @@ const getVariables = async (args) => {
   return result;
 };
 
-export const sendRequestCore = async (args, options = {}) => {
+export const sendRequestCore = async (args) => {
   const request = {
     method: "GET",
     headers: [{ key: "Content-Type", value: "application/json" }],
@@ -249,44 +249,7 @@ export const sendRequestCore = async (args, options = {}) => {
     }
   }
 
-  // If returnResponse option is set, return response data instead of logging
-  if (options.returnResponse) {
-    // Still perform assertions if specified
-    if (args.s) {
-      if (args.s != response.status) {
-        throw new Error(
-          `Response status code (${response.status}) doesn't match expected value (${args.s})`,
-        );
-      }
-    }
-
-    if (args.t) {
-      const bodyText = typeof responseBody === "string"
-        ? responseBody
-        : JSON.stringify(responseBody);
-      if (!bodyText.includes(args.t)) {
-        throw new Error(
-          `Response body doesn't contain expected text (${args.t})`,
-        );
-      }
-    }
-
-    // Write to file if output is specified
-    if (args.o) {
-      await Deno.writeTextFile(args.o, JSON.stringify(responseBody));
-      logger.info(`Response body written to file ${args.o}`);
-    }
-
-    return {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-      body: responseBody,
-      elapsed,
-    };
-  }
-
-  // Original CLI behavior: log everything
+  // Log response
   logger.info("Response:");
   logger.info("");
   if (args.v) {
@@ -300,7 +263,7 @@ export const sendRequestCore = async (args, options = {}) => {
       await Deno.writeTextFile(args.o, JSON.stringify(responseBody));
       logger.info(`Response body written to file ${args.o}`);
     } else {
-      responseBody = Deno.inspect(
+      const inspectedBody = Deno.inspect(
         responseBody,
         {
           colors: true,
@@ -309,7 +272,7 @@ export const sendRequestCore = async (args, options = {}) => {
           depth: 100,
         },
       );
-      logger.info(responseBody);
+      logger.info(inspectedBody);
     }
   } else {
     logger.info("No response body returned from server");
@@ -329,13 +292,25 @@ export const sendRequestCore = async (args, options = {}) => {
   }
 
   if (args.t) {
-    if (!responseBody.includes(args.t)) {
+    const bodyText = typeof responseBody === "string"
+      ? responseBody
+      : JSON.stringify(responseBody);
+    if (!bodyText.includes(args.t)) {
       logger.error(
         `ERROR: Response body doesn't contain expected text (${args.t})`,
       );
       Deno.exit(1);
     }
   }
+
+  // Return response data for SDK usage
+  return {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+    body: responseBody,
+    elapsed,
+  };
 };
 
 const sendRequest = async (args) => {

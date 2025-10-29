@@ -1,6 +1,7 @@
 # jsonr SDK Examples
 
-This document shows how to use jsonr as a JavaScript/TypeScript SDK for programmatic API testing and request chaining.
+This document shows how to use jsonr as a JavaScript/TypeScript SDK for
+programmatic API testing and request chaining.
 
 ## Installation
 
@@ -61,9 +62,11 @@ const response = await jsonr("api/users.http", {
 
 ### Using Variables
 
-Variables use the `@@variable@@` syntax in .http files and can be provided via the `input` option.
+Variables use the `@@variable@@` syntax in .http files and can be provided via
+the `input` option.
 
 **example.http:**
+
 ```http
 POST https://@@apiUrl@@/users
 
@@ -73,6 +76,7 @@ POST https://@@apiUrl@@/users
 ```
 
 **JavaScript:**
+
 ```javascript
 import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
@@ -89,6 +93,7 @@ const response = await jsonr("example.http", {
 Environment files are JSON files containing variable definitions.
 
 **test.env.json:**
+
 ```json
 {
   "apiUrl": "test.api.example.com",
@@ -97,12 +102,14 @@ Environment files are JSON files containing variable definitions.
 ```
 
 **request.http:**
+
 ```http
 GET https://@@apiUrl@@/data
 Authorization: Bearer @@apiKey@@
 ```
 
 **JavaScript:**
+
 ```javascript
 import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
@@ -218,7 +225,8 @@ const response = await jsonr("api/upload.http", {
 
 ## Request Chaining
 
-One of the most powerful features of the SDK is the ability to chain requests and pass data between them.
+One of the most powerful features of the SDK is the ability to chain requests
+and pass data between them.
 
 ### Basic Chaining
 
@@ -284,6 +292,7 @@ console.log("Order created and verified:", verifyResponse);
 ### Chaining with Environment Variables
 
 **create-user.http:**
+
 ```http
 POST https://@@apiUrl@@/users
 
@@ -293,12 +302,14 @@ POST https://@@apiUrl@@/users
 ```
 
 **get-user.http:**
+
 ```http
 GET https://@@apiUrl@@/users/@@userId@@
 Authorization: Bearer @@token@@
 ```
 
 **JavaScript:**
+
 ```javascript
 import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
@@ -444,12 +455,17 @@ Deno.test("User API - Create and retrieve user", async () => {
 
 ## Tips and Best Practices
 
-1. **Use Environment Files**: Keep environment-specific configuration in separate JSON files
-2. **Chain Requests**: Leverage the SDK's ability to pass data between requests for complex workflows
-3. **Add Assertions**: Use `status` and `text` options to validate responses automatically
+1. **Use Environment Files**: Keep environment-specific configuration in
+   separate JSON files
+2. **Chain Requests**: Leverage the SDK's ability to pass data between requests
+   for complex workflows
+3. **Add Assertions**: Use `status` and `text` options to validate responses
+   automatically
 4. **Reuse .http Files**: The same .http files work for both CLI and SDK usage
-5. **Error Handling**: Always wrap requests in try-catch blocks for production code
-6. **Verbose Mode**: Use verbose mode during debugging to see full request/response details
+5. **Error Handling**: Always wrap requests in try-catch blocks for production
+   code
+6. **Verbose Mode**: Use verbose mode during debugging to see full
+   request/response details
 7. **Type Safety**: Import the SDK in TypeScript projects for better IDE support
 
 ## See Also

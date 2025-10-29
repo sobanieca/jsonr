@@ -100,7 +100,7 @@ export async function jsonr(filePathOrUrl, options = {}) {
 
   // Execute the request and return response data
   try {
-    const response = await sendRequestCore(args, { returnResponse: true });
+    const response = await sendRequestCore(args);
     return response.body;
   } catch (err) {
     logger.error(err instanceof Error ? err.message : String(err));
