@@ -1,7 +1,9 @@
 # Main goal
 
-Implement a new feature in jsonr. jsonr SDK. It's supposed to allow writing interaction between API's responses and requests. Basing on already existing http
-files, it allows to chain them so basing on response from one request, one should be able to inject some data into another request. Sample usage:
+Implement a new feature in jsonr. jsonr SDK. It's supposed to allow writing
+interaction between API's responses and requests. Basing on already existing
+http files, it allows to chain them so basing on response from one request, one
+should be able to inject some data into another request. Sample usage:
 
 # Examples
 
@@ -29,7 +31,8 @@ jsonr('some-request.http', {
 
 ## Using environment variables
 
-Environment files are JSON files with variables and their values (similar to CLI's `-e` parameter).
+Environment files are JSON files with variables and their values (similar to
+CLI's `-e` parameter).
 
 ```
 import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
@@ -41,6 +44,7 @@ jsonr('some-request.http', {
 ```
 
 For a .http file like:
+
 ```
 POST https://@@apiUrl@@/value
 
@@ -50,6 +54,7 @@ POST https://@@apiUrl@@/value
 ```
 
 With environment file `test.json`:
+
 ```json
 {
   "apiUrl": "my-api-on-test-environment.com"
@@ -58,7 +63,8 @@ With environment file `test.json`:
 
 ## Overriding environment variables with input
 
-You can combine environment files with input variables to override specific values:
+You can combine environment files with input variables to override specific
+values:
 
 ```
 import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'

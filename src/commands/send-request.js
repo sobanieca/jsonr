@@ -112,7 +112,7 @@ const getVariables = async (args) => {
   return result;
 };
 
-const sendRequest = async (args) => {
+export const sendRequestCore = async (args, options = {}) => {
   const request = {
     method: "GET",
     headers: [{ key: "Content-Type", value: "application/json" }],
@@ -209,7 +209,7 @@ const sendRequest = async (args) => {
   }
 
   const timestamp = new Date();
-  const options = {
+  const fetchOptions = {
     method: request.method,
     body: request.body,
     redirect,
@@ -224,7 +224,7 @@ const sendRequest = async (args) => {
   };
   if (!request.body || !request.body.trim()) {
     logger.debug("No request body provided, removing it from request object.");
-    delete options.body;
+    delete fetchOptions.body;
   }
 
   request.url =
@@ -233,7 +233,7 @@ const sendRequest = async (args) => {
       : `http://${request.url}`;
 
   // @ts-ignore too strict typing
-  const response = await fetch(request.url, options);
+  const response = await fetch(request.url, fetchOptions);
 
   // @ts-ignore timestamp is Date type
   const elapsed = new Date() - timestamp;
@@ -249,6 +249,44 @@ const sendRequest = async (args) => {
     }
   }
 
+  // If returnResponse option is set, return response data instead of logging
+  if (options.returnResponse) {
+    // Still perform assertions if specified
+    if (args.s) {
+      if (args.s != response.status) {
+        throw new Error(
+          `Response status code (${response.status}) doesn't match expected value (${args.s})`,
+        );
+      }
+    }
+
+    if (args.t) {
+      const bodyText = typeof responseBody === "string"
+        ? responseBody
+        : JSON.stringify(responseBody);
+      if (!bodyText.includes(args.t)) {
+        throw new Error(
+          `Response body doesn't contain expected text (${args.t})`,
+        );
+      }
+    }
+
+    // Write to file if output is specified
+    if (args.o) {
+      await Deno.writeTextFile(args.o, JSON.stringify(responseBody));
+      logger.info(`Response body written to file ${args.o}`);
+    }
+
+    return {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+      body: responseBody,
+      elapsed,
+    };
+  }
+
+  // Original CLI behavior: log everything
   logger.info("Response:");
   logger.info("");
   if (args.v) {
@@ -298,6 +336,10 @@ const sendRequest = async (args) => {
       Deno.exit(1);
     }
   }
+};
+
+const sendRequest = async (args) => {
+  await sendRequestCore(args);
 };
 
 export default {
