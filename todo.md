@@ -15,7 +15,7 @@ jsonr('some-request.http');
 
 As an output one should see regular output from jsonr.
 
-## Overridng some options
+## Overriding some options
 
 ```
 import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
@@ -27,3 +27,20 @@ jsonr('some-request.http', {
 });
 ```
 
+## Chaining requests
+
+```
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+
+const response1 = await jsonr('some-request.http', {
+ headers: {
+    'Authorization': 'Bearer token123'
+ }
+});
+
+await jsonr('more-requests/some-request2.http', {
+ input: {
+    'orderId': response1.id
+ }
+});
+```
