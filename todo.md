@@ -10,7 +10,7 @@ should be able to inject some data into another request. Sample usage:
 ## Sending specific http file
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 jsonr('some-request.http');
 ```
@@ -20,7 +20,7 @@ As an output one should see regular output from jsonr.
 ## Overriding some options
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 jsonr('some-request.http', {
  headers: {
@@ -35,7 +35,7 @@ Environment files are JSON files with variables and their values (similar to
 CLI's `-e` parameter).
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Using environment file
 jsonr('some-request.http', {
@@ -67,7 +67,7 @@ You can combine environment files with input variables to override specific
 values:
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Load environment but override specific variables
 jsonr('some-request.http', {
@@ -81,7 +81,7 @@ jsonr('some-request.http', {
 ## Multiple input variables
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 jsonr('some-request.http', {
   input: {
@@ -95,7 +95,7 @@ jsonr('some-request.http', {
 ## Asserting response status
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Assert that response status is 200
 jsonr('some-request.http', {
@@ -106,7 +106,7 @@ jsonr('some-request.http', {
 ## Asserting response body contains text
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Assert that response body contains specific text
 jsonr('some-request.http', {
@@ -117,7 +117,7 @@ jsonr('some-request.http', {
 ## Specifying HTTP method
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Override method from .http file or specify for URL
 jsonr('http://localhost:3000/api/users', {
@@ -128,7 +128,7 @@ jsonr('http://localhost:3000/api/users', {
 ## Providing request body
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Provide body directly (useful with URLs instead of .http files)
 jsonr('http://myapi.com/values', {
@@ -140,7 +140,7 @@ jsonr('http://myapi.com/values', {
 ## Verbose mode
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Get detailed output with request and response headers
 jsonr('some-request.http', {
@@ -151,7 +151,7 @@ jsonr('some-request.http', {
 ## Raw mode
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Disable whitespace character replacement
 jsonr('some-request.http', {
@@ -162,7 +162,7 @@ jsonr('some-request.http', {
 ## Follow redirects
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Automatically follow 3xx redirects
 jsonr('some-request.http', {
@@ -173,7 +173,7 @@ jsonr('some-request.http', {
 ## Save response to file
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Save response to output file
 jsonr('some-request.http', {
@@ -184,7 +184,7 @@ jsonr('some-request.http', {
 ## Omit default Content-Type header
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 // Disable automatic "Content-Type: application/json" header
 jsonr('some-request.http', {
@@ -195,7 +195,7 @@ jsonr('some-request.http', {
 ## Chaining requests
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 const response1 = await jsonr('some-request.http', {
   headers: {
@@ -213,7 +213,7 @@ await jsonr('more-requests/some-request2.http', {
 ## Complete example with multiple options
 
 ```
-import { jsonr } from 'https://jsr.io/@sobanieca/jsonr'
+import { jsonr } from 'https://jsr.io/@sobanieca/jsonr/sdk'
 
 const response = await jsonr('api/create-order.http', {
   environment: './environments/test.json',

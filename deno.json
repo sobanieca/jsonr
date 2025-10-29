@@ -3,8 +3,8 @@
   "version": "1.6.0",
   "license": "MIT",
   "exports": {
-    ".": "./mod.js",
-    "./cli": "./main.js"
+    ".": "./main.js",
+    "./sdk": "./mod.js"
   },
   "compilerOptions": {
     "checkJs": true,

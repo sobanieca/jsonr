@@ -5,10 +5,10 @@ This document shows how to use jsonr as a JavaScript/TypeScript SDK for programm
 ## Installation
 
 ```bash
-# Import from JSR
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr"
+# Import from JSR (note the /sdk subpath)
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk"
 
-# Or use with Deno
+# Or use with Deno locally
 import { jsonr } from "./mod.js"
 ```
 
@@ -17,7 +17,7 @@ import { jsonr } from "./mod.js"
 ### Simple GET Request
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 // Using a .http file
 const response = await jsonr("request.http");
@@ -31,7 +31,7 @@ console.log(response2);
 ### POST Request with Body
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("https://api.example.com/users", {
   method: "POST",
@@ -49,7 +49,7 @@ console.log("Created user:", response);
 ### Adding Headers
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("api/users.http", {
   headers: {
@@ -74,7 +74,7 @@ POST https://@@apiUrl@@/users
 
 **JavaScript:**
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("example.http", {
   input: {
@@ -104,7 +104,7 @@ Authorization: Bearer @@apiKey@@
 
 **JavaScript:**
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("request.http", {
   environment: "./test.env.json",
@@ -114,7 +114,7 @@ const response = await jsonr("request.http", {
 ### Overriding Environment Variables
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("request.http", {
   environment: "./test.env.json",
@@ -129,7 +129,7 @@ const response = await jsonr("request.http", {
 ### Status Code Assertion
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 // Will throw an error if status is not 200
 const response = await jsonr("api/users.http", {
@@ -145,7 +145,7 @@ const created = await jsonr("api/create-user.http", {
 ### Response Body Text Assertion
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 // Will throw an error if response doesn't contain "success"
 const response = await jsonr("api/process.http", {
@@ -156,7 +156,7 @@ const response = await jsonr("api/process.http", {
 ### Combined Assertions
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("api/users.http", {
   status: 200,
@@ -169,7 +169,7 @@ const response = await jsonr("api/users.http", {
 ### Verbose Mode
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("api/users.http", {
   verbose: true, // Logs request/response headers
@@ -179,7 +179,7 @@ const response = await jsonr("api/users.http", {
 ### Raw Mode
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("request.http", {
   raw: true, // Disables whitespace character replacement
@@ -189,7 +189,7 @@ const response = await jsonr("request.http", {
 ### Follow Redirects
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("api/redirect.http", {
   followRedirects: true, // Automatically follow 3xx redirects
@@ -199,7 +199,7 @@ const response = await jsonr("api/redirect.http", {
 ### Save Response to File
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("api/data.http", {
   output: "response.json", // Saves response to response.json
@@ -209,7 +209,7 @@ const response = await jsonr("api/data.http", {
 ### Omit Default Content-Type Header
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const response = await jsonr("api/upload.http", {
   omitDefaultContentTypeHeader: true, // Don't add automatic "Content-Type: application/json"
@@ -223,7 +223,7 @@ One of the most powerful features of the SDK is the ability to chain requests an
 ### Basic Chaining
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 // First request - create a user
 const createResponse = await jsonr("api/create-user.http", {
@@ -243,7 +243,7 @@ console.log("User details:", userDetails);
 ### Complex Chaining Example
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 // Step 1: Authenticate and get token
 const authResponse = await jsonr("auth/login.http", {
@@ -300,7 +300,7 @@ Authorization: Bearer @@token@@
 
 **JavaScript:**
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 const env = {
   environment: "./test.env.json",
@@ -321,7 +321,7 @@ const details = await jsonr("get-user.http", {
 ## Error Handling
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 try {
   const response = await jsonr("api/users.http", {
@@ -338,7 +338,7 @@ try {
 ## Complete Example: E-commerce Test Flow
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 
 async function testEcommerceFlow() {
   const config = {
@@ -419,7 +419,7 @@ await testEcommerceFlow();
 ### Using with Deno.test
 
 ```javascript
-import { jsonr } from "https://jsr.io/@sobanieca/jsonr";
+import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
 import { assertEquals } from "https://deno.land/std/assert/mod.ts";
 
 Deno.test("User API - Create and retrieve user", async () => {
