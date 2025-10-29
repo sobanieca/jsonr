@@ -7,7 +7,7 @@ console.log("Testing jsonr SDK with .http files...\n");
 console.log("Test 1: Using .http file");
 try {
   const response1 = await jsonr("test/requests/get.http");
-  console.log("✓ Response from .http file:", response1);
+  console.log("✓ Response body from .http file:", response1);
   console.log();
 } catch (err) {
   console.error("✗ Test 1 failed:", err.message);
@@ -28,7 +28,7 @@ try {
       postId: "1",
     },
   });
-  console.log("✓ Response with variable substitution:", response2);
+  console.log("✓ Response body with variable substitution:", response2);
   console.log();
 } catch (err) {
   console.error("✗ Test 2 failed:", err.message);
@@ -56,7 +56,7 @@ try {
   const response3 = await jsonr("test-with-env.http", {
     environment: "test-env.json",
   });
-  console.log("✓ Response with environment variables:", response3);
+  console.log("✓ Response body with environment variables:", response3);
   console.log();
 } catch (err) {
   console.error("✗ Test 3 failed:", err.message);
@@ -72,7 +72,7 @@ try {
       postId: "3", // Override postId from environment
     },
   });
-  console.log("✓ Response with overridden variables:", response4);
+  console.log("✓ Response body with overridden variables:", response4);
   console.log();
 } catch (err) {
   console.error("✗ Test 4 failed:", err.message);
@@ -124,15 +124,15 @@ await Deno.writeTextFile(
 try {
   // First request - create a user
   const createResponse = await jsonr("test-create-user.http");
-  console.log("✓ Created user with id:", createResponse.id);
+  console.log("✓ Created user with id:", createResponse.body.id);
 
   // Second request - get user details using id from first request
   const getUserResponse = await jsonr("test-get-user.http", {
     input: {
-      userId: createResponse.id.toString(),
+      userId: createResponse.body.id.toString(),
     },
   });
-  console.log("✓ Retrieved user:", getUserResponse);
+  console.log("✓ Retrieved user:", getUserResponse.body);
   console.log("✓ Chaining with .http files works!");
   console.log();
 } catch (err) {

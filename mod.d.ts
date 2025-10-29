@@ -29,12 +29,28 @@ export interface JsonrOptions {
 }
 
 /**
+ * Response returned by jsonr
+ */
+export interface JsonrResponse {
+  /** HTTP status code */
+  status: number;
+  /** HTTP status text */
+  statusText: string;
+  /** Response headers */
+  headers: Headers;
+  /** Response body (parsed as JSON if possible, otherwise string) */
+  body: unknown;
+  /** Request elapsed time in milliseconds */
+  elapsed: number;
+}
+
+/**
  * Sends an HTTP request using a .http file or URL
  * @param filePathOrUrl - Path to .http file or a URL
  * @param options - Request options
- * @returns Response body (parsed as JSON if possible)
+ * @returns Response object with status, body, headers, and elapsed time
  */
 export function jsonr(
   filePathOrUrl: string,
   options?: JsonrOptions,
-): Promise<unknown>;
+): Promise<JsonrResponse>;

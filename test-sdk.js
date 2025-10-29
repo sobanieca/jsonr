@@ -7,7 +7,8 @@ console.log("Testing jsonr SDK...\n");
 console.log("Test 1: Simple GET request with URL");
 try {
   const response1 = await jsonr("https://jsonplaceholder.typicode.com/posts/1");
-  console.log("✓ Response received:", response1);
+  console.log("✓ Response received:", response1.body);
+  console.log("✓ Status:", response1.status);
   console.log();
 } catch (err) {
   console.error("✗ Test 1 failed:", err.message);
@@ -20,7 +21,7 @@ try {
   const response2 = await jsonr("https://jsonplaceholder.typicode.com/posts", {
     method: "GET",
   });
-  console.log("✓ Response received (first item):", response2[0]);
+  console.log("✓ Response received (first item):", response2.body[0]);
   console.log();
 } catch (err) {
   console.error("✗ Test 2 failed:", err.message);
@@ -38,7 +39,7 @@ try {
       userId: 1,
     }),
   });
-  console.log("✓ Response received:", response3);
+  console.log("✓ Response received:", response3.body);
   console.log();
 } catch (err) {
   console.error("✗ Test 3 failed:", err.message);
@@ -57,7 +58,7 @@ try {
       },
     },
   );
-  console.log("✓ Response received:", response4);
+  console.log("✓ Response received:", response4.body);
   console.log();
 } catch (err) {
   console.error("✗ Test 4 failed:", err.message);
@@ -100,14 +101,20 @@ try {
 console.log("Test 7: Chaining requests");
 try {
   // First request - get a post
-  const post = await jsonr("https://jsonplaceholder.typicode.com/posts/1");
-  console.log("✓ First request received post with userId:", post.userId);
+  const response1 = await jsonr("https://jsonplaceholder.typicode.com/posts/1");
+  console.log(
+    "✓ First request received post with userId:",
+    response1.body.userId,
+  );
 
   // Second request - use userId from first request to get user
-  const user = await jsonr("https://jsonplaceholder.typicode.com/users", {
+  const response2 = await jsonr("https://jsonplaceholder.typicode.com/users", {
     method: "GET",
   });
-  console.log("✓ Second request received users, first user:", user[0].name);
+  console.log(
+    "✓ Second request received users, first user:",
+    response2.body[0].name,
+  );
   console.log("✓ Chaining works!");
   console.log();
 } catch (err) {

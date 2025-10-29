@@ -2,24 +2,6 @@
 import { sendRequestCore } from "./src/commands/send-request.js";
 import logger from "./src/logger.js";
 
-/**
- * Sends an HTTP request using a .http file or URL
- * @param {string} filePathOrUrl - Path to .http file or a URL
- * @param {Object} [options={}] - Request options
- * @param {Object<string, string>} [options.headers] - Additional headers to add to the request
- * @param {string} [options.environment] - Path to environment JSON file
- * @param {Object<string, string>} [options.input] - Input variables to replace in the request
- * @param {number} [options.status] - Expected response status code (assertion)
- * @param {string} [options.text] - Expected text in response body (assertion)
- * @param {string} [options.method] - HTTP method (GET, POST, etc.)
- * @param {string} [options.body] - Request body
- * @param {boolean} [options.verbose] - Enable verbose mode (show headers)
- * @param {boolean} [options.raw] - Enable raw mode (don't replace whitespace in .http files)
- * @param {boolean} [options.followRedirects] - Follow redirects automatically
- * @param {string} [options.output] - Output file path for response
- * @param {boolean} [options.omitDefaultContentTypeHeader] - Don't add default Content-Type header
- * @returns {Promise<any>} Response body (parsed as JSON if possible)
- */
 export async function jsonr(filePathOrUrl, options = {}) {
   // Convert SDK options to internal args format
   const args = {
@@ -101,7 +83,7 @@ export async function jsonr(filePathOrUrl, options = {}) {
   // Execute the request and return response data
   try {
     const response = await sendRequestCore(args);
-    return response.body;
+    return response;
   } catch (err) {
     logger.error(err instanceof Error ? err.message : String(err));
     throw err;

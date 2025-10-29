@@ -209,7 +209,7 @@ export const sendRequestCore = async (args) => {
   }
 
   const timestamp = new Date();
-  const fetchOptions = {
+  const options = {
     method: request.method,
     body: request.body,
     redirect,
@@ -224,7 +224,7 @@ export const sendRequestCore = async (args) => {
   };
   if (!request.body || !request.body.trim()) {
     logger.debug("No request body provided, removing it from request object.");
-    delete fetchOptions.body;
+    delete options.body;
   }
 
   request.url =
@@ -233,7 +233,7 @@ export const sendRequestCore = async (args) => {
       : `http://${request.url}`;
 
   // @ts-ignore too strict typing
-  const response = await fetch(request.url, fetchOptions);
+  const response = await fetch(request.url, options);
 
   // @ts-ignore timestamp is Date type
   const elapsed = new Date() - timestamp;
@@ -249,6 +249,9 @@ export const sendRequestCore = async (args) => {
     }
   }
 
+  // Save original body for return value before logging mutates it
+  const originalResponseBody = responseBody;
+
   // Log response
   logger.info("Response:");
   logger.info("");
@@ -263,7 +266,7 @@ export const sendRequestCore = async (args) => {
       await Deno.writeTextFile(args.o, JSON.stringify(responseBody));
       logger.info(`Response body written to file ${args.o}`);
     } else {
-      const inspectedBody = Deno.inspect(
+      responseBody = Deno.inspect(
         responseBody,
         {
           colors: true,
@@ -272,7 +275,7 @@ export const sendRequestCore = async (args) => {
           depth: 100,
         },
       );
-      logger.info(inspectedBody);
+      logger.info(responseBody);
     }
   } else {
     logger.info("No response body returned from server");
@@ -292,9 +295,9 @@ export const sendRequestCore = async (args) => {
   }
 
   if (args.t) {
-    const bodyText = typeof responseBody === "string"
-      ? responseBody
-      : JSON.stringify(responseBody);
+    const bodyText = typeof originalResponseBody === "string"
+      ? originalResponseBody
+      : JSON.stringify(originalResponseBody);
     if (!bodyText.includes(args.t)) {
       logger.error(
         `ERROR: Response body doesn't contain expected text (${args.t})`,
@@ -308,7 +311,7 @@ export const sendRequestCore = async (args) => {
     status: response.status,
     statusText: response.statusText,
     headers: response.headers,
-    body: responseBody,
+    body: originalResponseBody,
     elapsed,
   };
 };

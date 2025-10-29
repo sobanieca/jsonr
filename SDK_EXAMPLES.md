@@ -3,6 +3,24 @@
 This document shows how to use jsonr as a JavaScript/TypeScript SDK for
 programmatic API testing and request chaining.
 
+## Response Format
+
+The `jsonr()` function returns a promise that resolves to a response object with
+the following structure:
+
+```typescript
+{
+  status: number; // HTTP status code (e.g., 200, 404)
+  statusText: string; // HTTP status text (e.g., "OK", "Not Found")
+  headers: Headers; // Response headers
+  body: unknown; // Response body (parsed as JSON if possible, otherwise string)
+  elapsed: number; // Request duration in milliseconds
+}
+```
+
+Access the response data using the `.body` property, status code using
+`.status`, etc.
+
 ## Installation
 
 ```bash
@@ -241,11 +259,11 @@ const createResponse = await jsonr("api/create-user.http", {
 // Second request - use the user ID from the first request
 const userDetails = await jsonr("api/get-user.http", {
   input: {
-    userId: createResponse.id,
+    userId: createResponse.body.id,
   },
 });
 
-console.log("User details:", userDetails);
+console.log("User details:", userDetails.body);
 ```
 
 ### Complex Chaining Example
@@ -265,7 +283,7 @@ const authResponse = await jsonr("auth/login.http", {
 // Step 2: Create an order using the auth token
 const orderResponse = await jsonr("api/create-order.http", {
   headers: {
-    Authorization: `Bearer ${authResponse.token}`,
+    Authorization: `Bearer ${authResponse.body.token}`,
   },
   input: {
     productId: "123",
@@ -277,16 +295,16 @@ const orderResponse = await jsonr("api/create-order.http", {
 // Step 3: Verify the order was created
 const verifyResponse = await jsonr("api/get-order.http", {
   headers: {
-    Authorization: `Bearer ${authResponse.token}`,
+    Authorization: `Bearer ${authResponse.body.token}`,
   },
   input: {
-    orderId: orderResponse.orderId,
+    orderId: orderResponse.body.orderId,
   },
   status: 200,
   text: "confirmed",
 });
 
-console.log("Order created and verified:", verifyResponse);
+console.log("Order created and verified:", verifyResponse.body);
 ```
 
 ### Chaining with Environment Variables
@@ -366,7 +384,7 @@ async function testEcommerceFlow() {
     });
 
     const headers = {
-      Authorization: `Bearer ${auth.token}`,
+      Authorization: `Bearer ${auth.body.token}`,
     };
 
     // 2. Get product catalog
@@ -383,7 +401,7 @@ async function testEcommerceFlow() {
       ...config,
       headers,
       input: {
-        productId: products[0].id,
+        productId: products.body[0].id,
         quantity: "2",
       },
       status: 200,
@@ -395,7 +413,7 @@ async function testEcommerceFlow() {
       ...config,
       headers,
       input: {
-        cartId: cart.id,
+        cartId: cart.body.id,
       },
       status: 201,
       text: "order created",
@@ -407,14 +425,14 @@ async function testEcommerceFlow() {
       ...config,
       headers,
       input: {
-        orderId: order.id,
+        orderId: order.body.id,
       },
       status: 200,
     });
 
     console.log("✓ E-commerce flow completed successfully!");
-    console.log("Order ID:", orderDetails.id);
-    console.log("Total:", orderDetails.total);
+    console.log("Order ID:", orderDetails.body.id);
+    console.log("Total:", orderDetails.body.total);
   } catch (error) {
     console.error("✗ E-commerce flow failed:", error.message);
     throw error;
@@ -439,17 +457,17 @@ Deno.test("User API - Create and retrieve user", async () => {
     status: 201,
   });
 
-  assertEquals(typeof createResponse.id, "number");
+  assertEquals(typeof createResponse.body.id, "number");
 
   // Retrieve user
   const getResponse = await jsonr("api/get-user.http", {
     input: {
-      userId: createResponse.id,
+      userId: createResponse.body.id,
     },
     status: 200,
   });
 
-  assertEquals(getResponse.id, createResponse.id);
+  assertEquals(getResponse.body.id, createResponse.body.id);
 });
 ```
 
