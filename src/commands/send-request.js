@@ -249,10 +249,8 @@ export const sendRequestCore = async (args) => {
     }
   }
 
-  // Save original body for return value before logging mutates it
   const originalResponseBody = responseBody;
 
-  // Log response
   logger.info("Response:");
   logger.info("");
   if (args.verbose) {
@@ -306,7 +304,6 @@ export const sendRequestCore = async (args) => {
     }
   }
 
-  // Return response data for SDK usage
   return {
     status: response.status,
     statusText: response.statusText,

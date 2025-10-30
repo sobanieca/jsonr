@@ -3,7 +3,6 @@ import { sendRequestCore } from "./src/commands/send-request.js";
 import logger from "./src/logger.js";
 
 export async function jsonr(filePathOrUrl, options = {}) {
-  // Convert SDK options to internal args format
   const args = {
     _: [filePathOrUrl],
     headers: undefined,
@@ -20,7 +19,6 @@ export async function jsonr(filePathOrUrl, options = {}) {
     "omit-default-content-type-header": false,
   };
 
-  // Map headers option
   if (options.headers) {
     args.headers = [];
     for (const [key, value] of Object.entries(options.headers)) {
@@ -28,12 +26,10 @@ export async function jsonr(filePathOrUrl, options = {}) {
     }
   }
 
-  // Map environment option
   if (options.environment) {
     args.environment = options.environment;
   }
 
-  // Map input variables option
   if (options.input) {
     args.input = [];
     for (const [key, value] of Object.entries(options.input)) {
@@ -41,7 +37,6 @@ export async function jsonr(filePathOrUrl, options = {}) {
     }
   }
 
-  // Map assertion options
   if (options.status !== undefined) {
     args.status = options.status;
   }
@@ -50,7 +45,6 @@ export async function jsonr(filePathOrUrl, options = {}) {
     args.text = options.text;
   }
 
-  // Map request configuration options
   if (options.method) {
     args.method = options.method;
   }
@@ -59,7 +53,6 @@ export async function jsonr(filePathOrUrl, options = {}) {
     args.body = options.body;
   }
 
-  // Map boolean flags
   if (options.verbose) {
     args.verbose = true;
   }
@@ -80,7 +73,6 @@ export async function jsonr(filePathOrUrl, options = {}) {
     args["omit-default-content-type-header"] = true;
   }
 
-  // Execute the request and return response data
   try {
     const response = await sendRequestCore(args);
     return response;
