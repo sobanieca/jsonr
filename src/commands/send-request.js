@@ -122,7 +122,7 @@ export const sendRequestCore = async (args) => {
 
   if (args["omit-default-content-type-header"]) {
     logger.debug(
-      "Parameter--omit-default-content-type-header provided - removing default Content-Type header",
+      "Parameter --omit-default-content-type-header provided - removing default Content-Type header",
     );
     request.headers = [];
   }
