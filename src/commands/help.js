@@ -133,9 +133,13 @@ path to .http file name or url
 
   Display this help text
 
---version 
+--version
 
   Display version info
+
+--sdk-init
+
+  Create a jsonr SDK example file to get started using jsonr programmatically
 
 -o [o]utput file for response json, if this parameter is not provided default output is stdout. 
 
