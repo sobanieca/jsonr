@@ -2,18 +2,18 @@ import logger from "../logger.js";
 
 /*
  * Available args:
- * i input variable -i "variable1: abc"
- * h header -h "auth: abc"
- * s expected response status code -s 200
- * t expected text in response -t "abc"
- * e environment file path -e "./file.json"
- * m http method -m POST
- * v verbose - more details like response headers
- * b body -b '{ test: "123" }'
+ * input (i) input variable -i "variable1: abc"
+ * headers (h) header -h "auth: abc"
+ * status (s) expected response status code -s 200
+ * text (t) expected text in response -t "abc"
+ * environment (e) environment file path -e "./file.json"
+ * method (m) http method -m POST
+ * verbose (v) verbose - more details like response headers
+ * body (b) body -b '{ test: "123" }'
  * --omit-default-content-type-header
- * o output file -o output.json
- * r request raw mode
- * f follow redirects
+ * output (o) output file -o output.json
+ * raw (r) request raw mode
+ * follow-redirects (f) follow redirects
  * input http file / url
  */
 
@@ -77,8 +77,8 @@ const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
 
 const getVariables = async (args) => {
   const result = new Map();
-  if (args.e) {
-    const environmentFilePath = args.e;
+  if (args.environment) {
+    const environmentFilePath = args.environment;
     try {
       const environmentFileVariables = JSON.parse(
         await Deno.readTextFile(environmentFilePath),
@@ -99,13 +99,13 @@ const getVariables = async (args) => {
     result.set(key, value);
   };
 
-  if (args.i) {
-    if (Array.isArray(args.i)) {
-      for (const inputVariable of args.i) {
+  if (args.input) {
+    if (Array.isArray(args.input)) {
+      for (const inputVariable of args.input) {
         setInputVariable(inputVariable);
       }
     } else {
-      setInputVariable(args.i);
+      setInputVariable(args.input);
     }
   }
 
@@ -146,7 +146,7 @@ export const sendRequestCore = async (args) => {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
       const variables = await getVariables(args);
-      const fileRequest = await parseHttpFile(urlOrFilePath, variables, args.r);
+      const fileRequest = await parseHttpFile(urlOrFilePath, variables, args.raw);
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
@@ -163,41 +163,41 @@ export const sendRequestCore = async (args) => {
     }
   }
 
-  if (args.m) {
-    logger.debug(`Parameter [m]ethod provided - HTTP method set to ${args.m}`);
-    request.method = args.m;
+  if (args.method) {
+    logger.debug(`Parameter [m]ethod provided - HTTP method set to ${args.method}`);
+    request.method = args.method;
   }
 
-  if (args.b) {
-    logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.b}`);
-    request.body = args.b;
+  if (args.body) {
+    logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.body}`);
+    request.body = args.body;
   }
 
-  if (args.h) {
+  if (args.headers) {
     const appendHeader = (headerArg) => {
       logger.debug(`Adding ${headerArg} header to request`);
       const headerValues = getHeaderValues(headerArg);
       request.headers.push(headerValues);
     };
-    if (Array.isArray(args.h)) {
-      for (const h of args.h) {
+    if (Array.isArray(args.headers)) {
+      for (const h of args.headers) {
         appendHeader(h);
       }
     } else {
-      appendHeader(args.h);
+      appendHeader(args.headers);
     }
   }
 
   logger.info(`${request.method} ${request.url}...`);
   let requestLog = (msg) => logger.debug(msg);
 
-  if (args.v) {
+  if (args.verbose) {
     requestLog = (msg) => logger.info(msg);
   }
 
   let redirect = "manual";
 
-  if (args.f) {
+  if (args["follow-redirects"]) {
     redirect = "follow";
   }
 
@@ -255,16 +255,16 @@ export const sendRequestCore = async (args) => {
   // Log response
   logger.info("Response:");
   logger.info("");
-  if (args.v) {
+  if (args.verbose) {
     for (const header of response.headers.entries()) {
       logger.info(`${header[0]}: ${header[1]}`);
     }
   }
 
   if (responseBody) {
-    if (args.o) {
-      await Deno.writeTextFile(args.o, JSON.stringify(responseBody));
-      logger.info(`Response body written to file ${args.o}`);
+    if (args.output) {
+      await Deno.writeTextFile(args.output, JSON.stringify(responseBody));
+      logger.info(`Response body written to file ${args.output}`);
     } else {
       responseBody = Deno.inspect(
         responseBody,
@@ -285,22 +285,22 @@ export const sendRequestCore = async (args) => {
     `${response.status} - ${response.statusText} obtained in ${elapsed}ms`,
   );
 
-  if (args.s) {
-    if (args.s != response.status) {
+  if (args.status) {
+    if (args.status != response.status) {
       logger.error(
-        `ERROR: Response status code (${response.status}) doesn't match expected value (${args.s})`,
+        `ERROR: Response status code (${response.status}) doesn't match expected value (${args.status})`,
       );
       Deno.exit(1);
     }
   }
 
-  if (args.t) {
+  if (args.text) {
     const bodyText = typeof originalResponseBody === "string"
       ? originalResponseBody
       : JSON.stringify(originalResponseBody);
-    if (!bodyText.includes(args.t)) {
+    if (!bodyText.includes(args.text)) {
       logger.error(
-        `ERROR: Response body doesn't contain expected text (${args.t})`,
+        `ERROR: Response body doesn't contain expected text (${args.text})`,
       );
       Deno.exit(1);
     }

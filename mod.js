@@ -6,74 +6,74 @@ export async function jsonr(filePathOrUrl, options = {}) {
   // Convert SDK options to internal args format
   const args = {
     _: [filePathOrUrl],
-    h: undefined,
-    e: undefined,
-    i: undefined,
-    s: undefined,
-    t: undefined,
-    m: undefined,
-    b: undefined,
-    v: false,
-    r: false,
-    f: false,
-    o: undefined,
+    headers: undefined,
+    environment: undefined,
+    input: undefined,
+    status: undefined,
+    text: undefined,
+    method: undefined,
+    body: undefined,
+    verbose: false,
+    raw: false,
+    "follow-redirects": false,
+    output: undefined,
     "omit-default-content-type-header": false,
   };
 
   // Map headers option
   if (options.headers) {
-    args.h = [];
+    args.headers = [];
     for (const [key, value] of Object.entries(options.headers)) {
-      args.h.push(`${key}: ${value}`);
+      args.headers.push(`${key}: ${value}`);
     }
   }
 
   // Map environment option
   if (options.environment) {
-    args.e = options.environment;
+    args.environment = options.environment;
   }
 
   // Map input variables option
   if (options.input) {
-    args.i = [];
+    args.input = [];
     for (const [key, value] of Object.entries(options.input)) {
-      args.i.push(`${key}: ${value}`);
+      args.input.push(`${key}: ${value}`);
     }
   }
 
   // Map assertion options
   if (options.status !== undefined) {
-    args.s = options.status;
+    args.status = options.status;
   }
 
   if (options.text !== undefined) {
-    args.t = options.text;
+    args.text = options.text;
   }
 
   // Map request configuration options
   if (options.method) {
-    args.m = options.method;
+    args.method = options.method;
   }
 
   if (options.body) {
-    args.b = options.body;
+    args.body = options.body;
   }
 
   // Map boolean flags
   if (options.verbose) {
-    args.v = true;
+    args.verbose = true;
   }
 
   if (options.raw) {
-    args.r = true;
+    args.raw = true;
   }
 
   if (options.followRedirects) {
-    args.f = true;
+    args["follow-redirects"] = true;
   }
 
   if (options.output) {
-    args.o = options.output;
+    args.output = options.output;
   }
 
   if (options.omitDefaultContentTypeHeader) {
