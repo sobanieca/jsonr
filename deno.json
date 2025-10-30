@@ -4,7 +4,7 @@
   "license": "MIT",
   "exports": {
     ".": "./main.js",
-    "./sdk": "./mod.js"
+    "./sdk": "./sdk.js"
   },
   "compilerOptions": {
     "checkJs": true,

@@ -1,4 +1,4 @@
-/* @ts-self-types="./mod.d.ts" */
+/* @ts-self-types="./sdk.d.ts" */
 import { sendRequestCore } from "./src/commands/send-request.js";
 import logger from "./src/logger.js";
 
