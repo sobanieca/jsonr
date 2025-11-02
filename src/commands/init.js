@@ -9,7 +9,7 @@ if (response.status !== 200) {
 
 export default {
   execute: async (args) => {
-    const filename = "jsonr-sdk.js";
+    const filename = "jsonr-script.js";
     // Get the URL/file from --init argument or use default placeholder
     const urlOrFile = args["init"] || 'url or http file';
     const sdkTemplate = generateTemplate(urlOrFile);
