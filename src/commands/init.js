@@ -1,6 +1,6 @@
-const sdkTemplate = `import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
+const generateTemplate = (urlOrFile) => `import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
-const response = await jsonr('url or http file');
+const response = await jsonr('${urlOrFile}');
 
 if (response.status !== 200) {
   console.log("Non 200 response status received");
@@ -8,8 +8,12 @@ if (response.status !== 200) {
 `;
 
 export default {
-  execute: async () => {
+  execute: async (args) => {
     const filename = "jsonr-sdk.js";
+    // Get the URL/file from --init argument or use default placeholder
+    const urlOrFile = args["init"] || 'url or http file';
+    const sdkTemplate = generateTemplate(urlOrFile);
+
     try {
       await Deno.writeTextFile(filename, sdkTemplate);
       console.log(`Created ${filename} with jsonr SDK template`);
@@ -21,5 +25,5 @@ export default {
       );
     }
   },
-  match: (args) => args["sdk-init"] ? true : false,
+  match: (args) => args["init"] !== undefined,
 };
