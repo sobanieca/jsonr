@@ -1,4 +1,6 @@
-const generateTemplate = (urlOrFile) => `import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
+const generateTemplate = (urlOrFile) => `// Run with: deno run --allow-write --allow-net --allow-read jsonr-script.ts
+
+import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
 const response = await jsonr('${urlOrFile}');
 
@@ -9,7 +11,7 @@ if (response.status !== 200) {
 
 export default {
   execute: async (args) => {
-    const filename = "jsonr-script.js";
+    const filename = "jsonr-script.ts";
     // Get the URL/file from --init argument or use default placeholder
     const urlOrFile = args["init"] || 'url or http file';
     const sdkTemplate = generateTemplate(urlOrFile);

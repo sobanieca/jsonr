@@ -105,9 +105,9 @@ jsonr --init ./requests/get.http
 jsonr --init https://api.example.com/endpoint
 ```
 
-This creates a `jsonr-script.js` file that you can customize:
+This creates a `jsonr-script.ts` file that you can customize:
 
-```javascript
+```typescript
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
 const response = await jsonr('url or http file');
