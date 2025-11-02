@@ -23,12 +23,12 @@ path to .http file name or url
     "username" : "sample.email@sample.com"
   }
 
-  First line represents http method + url. Below there are http headers and at the bottom (after two empty lines) request body. 
-  If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request. 
+  First line represents http method + url. Below there are http headers and at the bottom (after two empty lines) request body.
+  If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request.
   If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
   Http files can include comments. In order to provide comment start a new line with '#' or '//'.
 
--i provide value for [i]nput variables
+-i, --input provide value for input variables
 
   Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. 
   This will allow to either provide it's value via -i flag, or via environment file option (read further)
@@ -52,13 +52,13 @@ path to .http file name or url
 
   jsonr -i "variable1: a" -i "variable2: b" ./some-other-sample.http
 
--h provide value for additional [h]eaders
+-h, --headers provide value for additional headers
 
   If there are additional headers that you want to append to the request you can use this parameter. If there are many headers you want to append, use many -h flags:
 
   jsonr -h "Authorization: Bearer 123" -h "TrackingId: xyz" ./sample.http
 
--s expected response [s]tatus code
+-s, --status expected response status code
 
   If you provide this parameter jsonr will perform assertion against returned response status code. This is useful if you want to create smoke tests scripts.
   You can for instance  write a script with multiple requests:
@@ -68,12 +68,12 @@ path to .http file name or url
 
   jsonr will return non-zero exit code if assertion failed, so you can prepare a script that will report error if any of the requests fail.
 
--t expected [t]ext that should be contained within response body
+-t, --text expected text that should be contained within response body
 
   This parameter works in a very similar way as the -s param. With one remark - it checks response body and searches if it's response contains specified text.
   It's a simple text search, no regular expressions available. If text is not contained - jsonr will report error. It may be useful for smoke tests scripts.
 
--e [e]nvironment file path
+-e, --environment environment file path
 
   Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files.
   For instance you can have following sample.http file:
@@ -94,7 +94,7 @@ path to .http file name or url
 
   jsonr -e ./test.json ./sample.http
 
--m HTTP [m]ethod
+-m, --method HTTP method
 
   Specify http method, like:
 
@@ -103,16 +103,16 @@ path to .http file name or url
 
   Default (if nothing found in .http file and no parameter provided) - GET
 
--v [v]erbose mode
+-v, --verbose verbose mode
 
   Provide more details in output (output request and response headers). It may be useful for reporting issues with endpoints
 
--r request [r]aw mode
+-r, --raw request raw mode
 
   By default jsonr replaces all new line and tab characters (whitespace characters) in http file so you can use new lines for human-friendly request body formatting. 
   If you use this flag you will disable this behaviour.
 
--f [f]ollow redirects
+-f, --follow-redirects follow redirects
 
   By default jsonr won't follow redirects when 3xx response is returned from server. Use this flag if you want to automatically follow all redirects, to return response from final destination server.
 
@@ -120,7 +120,7 @@ path to .http file name or url
 
   Provide more detailed logs (use it only for troubleshooting)
 
--b Request [b]ody (if not willing to use http file)
+-b, --body request body (if not willing to use http file)
 
   EXAMPLE
   jsonr -m POST -b '{ "username": "user@email.com" }' http://myapi.com/values
@@ -137,11 +137,14 @@ path to .http file name or url
 
   Display version info
 
---sdk-init
+--init [url or .http file]
 
-  Create a jsonr SDK example file to get started using jsonr programmatically
+  Generate a jsonr SDK example script to get started using jsonr programmatically in your code.
 
--o [o]utput file for response json, if this parameter is not provided default output is stdout. 
+  The SDK allows you to chain multiple requests and handle responses programmatically.
+  When you provide an optional URL or .http file path, the generated script will include it as a starting example.
+
+-o, --output output file for response json, if this parameter is not provided default output is stdout. 
 
   WARNING: If file exists it will overwrite it.
 
