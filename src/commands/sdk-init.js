@@ -1,6 +1,10 @@
-const sdkTemplate = `import { jsonr } from "https://jsr.io/@sobanieca/jsonr/sdk";
+const sdkTemplate = `import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
 const response = await jsonr('url or http file');
+
+if (response.status !== 200) {
+  console.log("Non 200 response status received");
+}
 `;
 
 export default {
