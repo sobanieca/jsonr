@@ -4,14 +4,8 @@
   "version": "1.6.0",
   "license": "MIT",
   "exports": {
-    ".": {
-      "types": "./main.d.ts",
-      "default": "./main.js"
-    },
-    "./sdk": {
-      "types": "./sdk.d.ts",
-      "default": "./sdk.js"
-    }
+    ".": "./main.js",
+    "./sdk": "./sdk.js"
   },
   "compilerOptions": {
     "checkJs": true,
