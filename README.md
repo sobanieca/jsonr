@@ -93,6 +93,32 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
+### Programmatic Usage (SDK)
+
+The jsonr SDK allows you to use jsonr programmatically in your JavaScript/TypeScript scripts, enabling you to chain multiple requests and handle responses in code.
+
+To get started, generate a template script:
+
+```bash
+jsonr --init
+jsonr --init ./requests/get.http
+jsonr --init https://api.example.com/endpoint
+```
+
+This creates a `jsonr-script.js` file that you can customize:
+
+```javascript
+import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
+
+const response = await jsonr('url or http file');
+
+if (response.status !== 200) {
+  console.log("Non 200 response status received");
+}
+```
+
+**Important:** The SDK is designed for top-level scripts only. Do not use jsonr as a library within your application, as it logs to stdout and calls `Deno.exit(1)` internally, which may interfere with your application's behavior.
+
 ### Working with Large Responses
 
 When dealing with large response bodies, you can pipe the output to `grep` to
