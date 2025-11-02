@@ -95,7 +95,7 @@ Type `jsonr --help` for more details on usage once you have a tool installed.
 
 ### Programmatic Usage (SDK)
 
-The jsonr SDK allows you to use jsonr programmatically in your JavaScript/TypeScript scripts, enabling you to chain multiple requests and handle responses in code.
+The `jsonr` SDK allows you to use `jsonr` programmatically in your JavaScript/TypeScript scripts, enabling you to chain multiple requests and handle responses in code.
 
 To get started, generate a template script:
 
@@ -117,7 +117,7 @@ if (response.status !== 200) {
 }
 ```
 
-**Important:** The SDK is designed for top-level scripts only. Do not use jsonr as a library within your application, as it logs to stdout and calls `Deno.exit(1)` internally, which may interfere with your application's behavior.
+**Important:** The SDK is designed for top-level scripts only. Do not use `jsonr` as a library within your application, as it logs to stdout and calls `Deno.exit(1)` internally, which may interfere with your application's behavior.
 
 ### Working with Large Responses
 
