@@ -2,7 +2,20 @@ const generateTemplate = (urlOrFile) => `// Run with: deno run --allow-write --a
 
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
-const response = await jsonr('${urlOrFile}');
+const response = await jsonr('${urlOrFile}', {
+  headers: { "Authorization": "Bearer token" },
+  // environment: "./env.json",
+  input: { "key": "value" },
+  // status: 204,
+  // text: "success",
+  // method: "POST",
+  // body: JSON.stringify({ data: "example" }),
+  verbose: false,
+  raw: false,
+  followRedirects: false,
+  // output: "./response.json",
+  omitDefaultContentTypeHeader: false,
+});
 
 if (response.status !== 200) {
   console.log("Non 200 response status received");
