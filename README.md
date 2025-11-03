@@ -11,7 +11,7 @@
   you don't use `curl` that often?
 - :clipboard: Are you working with modern json http api's?
 - :dash: Do you want to write smoke tests for your api?
-- :chain: Need a scripting tool to chain requests?
+- :link: Need a scripting tool to chain requests?
 
 `jsonr` is a simple CLI tool for interacting with json http api's and writing
 simple smoke tests. It's available from your terminal anytime when you need it
