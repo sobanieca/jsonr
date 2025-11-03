@@ -11,7 +11,7 @@ const response = await jsonr('${urlOrFile}', {
   // status: 204,
   // text: "success",
   // method: "POST",
-  // body: JSON.stringify({ data: "example" }),
+  // body: { data: "example" },
   verbose: false,
   raw: false,
   followRedirects: false,

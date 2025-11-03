@@ -106,16 +106,36 @@ jsonr --init ./requests/get.http
 jsonr --init https://api.example.com/endpoint
 ```
 
-This creates a `jsonr-script.js` file that you can customize:
+This creates a `jsonr-script.js` file that you can customize. Here's an example that creates a user and then posts an order using the returned user ID:
 
-```typescript
+```javascript
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
-const response = await jsonr('url or http file');
+// Create a new user
+const userResponse = await jsonr('https://api.example.com/users', {
+  method: "POST",
+  body: {
+    name: "John Doe",
+    email: "john@example.com"
+  },
+  status: 201,
+});
 
-if (response.status !== 200) {
-  console.log("Non 200 response status received");
-}
+const userId = userResponse.body.id;
+console.log(`Created user with ID: ${userId}`);
+
+// Create an order for the newly created user
+const orderResponse = await jsonr('https://api.example.com/orders', {
+  method: "POST",
+  body: {
+    userId: userId,
+    items: ["product-123", "product-456"],
+    total: 99.99
+  },
+  status: 201,
+});
+
+console.log(`Order created with ID: ${orderResponse.body.id}`);
 ```
 
 **Important:** The SDK is designed for top-level scripts only. Do not use `jsonr` as a library within your application, as it logs to stdout and calls `Deno.exit(1)` internally, which may interfere with your application's behavior.

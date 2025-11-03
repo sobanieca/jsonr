@@ -14,8 +14,8 @@ export interface JsonrOptions {
   text?: string;
   /** HTTP method (GET, POST, etc.) */
   method?: string;
-  /** Request body */
-  body?: string;
+  /** Request body (will be automatically stringified if not a string) */
+  body?: string | Record<string, any>;
   /** Enable verbose mode (show headers) */
   verbose?: boolean;
   /** Enable raw mode (don't replace whitespace in .http files) */

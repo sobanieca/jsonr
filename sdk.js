@@ -49,8 +49,10 @@ export async function jsonr(filePathOrUrl, options = {}) {
     args.method = options.method;
   }
 
-  if (options.body) {
-    args.body = options.body;
+  if (options.body !== undefined) {
+    args.body = typeof options.body === 'string'
+      ? options.body
+      : JSON.stringify(options.body);
   }
 
   if (options.verbose) {
