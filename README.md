@@ -94,7 +94,7 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
-### Programmatic Usage (SDK) - Chaining requests
+### Programmatic Usage (SDK) - chaining requests
 
 The `jsonr` SDK allows you to use `jsonr` programmatically in your JavaScript/TypeScript scripts, enabling you to chain multiple requests and handle responses in code.
 
