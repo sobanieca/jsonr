@@ -11,6 +11,7 @@
   you don't use `curl` that often?
 - :clipboard: Are you working with modern json http api's?
 - :dash: Do you want to write smoke tests for your api?
+- :chain: Need a scripting tool to chain requests?
 
 `jsonr` is a simple CLI tool for interacting with json http api's and writing
 simple smoke tests. It's available from your terminal anytime when you need it
@@ -93,7 +94,7 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
-### Programmatic Usage (SDK)
+### Programmatic Usage (SDK) - Chaining requests
 
 The `jsonr` SDK allows you to use `jsonr` programmatically in your JavaScript/TypeScript scripts, enabling you to chain multiple requests and handle responses in code.
 
@@ -105,7 +106,7 @@ jsonr --init ./requests/get.http
 jsonr --init https://api.example.com/endpoint
 ```
 
-This creates a `jsonr-script.ts` file that you can customize:
+This creates a `jsonr-script.js` file that you can customize:
 
 ```typescript
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";

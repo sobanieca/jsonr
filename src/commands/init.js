@@ -1,4 +1,6 @@
-const generateTemplate = (urlOrFile) => `// Run with: deno run --allow-write --allow-net --allow-read jsonr-script.ts
+import logger from "../logger.js";
+
+const generateTemplate = (urlOrFile) => `// Run with: deno run --allow-write --allow-net --allow-read jsonr-script.js
 
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
@@ -24,8 +26,18 @@ if (response.status !== 200) {
 
 export default {
   execute: async (args) => {
-    const filename = "jsonr-script.ts";
-    // Get the URL/file from --init argument or use default placeholder
+    const filename = "jsonr-script.js";
+
+    try {
+      await Deno.stat(filename);
+      logger.error(`Error: ${filename} already exists`);
+      Deno.exit(1);
+    } catch (err) {
+      if (!(err instanceof Deno.errors.NotFound)) {
+        throw err;
+      }
+    }
+
     const urlOrFile = args["init"] || 'url or http file';
     const sdkTemplate = generateTemplate(urlOrFile);
 
