@@ -104,6 +104,10 @@ Deno.test("Given API", async (t) => {
   await test("jsonr requests/get.http -t sample-get");
   await test("jsonr http://localhost:3000/redirect");
   await test("jsonr http://localhost:3000/redirect -f");
+  await test("jsonr --js requests/post-js.http");
+  await test(
+    `jsonr --js -m POST -b '{ name: "test", count: 5 + 3 }' localhost:3000/sample`,
+  );
 
   await sdkTest("jsonr --init requests/get.http");
   await sdkTest("jsonr --init http://localhost:3000/sample");

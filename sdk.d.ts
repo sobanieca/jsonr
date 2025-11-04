@@ -26,6 +26,8 @@ export interface JsonrOptions {
   output?: string;
   /** Don't add default Content-Type header */
   omitDefaultContentTypeHeader?: boolean;
+  /** Treat body as JavaScript object and serialize to JSON */
+  js?: boolean;
 }
 
 /**

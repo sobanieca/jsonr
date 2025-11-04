@@ -14,6 +14,7 @@ import logger from "../logger.js";
  * output (o) output file -o output.json
  * raw (r) request raw mode
  * follow-redirects (f) follow redirects
+ * --js treat body content as JavaScript object and serialize to JSON
  * input http file / url
  */
 
@@ -177,6 +178,20 @@ export const sendRequestCore = async (args) => {
   if (args.body) {
     logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.body}`);
     request.body = args.body;
+  }
+
+  if (args.js && request.body) {
+    logger.debug("JS mode enabled - evaluating body as JavaScript");
+    try {
+      const jsObject = eval(`(${request.body})`);
+      request.body = JSON.stringify(jsObject);
+      logger.debug(`Serialized JS object to JSON: ${request.body}`);
+    } catch (err) {
+      logger.debug(`Error evaluating JavaScript body: ${err}`);
+      throw new Error(
+        "Failed to evaluate body as JavaScript. Ensure the body contains valid JavaScript object syntax.",
+      );
+    }
   }
 
   if (args.headers) {

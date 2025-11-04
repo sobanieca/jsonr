@@ -261,6 +261,32 @@ snapshot[`Given API 15`] = `
 
 snapshot[`Given API 16`] = `
 {
+  code: 0,
+  output: "POST http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 17`] = `
+{
+  code: 0,
+  output: "Invalid parameters provided. Provide exactly one url or .http file path.
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 18`] = `
+{
   initCode: 1,
   initOutput: "Error: jsonr-script.js already exists
 ",
@@ -280,7 +306,7 @@ snapshot[`Given API 16`] = `
 }
 `;
 
-snapshot[`Given API 17`] = `
+snapshot[`Given API 19`] = `
 {
   initCode: 0,
   initOutput: "Created jsonr-script.js with jsonr SDK template

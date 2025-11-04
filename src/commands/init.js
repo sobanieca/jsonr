@@ -18,6 +18,7 @@ const response = await jsonr('${urlOrFile}', {
   followRedirects: false,
   // output: "./response.json",
   omitDefaultContentTypeHeader: false,
+  js: false,
 });
 
 if (response.status !== 200) {

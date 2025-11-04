@@ -1,3 +1,12 @@
+# 1.7.0
+
+- Added `--js` flag to treat request body as JavaScript object
+  - Allows using JavaScript expressions, functions, and computed values in
+    request bodies
+  - Works with both `.http` files and `-b` parameter
+  - Automatically serializes JavaScript objects to JSON before sending
+  - Available in both CLI and SDK
+
 # 1.6.0
 
 - Introduced `jsonr` SDK for simple request chaining

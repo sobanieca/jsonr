@@ -125,7 +125,7 @@ path to .http file name or url
 
   Request raw mode.
 
-  By default jsonr replaces all new line and tab characters (whitespace characters) in http file so you can use new lines for human-friendly request body formatting. 
+  By default jsonr replaces all new line and tab characters (whitespace characters) in http file so you can use new lines for human-friendly request body formatting.
   If you use this flag you will disable this behaviour.
 
 -f, --follow-redirects
@@ -133,6 +133,29 @@ path to .http file name or url
   Follow redirects.
 
   By default jsonr won't follow redirects when 3xx response is returned from server. Use this flag if you want to automatically follow all redirects, to return response from final destination server.
+
+--js
+
+  Treat body content as JavaScript object.
+
+  When this flag is used, the request body (either from .http file or from -b parameter) will be treated as JavaScript code that evaluates to an object.
+  The object will be automatically serialized to JSON before sending the request.
+
+  This is useful when you want to use JavaScript expressions, functions, or computed values in your request body.
+
+  EXAMPLE with .http file:
+  POST http://myapi.com/values
+
+  {
+    name: "test",
+    timestamp: Date.now(),
+    items: ["a", "b", "c"].map(x => x.toUpperCase())
+  }
+
+  Then run: jsonr --js ./sample.http
+
+  EXAMPLE with -b parameter:
+  jsonr --js -m POST -b '{ name: "test", count: 5 + 3 }' http://myapi.com/values
 
 --debug
 

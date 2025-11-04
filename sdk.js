@@ -17,6 +17,7 @@ export async function jsonr(filePathOrUrl, options = {}) {
     "follow-redirects": false,
     output: undefined,
     "omit-default-content-type-header": false,
+    js: false,
   };
 
   if (options.headers) {
@@ -73,6 +74,10 @@ export async function jsonr(filePathOrUrl, options = {}) {
 
   if (options.omitDefaultContentTypeHeader) {
     args["omit-default-content-type-header"] = true;
+  }
+
+  if (options.js) {
+    args.js = true;
   }
 
   try {

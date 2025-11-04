@@ -94,6 +94,31 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
+### JavaScript Object Bodies (--js flag)
+
+The `--js` flag allows you to write request bodies as JavaScript objects instead
+of strict JSON syntax.
+
+Example `.http` file with `--js`:
+
+```
+POST http://myapi.com/values
+
+{
+  name: "test",
+  items: ["a", "b", "c"],
+  enabled: true
+}
+```
+
+Run with: `jsonr --js ./sample.http`
+
+You can also use it with the `-b` parameter:
+
+```bash
+jsonr --js -m POST -b '{ name: "test", enabled: true }' http://myapi.com/values
+```
+
 ### Programmatic Usage (SDK) - chaining requests
 
 The `jsonr` SDK allows you to use `jsonr` programmatically in your
