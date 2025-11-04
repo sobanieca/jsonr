@@ -287,8 +287,8 @@ snapshot[`Given API 17`] = `
 
 snapshot[`Given API 18`] = `
 {
-  initCode: 1,
-  initOutput: "Error: jsonr-script.js already exists
+  initCode: 0,
+  initOutput: "Created jsonr-script.js with jsonr SDK template
 ",
   initOutputError: "",
   scriptCode: 0,

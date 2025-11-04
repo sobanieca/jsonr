@@ -76,6 +76,60 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
 
 const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
 
+const convertJsObjectToJson = (jsCode) => {
+  let result = jsCode.trim();
+
+  const isInsideString = (str, index) => {
+    let inString = false;
+    let stringChar = null;
+    let escaped = false;
+
+    for (let i = 0; i < index; i++) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (str[i] === "\\") {
+        escaped = true;
+        continue;
+      }
+      if ((str[i] === '"' || str[i] === "'") && !inString) {
+        inString = true;
+        stringChar = str[i];
+      } else if (str[i] === stringChar && inString) {
+        inString = false;
+        stringChar = null;
+      }
+    }
+
+    return inString;
+  };
+
+  result = result.split("").map((char, index) => {
+    if (isInsideString(result, index)) {
+      if (char === "'") {
+        return '"';
+      }
+    }
+    return char;
+  }).join("");
+
+  result = result.replace(/,(\s*[}\]])/g, "$1");
+
+  result = result.replace(
+    /([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)(\s*:)/g,
+    (match, prefix, key, suffix) => {
+      const position = result.indexOf(match);
+      if (!isInsideString(result, position)) {
+        return `${prefix}"${key}"${suffix}`;
+      }
+      return match;
+    },
+  );
+
+  return result;
+};
+
 const getVariables = async (args) => {
   const result = new Map();
   if (args.environment) {
@@ -181,15 +235,15 @@ export const sendRequestCore = async (args) => {
   }
 
   if (args.js && request.body) {
-    logger.debug("JS mode enabled - evaluating body as JavaScript");
+    logger.debug("JS mode enabled - converting JS object to JSON");
     try {
-      const jsObject = eval(`(${request.body})`);
-      request.body = JSON.stringify(jsObject);
-      logger.debug(`Serialized JS object to JSON: ${request.body}`);
+      request.body = convertJsObjectToJson(request.body);
+      JSON.parse(request.body);
+      logger.debug(`Converted JS object to JSON: ${request.body}`);
     } catch (err) {
-      logger.debug(`Error evaluating JavaScript body: ${err}`);
+      logger.debug(`Error converting JavaScript body: ${err}`);
       throw new Error(
-        "Failed to evaluate body as JavaScript. Ensure the body contains valid JavaScript object syntax.",
+        "Failed to convert body from JavaScript object to JSON. Ensure the body contains valid JavaScript object literal syntax.",
       );
     }
   }

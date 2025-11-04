@@ -2,6 +2,7 @@ POST http://localhost:3000/sample
 
 {
   name: "test",
-  count: 5 + 3,
-  items: ["a", "b"].map(x => x.toUpperCase())
+  count: 8,
+  items: ["A", "B"],
+  enabled: true
 }

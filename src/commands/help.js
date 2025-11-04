@@ -136,26 +136,25 @@ path to .http file name or url
 
 --js
 
-  Treat body content as JavaScript object.
+  Treat body content as JavaScript object literal.
 
-  When this flag is used, the request body (either from .http file or from -b parameter) will be treated as JavaScript code that evaluates to an object.
-  The object will be automatically serialized to JSON before sending the request.
-
-  This is useful when you want to use JavaScript expressions, functions, or computed values in your request body.
+  When this flag is used, the request body (either from .http file or from -b parameter) will be treated as JavaScript object literal syntax.
+  This allows you to write objects without strict JSON formatting (unquoted keys, single quotes, trailing commas, etc).
+  The object will be automatically converted to valid JSON before sending the request.
 
   EXAMPLE with .http file:
   POST http://myapi.com/values
 
   {
     name: "test",
-    timestamp: Date.now(),
-    items: ["a", "b", "c"].map(x => x.toUpperCase())
+    items: ['a', 'b', 'c'],
+    enabled: true,
   }
 
   Then run: jsonr --js ./sample.http
 
   EXAMPLE with -b parameter:
-  jsonr --js -m POST -b '{ name: "test", count: 5 + 3 }' http://myapi.com/values
+  jsonr --js -m POST -b '{ name: "test", enabled: true }' http://myapi.com/values
 
 --debug
 
