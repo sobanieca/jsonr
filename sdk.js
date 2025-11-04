@@ -50,7 +50,7 @@ export async function jsonr(filePathOrUrl, options = {}) {
   }
 
   if (options.body !== undefined) {
-    args.body = typeof options.body === 'string'
+    args.body = typeof options.body === "string"
       ? options.body
       : JSON.stringify(options.body);
   }

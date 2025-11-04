@@ -1,6 +1,7 @@
 import logger from "../logger.js";
 
-const generateTemplate = (urlOrFile) => `// Run with: deno run --allow-write --allow-net --allow-read jsonr-script.js
+const generateTemplate = (urlOrFile) =>
+  `// Run with: deno run --allow-write --allow-net --allow-read jsonr-script.js
 
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
@@ -38,7 +39,7 @@ export default {
       }
     }
 
-    const urlOrFile = args["init"] || 'url or http file';
+    const urlOrFile = args["init"] || "url or http file";
     const sdkTemplate = generateTemplate(urlOrFile);
 
     try {
@@ -48,7 +49,7 @@ export default {
       throw new Error(
         `Failed to create ${filename}: ${
           err instanceof Error ? err.message : String(err)
-        }`
+        }`,
       );
     }
   },

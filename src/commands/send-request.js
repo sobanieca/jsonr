@@ -146,7 +146,11 @@ export const sendRequestCore = async (args) => {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
       const variables = await getVariables(args);
-      const fileRequest = await parseHttpFile(urlOrFilePath, variables, args.raw);
+      const fileRequest = await parseHttpFile(
+        urlOrFilePath,
+        variables,
+        args.raw,
+      );
       request.method = fileRequest.method;
       request.url = fileRequest.url;
       request.body = fileRequest.body;
@@ -164,7 +168,9 @@ export const sendRequestCore = async (args) => {
   }
 
   if (args.method) {
-    logger.debug(`Parameter [m]ethod provided - HTTP method set to ${args.method}`);
+    logger.debug(
+      `Parameter [m]ethod provided - HTTP method set to ${args.method}`,
+    );
     request.method = args.method;
   }
 

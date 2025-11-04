@@ -96,7 +96,9 @@ Type `jsonr --help` for more details on usage once you have a tool installed.
 
 ### Programmatic Usage (SDK) - chaining requests
 
-The `jsonr` SDK allows you to use `jsonr` programmatically in your JavaScript/TypeScript scripts, enabling you to chain multiple requests and handle responses in code.
+The `jsonr` SDK allows you to use `jsonr` programmatically in your
+JavaScript/TypeScript scripts, enabling you to chain multiple requests and
+handle responses in code.
 
 To get started, generate a template script:
 
@@ -106,17 +108,18 @@ jsonr --init ./requests/get.http
 jsonr --init https://api.example.com/endpoint
 ```
 
-This creates a `jsonr-script.js` file that you can customize. Here's an example that creates a user and then posts an order using the returned user ID:
+This creates a `jsonr-script.js` file that you can customize. Here's an example
+that creates a user and then posts an order using the returned user ID:
 
 ```javascript
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
 // Create a new user
-const userResponse = await jsonr('https://api.example.com/users', {
+const userResponse = await jsonr("https://api.example.com/users", {
   method: "POST",
   body: {
     name: "John Doe",
-    email: "john@example.com"
+    email: "john@example.com",
   },
   status: 201,
 });
@@ -125,12 +128,12 @@ const userId = userResponse.body.id;
 console.log(`Created user with ID: ${userId}`);
 
 // Create an order for the newly created user
-const orderResponse = await jsonr('https://api.example.com/orders', {
+const orderResponse = await jsonr("https://api.example.com/orders", {
   method: "POST",
   body: {
     userId: userId,
     items: ["product-123", "product-456"],
-    total: 99.99
+    total: 99.99,
   },
   status: 201,
 });
@@ -138,7 +141,9 @@ const orderResponse = await jsonr('https://api.example.com/orders', {
 console.log(`Order created with ID: ${orderResponse.body.id}`);
 ```
 
-**Important:** The SDK is designed for top-level scripts only. Do not use `jsonr` as a library within your application, as it logs to stdout and calls `Deno.exit(1)` internally, which may interfere with your application's behavior.
+**Important:** The SDK is designed for top-level scripts only. Do not use
+`jsonr` as a library within your application, as it logs to stdout and calls
+`Deno.exit(1)` internally, which may interfere with your application's behavior.
 
 ### Working with Large Responses
 
