@@ -258,3 +258,41 @@ snapshot[`Given API 15`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 16`] = `
+{
+  initCode: 0,
+  initOutput: "Created jsonr-script.js with jsonr SDK template
+",
+  initOutputError: "",
+  scriptCode: 1,
+  scriptOutput: "",
+  scriptOutputError: "error: Unknown export './sdk' for '@sobanieca/jsonr@1.5.4'.
+" +
+    "  Package exports:
+" +
+    " * .
+" +
+    "    at file:///home/sobanieca/code/jsonr/test/jsonr-script.js:3:23
+",
+}
+`;
+
+snapshot[`Given API 17`] = `
+{
+  initCode: 0,
+  initOutput: "Created jsonr-script.js with jsonr SDK template
+",
+  initOutputError: "",
+  scriptCode: 1,
+  scriptOutput: "",
+  scriptOutputError: "error: Unknown export './sdk' for '@sobanieca/jsonr@1.5.4'.
+" +
+    "  Package exports:
+" +
+    " * .
+" +
+    "    at file:///home/sobanieca/code/jsonr/test/jsonr-script.js:3:23
+",
+}
+`;

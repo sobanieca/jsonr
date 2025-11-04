@@ -64,6 +64,29 @@ Deno.test("Given API", async (t) => {
     });
   };
 
+  const sdkTest = async (jsonrCommand) => {
+    jsonrCommand = jsonrCommand.replace("jsonr", "deno run -A ../main.js");
+    await t.step(jsonrCommand, async () => {
+      const initResult = await run(jsonrCommand);
+
+      const scriptResult = await run("deno run -A jsonr-script.js");
+
+      await assertSnapshot(t, {
+        initCode: initResult.code,
+        initOutput: initResult.output,
+        initOutputError: initResult.outputError,
+        scriptCode: scriptResult.code,
+        scriptOutput: scriptResult.output,
+        scriptOutputError: scriptResult.outputError,
+      });
+
+      try {
+        await Deno.remove("jsonr-script.js");
+      } catch {
+      }
+    });
+  };
+
   await test("jsonr requests/get.http");
   await test("jsonr requests/post.http");
   await test("jsonr requests/delete.http");
@@ -81,6 +104,9 @@ Deno.test("Given API", async (t) => {
   await test("jsonr requests/get.http -t sample-get");
   await test("jsonr http://localhost:3000/redirect");
   await test("jsonr http://localhost:3000/redirect -f");
+
+  await sdkTest("jsonr --init requests/get.http");
+  await sdkTest("jsonr --init http://localhost:3000/sample");
 
   apiProcess.kill();
   await apiProcess.output();
