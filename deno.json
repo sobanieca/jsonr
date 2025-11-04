@@ -12,6 +12,11 @@
     "noImplicitAny": false,
     "strictNullChecks": false
   },
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
+  },
   "tasks": {
     "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js"
   }
