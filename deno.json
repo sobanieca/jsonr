@@ -1,12 +1,21 @@
 {
   "name": "@sobanieca/jsonr",
-  "version": "1.5.4",
+  "description": "CLI tool for interacting with json http api's",
+  "version": "1.6.0",
   "license": "MIT",
-  "exports": "./main.js",
+  "exports": {
+    ".": "./main.js",
+    "./sdk": "./sdk.js"
+  },
   "compilerOptions": {
     "checkJs": true,
     "noImplicitAny": false,
     "strictNullChecks": false
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
   },
   "tasks": {
     "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js"

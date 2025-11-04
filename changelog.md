@@ -1,3 +1,7 @@
+# 1.6.0
+
+- Introduced `jsonr` SDK for simple request chaining
+
 # 1.5.4
 
 - Move to JSR.io

@@ -3,11 +3,13 @@ import args from "./src/args.js";
 import logger from "./src/logger.js";
 import help from "./src/commands/help.js";
 import version from "./src/commands/version.js";
+import init from "./src/commands/init.js";
 import sendRequest from "./src/commands/send-request.js";
 
 const commands = [
   { name: "help", engine: help },
   { name: "version", engine: version },
+  { name: "init", engine: init },
   { name: "send-request", engine: sendRequest },
 ];
 
