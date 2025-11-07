@@ -8,6 +8,7 @@ const args = deps.parse(Deno.args, {
     "verbose",
     "raw",
     "follow-redirects",
+    "js",
   ],
   string: [
     "input",

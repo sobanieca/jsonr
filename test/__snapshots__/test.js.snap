@@ -258,3 +258,79 @@ snapshot[`Given API 15`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 16`] = `
+{
+  code: 0,
+  output: "POST http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 17`] = `
+{
+  code: 0,
+  output: "POST localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 18`] = `
+{
+  initCode: 0,
+  initOutput: "Created jsonr-script.js with jsonr SDK template
+",
+  initOutputError: "",
+  scriptCode: 0,
+  scriptOutput: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  scriptOutputError: "",
+}
+`;
+
+snapshot[`Given API 19`] = `
+{
+  initCode: 0,
+  initOutput: "Created jsonr-script.js with jsonr SDK template
+",
+  initOutputError: "",
+  scriptCode: 0,
+  scriptOutput: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  scriptOutputError: "",
+}
+`;

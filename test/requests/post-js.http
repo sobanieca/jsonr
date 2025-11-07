@@ -1,0 +1,8 @@
+POST http://localhost:3000/sample
+
+{
+  name: "test",
+  count: 8,
+  items: ["A", "B"],
+  enabled: true
+}

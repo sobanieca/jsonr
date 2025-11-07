@@ -1,3 +1,7 @@
+# 1.7.0
+
+- Added `--js` flag to treat request body as JavaScript object literal
+
 # 1.6.0
 
 - Introduced `jsonr` SDK for simple request chaining

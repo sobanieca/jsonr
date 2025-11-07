@@ -1,8 +1,8 @@
 import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.ts";
 
 const run = async (cmd) => {
-  const command = new Deno.Command(Deno.execPath(), {
-    args: cmd.replace("deno ", "").split(" "),
+  const command = new Deno.Command("sh", {
+    args: ["-c", cmd],
     stdout: "piped",
     stderr: "piped",
   });
@@ -64,6 +64,30 @@ Deno.test("Given API", async (t) => {
     });
   };
 
+  const sdkTest = async (jsonrCommand) => {
+    jsonrCommand = jsonrCommand.replace("jsonr", "deno run -A ../main.js");
+    await t.step(jsonrCommand, async () => {
+      const initResult = await run(jsonrCommand);
+
+      const scriptResult = await run("deno run -A jsonr-script.js");
+
+      await assertSnapshot(t, {
+        initCode: initResult.code,
+        initOutput: initResult.output,
+        initOutputError: initResult.outputError,
+        scriptCode: scriptResult.code,
+        scriptOutput: scriptResult.output,
+        scriptOutputError: scriptResult.outputError,
+      });
+
+      try {
+        await Deno.remove("jsonr-script.js");
+      } catch {
+        // Ignore if file doesn't exist
+      }
+    });
+  };
+
   await test("jsonr requests/get.http");
   await test("jsonr requests/post.http");
   await test("jsonr requests/delete.http");
@@ -72,7 +96,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -s 401 requests/auth-401.http");
   await test("jsonr -e requests/environments/test.json requests/auth.http");
   await test(
-    `jsonr -m PUT -b ${JSON.stringify({ name: "test" })} localhost:3000/sample`,
+    'jsonr -m PUT -b \'{"name":"test"}\' localhost:3000/sample',
   );
   await test("jsonr http://localhost:3000/sample");
   await test("jsonr requests/put.http -s 303");
@@ -81,6 +105,13 @@ Deno.test("Given API", async (t) => {
   await test("jsonr requests/get.http -t sample-get");
   await test("jsonr http://localhost:3000/redirect");
   await test("jsonr http://localhost:3000/redirect -f");
+  await test("jsonr --js requests/post-js.http");
+  await test(
+    "jsonr --js -m POST -b '{ name: \"test\", count: 8 }' localhost:3000/sample",
+  );
+
+  await sdkTest("jsonr --init requests/get.http");
+  await sdkTest("jsonr --init http://localhost:3000/sample");
 
   apiProcess.kill();
   await apiProcess.output();
