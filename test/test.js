@@ -1,8 +1,8 @@
 import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.ts";
 
 const run = async (cmd) => {
-  const command = new Deno.Command(Deno.execPath(), {
-    args: cmd.replace("deno ", "").split(" "),
+  const command = new Deno.Command("sh", {
+    args: ["-c", cmd],
     stdout: "piped",
     stderr: "piped",
   });
@@ -83,6 +83,7 @@ Deno.test("Given API", async (t) => {
       try {
         await Deno.remove("jsonr-script.js");
       } catch {
+        // Ignore if file doesn't exist
       }
     });
   };
@@ -95,7 +96,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -s 401 requests/auth-401.http");
   await test("jsonr -e requests/environments/test.json requests/auth.http");
   await test(
-    `jsonr -m PUT -b ${JSON.stringify({ name: "test" })} localhost:3000/sample`,
+    'jsonr -m PUT -b \'{"name":"test"}\' localhost:3000/sample',
   );
   await test("jsonr http://localhost:3000/sample");
   await test("jsonr requests/put.http -s 303");
@@ -106,7 +107,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr http://localhost:3000/redirect -f");
   await test("jsonr --js requests/post-js.http");
   await test(
-    `jsonr --js -m POST -b '{ name: "test", count: 8 }' localhost:3000/sample`,
+    "jsonr --js -m POST -b '{ name: \"test\", count: 8 }' localhost:3000/sample",
   );
 
   await sdkTest("jsonr --init requests/get.http");

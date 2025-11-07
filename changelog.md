@@ -1,12 +1,6 @@
 # 1.7.0
 
 - Added `--js` flag to treat request body as JavaScript object literal
-  - Allows writing objects with unquoted keys, single quotes, trailing commas,
-    etc.
-  - Works with both `.http` files and `-b` parameter
-  - Automatically converts JavaScript object literals to valid JSON before
-    sending
-  - Available in both CLI and SDK
 
 # 1.6.0
 

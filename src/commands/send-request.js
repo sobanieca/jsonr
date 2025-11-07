@@ -14,7 +14,7 @@ import logger from "../logger.js";
  * output (o) output file -o output.json
  * raw (r) request raw mode
  * follow-redirects (f) follow redirects
- * --js treat body content as JavaScript object and serialize to JSON
+ * js treat body content as JavaScript object and serialize to JSON
  * input http file / url
  */
 
