@@ -1,4 +1,24 @@
 const help = `
+jsonr - A CLI tool for interacting with JSON HTTP APIs and writing simple smoke tests.
+
+Usage:
+
+  jsonr [url or .http file] [options]
+  jsonr [command] [options]
+
+Commands:
+
+  help        Display this help text
+  version     Display version info
+  init        Generate a jsonr SDK example script to get started using jsonr programmatically in your code.
+              Usage: jsonr init [url or .http file]
+
+              The SDK allows you to chain multiple requests and handle responses programmatically.
+              When you provide an optional URL or .http file path, the generated script will include it as a starting example.
+
+              NOTE: The SDK is designed for top-level scripts only. Do not use jsonr as a library within your application,
+              as it logs to stdout and calls Deno.exit(1) internally, which may interfere with your application's behavior.
+
 Sample command:
 
 jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
@@ -175,21 +195,11 @@ path to .http file name or url
 
 --help
 
-  Display this help text
+  Display this help text (alternatively: jsonr help)
 
 --version
 
-  Display version info
-
---init [url or .http file]
-
-  Generate a jsonr SDK example script to get started using jsonr programmatically in your code.
-
-  The SDK allows you to chain multiple requests and handle responses programmatically.
-  When you provide an optional URL or .http file path, the generated script will include it as a starting example.
-
-  NOTE: The SDK is designed for top-level scripts only. Do not use jsonr as a library within your application,
-  as it logs to stdout and calls Deno.exit(1) internally, which may interfere with your application's behavior.
+  Display version info (alternatively: jsonr version)
 
 -o, --output
 
@@ -203,5 +213,5 @@ path to .http file name or url
 
 export default {
   execute: () => console.log(help),
-  match: (args) => args.help ? true : false,
+  match: (args) => args._[0] === "help" || args.help === true,
 };

@@ -71,12 +71,18 @@ Deno.test("Given API", async (t) => {
 
       const scriptResult = await run("deno run -A jsonr-script.js");
 
+      const normalizeScriptOutput = (output) => {
+        return output
+          .replace(/Elapsed: \d+ ms/g, "Elapsed: * ms")
+          .replace(/Header date: [^\n]+/g, "Header date: *");
+      };
+
       await assertSnapshot(t, {
         initCode: initResult.code,
         initOutput: initResult.output,
         initOutputError: initResult.outputError,
         scriptCode: scriptResult.code,
-        scriptOutput: scriptResult.output,
+        scriptOutput: normalizeScriptOutput(scriptResult.output),
         scriptOutputError: scriptResult.outputError,
       });
 
@@ -109,9 +115,10 @@ Deno.test("Given API", async (t) => {
   await test(
     "jsonr --js -m POST -b '{ name: \"test\", count: 8 }' localhost:3000/sample",
   );
+  await test("jsonr help");
 
-  await sdkTest("jsonr --init requests/get.http");
-  await sdkTest("jsonr --init http://localhost:3000/sample");
+  await sdkTest("jsonr init requests/get.http");
+  await sdkTest("jsonr init http://localhost:3000/sample");
 
   apiProcess.kill();
   await apiProcess.output();

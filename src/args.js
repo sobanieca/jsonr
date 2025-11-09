@@ -19,7 +19,6 @@ const args = deps.parse(Deno.args, {
     "text",
     "method",
     "output",
-    "init",
   ],
   alias: {
     v: "verbose",
