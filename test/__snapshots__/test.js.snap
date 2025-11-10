@@ -338,6 +338,16 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
+    "  update      Update jsonr to the latest version from JSR registry.
+" +
+    "              Usage: jsonr update
+" +
+    "
+" +
+    "              Runs the Deno install command to fetch and install the latest version.
+" +
+    "
+" +
     "Sample command:
 " +
     "

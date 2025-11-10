@@ -19,6 +19,11 @@ Commands:
               NOTE: The SDK is designed for top-level scripts only. Do not use jsonr as a library within your application,
               as it logs to stdout and calls Deno.exit(1) internally, which may interfere with your application's behavior.
 
+  update      Update jsonr to the latest version from JSR registry.
+              Usage: jsonr update
+
+              Runs the Deno install command to fetch and install the latest version.
+
 Sample command:
 
 jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
