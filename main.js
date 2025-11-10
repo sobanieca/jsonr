@@ -5,6 +5,7 @@ import help from "./src/commands/help.js";
 import version from "./src/commands/version.js";
 import init from "./src/commands/init.js";
 import update from "./src/commands/update.js";
+import runScript from "./src/commands/run-script.js";
 import sendRequest from "./src/commands/send-request.js";
 
 const commands = [
@@ -12,6 +13,7 @@ const commands = [
   { name: "version", engine: version },
   { name: "init", engine: init },
   { name: "update", engine: update },
+  { name: "run-script", engine: runScript },
   { name: "send-request", engine: sendRequest },
 ];
 

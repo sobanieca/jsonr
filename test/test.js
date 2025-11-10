@@ -69,7 +69,9 @@ Deno.test("Given API", async (t) => {
     await t.step(jsonrCommand, async () => {
       const initResult = await run(jsonrCommand);
 
-      const scriptResult = await run("deno run -A jsonr-script.js");
+      const scriptResult = await run(
+        "deno run -A ../main.js run jsonr-script.js",
+      );
 
       const normalizeScriptOutput = (output) => {
         return output
