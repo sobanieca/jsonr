@@ -49,7 +49,7 @@ export default {
       }
     }
 
-    const urlOrFile = args["init"] || "url or http file";
+    const urlOrFile = args._[1] || "url or http file";
     const sdkTemplate = generateTemplate(urlOrFile);
 
     try {
@@ -63,5 +63,5 @@ export default {
       );
     }
   },
-  match: (args) => args["init"] !== undefined,
+  match: (args) => args._[0] === "init",
 };

@@ -4,12 +4,14 @@ import logger from "./src/logger.js";
 import help from "./src/commands/help.js";
 import version from "./src/commands/version.js";
 import init from "./src/commands/init.js";
+import update from "./src/commands/update.js";
 import sendRequest from "./src/commands/send-request.js";
 
 const commands = [
   { name: "help", engine: help },
   { name: "version", engine: version },
   { name: "init", engine: init },
+  { name: "update", engine: update },
   { name: "send-request", engine: sendRequest },
 ];
 
