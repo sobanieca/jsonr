@@ -24,7 +24,7 @@ Commands:
 
               Runs the Deno install command to fetch and install the latest version.
 
-Sample command:
+Sample usage:
 
 jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
 
