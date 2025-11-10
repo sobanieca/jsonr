@@ -1,3 +1,8 @@
+# 2.1.0
+
+- Introduced `jsonr` runtime to significantly simplify running SDK scripts
+- Adjusted `update` command to either display update instructions or perform update using Deno
+
 # 2.0.0
 
 - Breaking change: `--init` is moved as subcommand to be called as `jsonr init`.
