@@ -1,8 +1,10 @@
 # 2.0.0
 
-- Breaking change: `--init` is moved as subcommand to be called as `jsonr init`. Similarly `help` and `version` (but these subcommands still support `--help`
+- Breaking change: `--init` is moved as subcommand to be called as `jsonr init`.
+  Similarly `help` and `version` (but these subcommands still support `--help`
   and `--version`)
-- Added new subcommand `jsonr update` that updates to latest version (works only for Deno based installations)
+- Added new subcommand `jsonr update` that updates to latest version (works only
+  for Deno based installations)
 
 # 1.7.1
 
