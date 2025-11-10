@@ -1,7 +1,7 @@
 import logger from "../logger.js";
 
 const generateTemplate = (urlOrFile) =>
-  `// Run with: deno run -A jsonr-script.js
+  `// Run with: jsonr run jsonr-script.js
 
 import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
 
