@@ -26,10 +26,11 @@ Commands:
               The standalone binary includes the runtime, so no separate Deno installation is needed.
               Scripts run with the same permissions as jsonr (--allow-net, --allow-read, --allow-write).
 
-  update      Update jsonr to the latest version from JSR registry.
-              Usage: jsonr update
+  update      Display instructions for updating jsonr to the latest version.
+              Usage: jsonr update [--deno]
 
-              Runs the Deno install command to fetch and install the latest version.
+              Shows the command to update jsonr for both Deno installations and standalone binaries.
+              Use --deno flag to automatically run the update (will ask for run permission).
 
 Sample usage:
 
