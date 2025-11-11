@@ -3,8 +3,6 @@ import logger from "../logger.js";
 const generateTemplate = (urlOrFile) =>
   `// Run with: jsonr run jsonr-script.js
 
-import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
-
 const response = await jsonr('${urlOrFile}', {
   headers: { "Authorization": "Bearer token" },
   // environment: "./env.json",
