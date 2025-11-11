@@ -1,3 +1,9 @@
+# 3.0.0
+
+- Breaking change: SDK is no longer exported as a library. The `jsonr` function
+  is now automatically available in scripts run with `jsonr run` - no import
+  needed
+
 # 2.1.0
 
 - Introduced `jsonr` runtime to significantly simplify running SDK scripts
