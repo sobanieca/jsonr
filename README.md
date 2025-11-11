@@ -26,28 +26,39 @@ Run `jsonr --help` for details.
 
 ## Prerequisites
 
-Deno runtime environment `https://deno.land`
+Deno runtime environment `https://deno.land` (required for recommended
+installation method)
 
 ## Installation
 
 ### Option 1: Install via Deno (Recommended)
 
-**Prerequisites:**
-
-- Deno runtime environment
-
-**Install Command:**
-
 ```bash
 deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
 ```
 
-To update to the latest version, run the same installation command
-
 `--allow-write` permission is needed only if you are planning to use `-o`
 parameter (write response body to file, check `jsonr --help` for details)
 
-### Option 2: Pre-compiled Binaries
+### Option 2: Quick Install Script (Standalone Binary)
+
+If you don't have Deno installed, you can install the pre-compiled binary with a
+single command:
+
+```bash
+curl -fsSL sobanieca.github.io/jsonr/install.sh | bash
+```
+
+This script automatically detects your OS and architecture (Linux/macOS,
+x64/arm64) and installs the appropriate binary to `/usr/local/bin`.
+
+To install to a custom location:
+
+```bash
+curl -fsSL sobanieca.github.io/jsonr/install.sh | INSTALL_DIR=~/bin bash
+```
+
+### Option 3: Manual Binary Installation
 
 Download the latest pre-compiled binary for your operating system from the
 [releases page](https://github.com/sobanieca/jsonr/releases/latest):
@@ -63,7 +74,44 @@ sudo mv jsonr /usr/local/bin/
 Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`,
 `jsonr-macos-arm64`
 
-### SSL Certificate Issues
+## Updating
+
+### For Deno Installations
+
+To update `jsonr` to the latest version, use the `update` command:
+
+```bash
+jsonr update --deno
+```
+
+This will automatically run the Deno installer with the correct permissions to
+update jsonr to the latest version from JSR.
+
+Alternatively, you can run the installation command manually:
+
+```bash
+deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
+```
+
+If you just want to see the update instructions without actually updating, run:
+
+```bash
+jsonr update
+```
+
+### For Pre-compiled Binaries
+
+You can run the install script again to get the latest version:
+
+```bash
+curl -fsSL sobanieca.github.io/jsonr/install.sh | bash
+```
+
+Or manually download the latest binary from the
+[releases page](https://github.com/sobanieca/jsonr/releases/latest) and replace
+your existing installation.
+
+## SSL Certificate Issues
 
 If your requests are failing due to certificate validation errors (and you trust
 target server) you can run `temporary` command like:

@@ -1,3 +1,7 @@
+# 3.1.0
+
+- Added universal install script for easy standalone binary installation
+
 # 3.0.0
 
 - Breaking change: SDK is no longer exported as a library. The `jsonr` function

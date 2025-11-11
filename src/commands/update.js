@@ -40,18 +40,19 @@ export default {
         "  deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr",
       );
       logger.info("");
-      logger.info("Or use the automatic updater:");
+      logger.info("Or use deno updater:");
       logger.info("  jsonr update --deno");
       logger.info(
         "  (This will ask for run permission and perform the update)",
       );
       logger.info("");
+      logger.info("For standalone binaries, run the install script:");
       logger.info(
-        "For standalone binaries, download the latest release from:",
+        "  curl -fsSL sobanieca.github.io/jsonr/install.sh | bash",
       );
-      logger.info(
-        "  https://github.com/sobanieca/jsonr/releases/latest",
-      );
+      logger.info("");
+      logger.info("Or download manually from:");
+      logger.info("  https://github.com/sobanieca/jsonr/releases/latest");
     }
   },
   match: (args) => args._[0] === "update",
