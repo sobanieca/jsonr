@@ -26,7 +26,7 @@ Run `jsonr --help` for details.
 
 ## Prerequisites
 
-Deno runtime environment `https://deno.land` (required for recommended
+Deno runtime environment `https://deno.com` (required for recommended
 installation method)
 
 ## Installation
