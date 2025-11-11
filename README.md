@@ -89,15 +89,9 @@ version from JSR.
 
 ### For Pre-compiled Binaries
 
-You can run the install script again to get the latest version:
-
-```bash
-curl -fsSL sobanieca.github.io/jsonr/install.sh | bash
-```
-
-Or manually download the latest binary from the
-[releases page](https://github.com/sobanieca/jsonr/releases/latest) and replace
-your existing installation.
+Run the `install.sh` script to update to the latest version, or download the
+latest binary from the
+[releases page](https://github.com/sobanieca/jsonr/releases/latest).
 
 ## SSL Certificate Issues
 
