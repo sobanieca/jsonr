@@ -1,12 +1,9 @@
 {
   "name": "@sobanieca/jsonr",
   "description": "CLI tool for interacting with json http api's",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "license": "MIT",
-  "exports": {
-    ".": "./main.js",
-    "./sdk": "./sdk.js"
-  },
+  "exports": "./main.js",
   "compilerOptions": {
     "checkJs": true,
     "noImplicitAny": false,

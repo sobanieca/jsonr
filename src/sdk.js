@@ -1,6 +1,5 @@
-/* @ts-self-types="./sdk.d.ts" */
-import { sendRequestCore } from "./src/commands/send-request.js";
-import logger from "./src/logger.js";
+import { sendRequestCore } from "./commands/send-request.js";
+import logger from "./logger.js";
 
 export async function jsonr(filePathOrUrl, options = {}) {
   const args = {
