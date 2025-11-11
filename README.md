@@ -84,20 +84,8 @@ To update `jsonr` to the latest version, use the `update` command:
 jsonr update --deno
 ```
 
-This will automatically run the Deno installer with the correct permissions to
-update jsonr to the latest version from JSR.
-
-Alternatively, you can run the installation command manually:
-
-```bash
-deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
-```
-
-If you just want to see the update instructions without actually updating, run:
-
-```bash
-jsonr update
-```
+This will ask for run permission and automatically update jsonr to the latest
+version from JSR.
 
 ### For Pre-compiled Binaries
 
