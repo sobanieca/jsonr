@@ -28,9 +28,6 @@ for (const [key, value] of response.headers.entries()) {
   console.log(\`Header \${key}: \${value}\`);
 }
 
-if (response.status !== 200) {
-  console.log("Non 200 response status received");
-}
 `;
 
 export default {

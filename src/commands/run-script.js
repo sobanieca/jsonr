@@ -1,5 +1,5 @@
 import logger from "../logger.js";
-import { jsonr } from "../../sdk.js";
+import { jsonr } from "../sdk.js";
 
 export default {
   execute: async (args) => {

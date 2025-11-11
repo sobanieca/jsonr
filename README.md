@@ -94,26 +94,23 @@ POST http://my-api.com/endpoint
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
 
-### Programmatic Usage (SDK) - chaining requests
+### Programmatic Usage - chaining requests
 
-The `jsonr` SDK allows you to use `jsonr` programmatically in your
-JavaScript/TypeScript scripts, enabling you to chain multiple requests and
-handle responses in code.
+You can use `jsonr` programmatically in your JavaScript/TypeScript scripts to
+chain multiple requests and handle responses in code.
 
 To get started, generate a template script:
 
 ```bash
-jsonr --init
-jsonr --init ./requests/get.http
-jsonr --init https://api.example.com/endpoint
+jsonr init
+jsonr init ./requests/get.http
+jsonr init https://api.example.com/endpoint
 ```
 
 This creates a `jsonr-script.js` file that you can customize. Here's an example
 that creates a user and then posts an order using the returned user ID:
 
 ```javascript
-import { jsonr } from "jsr:@sobanieca/jsonr/sdk";
-
 // Create a new user
 const userResponse = await jsonr("https://api.example.com/users", {
   method: "POST",
@@ -141,9 +138,14 @@ const orderResponse = await jsonr("https://api.example.com/orders", {
 console.log(`Order created with ID: ${orderResponse.body.id}`);
 ```
 
-**Important:** The SDK is designed for top-level scripts only. Do not use
-`jsonr` as a library within your application, as it logs to stdout and calls
-`Deno.exit(1)` internally, which may interfere with your application's behavior.
+Run your script with:
+
+```bash
+jsonr run jsonr-script.js
+```
+
+The `jsonr` function is automatically available in scripts run with
+`jsonr run` - no import needed!
 
 ### Working with Large Responses
 
