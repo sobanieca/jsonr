@@ -1,3 +1,8 @@
+# 3.2.0
+
+- Added `jsonr-config.json` support for default parameter configuration
+- Added `jsonr config` command to generate sample configuration file
+
 # 3.1.0
 
 - Added universal install script for easy standalone binary installation
