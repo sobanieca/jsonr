@@ -8,6 +8,7 @@ import {
 } from "jsr:@std/fmt@1.0.8/colors";
 import { parseArgs } from "jsr:@std/cli@1.0.20/parse-args";
 import { LogLevels } from "jsr:@std/log@0.224.14";
+import { dirname, join, resolve } from "jsr:@std/path@1.0.8";
 
 const deps = {
   logging: {
@@ -22,6 +23,9 @@ const deps = {
     brightYellow,
   },
   parse: parseArgs,
+  dirname,
+  join,
+  resolve,
 };
 
 export { deps };

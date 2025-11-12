@@ -23,6 +23,13 @@ Commands:
               The standalone binary includes the runtime, so no separate Deno installation is needed.
               Scripts run with the same permissions as jsonr (--allow-net, --allow-read, --allow-write).
 
+  config      Generate a sample jsonr-config.json file in the current directory.
+              Usage: jsonr config
+
+              Creates a jsonr-config.json file with all available configuration options.
+              Edit this file to set default values for command-line parameters.
+              See "Configuration Files" section below for more details.
+
   update      Display instructions for updating jsonr to the latest version.
               Usage: jsonr update [--deno]
 
@@ -32,6 +39,49 @@ Commands:
 Sample usage:
 
 jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
+
+Configuration Files:
+
+jsonr supports configuration files named 'jsonr-config.json' that can store default values for command-line parameters.
+This eliminates the need to repeat common parameters in every command.
+
+jsonr searches for configuration files starting from your current directory up to your home directory.
+Configuration files closer to your current directory take precedence over those in parent directories.
+Command-line parameters always take precedence over configuration file defaults.
+
+EXAMPLE jsonr-config.json:
+
+{
+  "defaults": {
+    "environment": "~/.secret/sandbox-env.json"
+  }
+}
+
+Use 'jsonr config' to generate a complete sample configuration file with all available options.
+
+Supported configuration keys (use camelCase as shown):
+
+  environment           Default environment file path (supports ~ for home directory)
+  headers               Default headers to include in all requests
+  input                 Default input variables for @@variable@@ replacement
+  status                Expected response status code for validation
+  text                  Expected text in response body
+  method                Default HTTP method
+  body                  Default request body
+  verbose               Enable verbose mode (true/false)
+  raw                   Enable raw mode (true/false)
+  followRedirects       Automatically follow HTTP redirects (true/false)
+  output                Default output file path
+  omitDefaultContentTypeHeader  Omit default Content-Type header (true/false)
+  js                    Treat body as JavaScript object literal (true/false)
+
+With the above configuration, running 'jsonr ./sample.http' will automatically use the environment file
+specified in the config, unless you explicitly provide a different -e flag on the command line.
+
+You can place jsonr-config.json files at different levels:
+- ~/jsonr-config.json (applies to all projects)
+- ~/projects/jsonr-config.json (applies to all projects in this directory)
+- ~/projects/my-app/jsonr-config.json (applies only to my-app)
 
 Parameters:
 
