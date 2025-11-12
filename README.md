@@ -20,7 +20,55 @@ solution for everything. That's why it's so simple to use. No more need to
 browse lots of documentation about tons of features that you don't need. 5
 minutes and you are ready to send any requests.
 
-![image](./jsonr.png)
+## Quick Examples
+
+**1. Create .http files** (store them in your git repository to share with other developers)
+
+```
+POST https://petstore.swagger.io/v2/pet
+Authorization: Bearer @@apiKey@@
+
+{
+  "name": "Sample Pet",
+  "status": "available"
+}
+```
+
+**2. Use simple command to send request and set input variable**
+
+```bash
+jsonr post-pet.http -i "apiKey: myApiKey123"
+```
+
+**3. Create environment file with proper input variable values**
+
+```bash
+cat prod.json
+```
+
+```json
+{
+  "apiKey": "prod_ApiKey123"
+}
+```
+
+**4. Use environment file when sending request**
+
+```bash
+jsonr post-pet.http -e prod.json
+```
+
+**5. Skip .http files and send request directly** (Content-Type: application/json is added automatically)
+
+```bash
+jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status": "available"}' https://petstore.swagger.io/v2/pet
+```
+
+**6. Write simple smoke tests with status code/response body assertions**
+
+```bash
+jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status": "available"}' https://petstore.swagger.io/v2/pet -s 201
+```
 
 Run `jsonr --help` for details.
 
@@ -296,3 +344,14 @@ contribute. Please keep in mind that this tool is supposed to be super simple to
 use and cover ~80% of use cases for playing around with JSON HTTP API's.
 Instructions (--help) for this tool should be possible to read in less than 5
 minutes. If more features will be added this may be hard to achieve.
+
+## Learn More
+
+For complete documentation of all available options and detailed usage
+instructions, view the help text at:
+
+https://sobanieca.github.io/jsonr/src/commands/help.js
+
+This URL is particularly useful when working with AI assistants or LLMs - you
+can provide this link to give them comprehensive information about jsonr's
+capabilities and command-line options.
