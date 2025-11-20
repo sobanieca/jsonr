@@ -42,28 +42,62 @@ jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
 
 Configuration Files:
 
-jsonr supports configuration files named 'jsonr-config.json' that can store default values for command-line parameters.
-This eliminates the need to repeat common parameters in every command.
+jsonr supports configuration files named 'jsonr-config.json' for managing environments and default parameters.
 
-jsonr searches for configuration files starting from your current directory up to your home directory.
-Configuration files closer to your current directory take precedence over those in parent directories.
-Command-line parameters always take precedence over configuration file defaults.
+Key features:
+- Define named environments (e.g., prod, dev, test) with specific configurations
+- Store sensitive variables in separate secrets files (masked in logs as *****)
+- Set default values to avoid repeating common parameters
+- Hierarchical search from current directory up to home directory
+- Files closer to current directory take precedence
+- Command-line parameters always override config values
 
 EXAMPLE jsonr-config.json:
 
 {
+  "environments": {
+    "prod": {
+      "inputVariables": {
+        "baseUrl": "https://api.example.com"
+      },
+      "secrets": "~/.secret/prod-secrets.json"
+    },
+    "dev": {
+      "inputVariables": {
+        "baseUrl": "https://dev-api.example.com"
+      }
+    }
+  },
   "defaults": {
-    "environment": "~/.secret/sandbox-env.json"
+    "inputVariables": {
+      "baseUrl": "http://localhost:3000"
+    },
+    "verbose": false
   }
 }
 
-Use 'jsonr config' to generate a complete sample configuration file with all available options.
+Use 'jsonr config' to generate a complete sample configuration with all available options.
 
-Supported configuration keys (use camelCase as shown):
+Using environments:
+  jsonr -e prod ./sample.http     # Uses prod environment from config
+  jsonr ./sample.http              # Uses defaults section
 
-  environment           Default environment file path (supports ~ for home directory)
+Secrets files:
+- Store sensitive variables (API keys, tokens) in a separate JSON file outside your repo
+- Reference the secrets file path in your config with the "secrets" property
+- Secrets are automatically masked in logs as *****
+- Example secrets file (~/.secret/prod-secrets.json):
+  {
+    "apiKey": "sk-1234567890abcdef",
+    "token": "Bearer xyz123"
+  }
+
+Supported configuration keys:
+
+  inputVariables        Input variables for @@variable@@ replacement
+  secrets               Path to secrets file (variables masked in logs)
+  environment           Environment file path for legacy .json files
   headers               Default headers to include in all requests
-  input                 Default input variables for @@variable@@ replacement
   status                Expected response status code for validation
   text                  Expected text in response body
   method                Default HTTP method
@@ -75,13 +109,15 @@ Supported configuration keys (use camelCase as shown):
   omitDefaultContentTypeHeader  Omit default Content-Type header (true/false)
   js                    Treat body as JavaScript object literal (true/false)
 
-With the above configuration, running 'jsonr ./sample.http' will automatically use the environment file
-specified in the config, unless you explicitly provide a different -e flag on the command line.
-
-You can place jsonr-config.json files at different levels:
+Configuration hierarchy:
 - ~/jsonr-config.json (applies to all projects)
 - ~/projects/jsonr-config.json (applies to all projects in this directory)
 - ~/projects/my-app/jsonr-config.json (applies only to my-app)
+
+Priority order (highest to lowest):
+1. Command-line arguments (-i, -e with .json file, etc.)
+2. Named environment from config (when using -e <envName>)
+3. Default section from config files (closer to cwd takes precedence)
 
 Parameters:
 
@@ -163,26 +199,43 @@ path to .http file name or url
 
 -e, --environment
 
-  Environment file path.
+  Environment name or file path.
 
-  Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files.
-  For instance you can have following sample.http file:
+  This parameter works in two ways:
 
-  POST https://@@apiUrl@@/value
+  1. Environment name (from jsonr-config.json):
+     When you provide a name (not ending with .json), jsonr will look for that environment
+     in your jsonr-config.json files.
 
-  {
-    "username": "user@email.com"
-  }
+     EXAMPLE:
+     jsonr -e prod ./sample.http      # Uses "prod" environment from config
 
-  Now, you can create environment file test.json:
+     If the environment is not found in any config file, jsonr will exit with an error.
 
-  {
-    "apiUrl": "my-api-on-test-environment.com"
-  }
+  2. Environment file path (legacy .json files):
+     When you provide a path ending with .json, jsonr treats it as a direct path to a
+     JSON file with variables and their values (similar to -i parameter).
 
-  And use it later as:
+     EXAMPLE sample.http file:
 
-  jsonr -e ./test.json ./sample.http
+     POST https://@@apiUrl@@/value
+
+     {
+       "username": "user@email.com"
+     }
+
+     Environment file test.json:
+
+     {
+       "apiUrl": "my-api-on-test-environment.com"
+     }
+
+     Usage:
+
+     jsonr -e ./test.json ./sample.http
+
+  Using named environments from config is recommended as it provides better organization,
+  supports secrets management, and allows hierarchical configuration across projects.
 
 -m, --method
 

@@ -1,15 +1,48 @@
 import logger from "../logger.js";
 
 const configWithComments = `{
+  // Named environments - use with 'jsonr -e <envName>'
+  "environments": {
+    "prod": {
+      // Input variables for @@variable@@ replacement
+      "inputVariables": {
+        "baseUrl": "https://api.example.com",
+        "apiVersion": "v1"
+      },
+
+      // Path to secrets file (JSON with sensitive variables, kept outside repo)
+      // Secrets are masked in logs as *****
+      "secrets": "~/.secret/prod-secrets.json",
+
+      // Other properties (same as defaults below)
+      "verbose": false
+    },
+    "dev": {
+      "inputVariables": {
+        "baseUrl": "https://dev-api.example.com",
+        "apiVersion": "v1"
+      },
+      "secrets": "~/.secret/dev-secrets.json"
+    }
+  },
+
+  // Default configuration (used when no -e flag is provided)
   "defaults": {
-    // Path to environment file with variables (supports ~ for home directory)
+    // Input variables for @@variable@@ replacement
+    "inputVariables": {
+      "baseUrl": "http://localhost:3000"
+    },
+
+    // Path to secrets file (supports ~ for home directory)
+    "secrets": undefined,
+
+    // Path to environment file with variables (legacy, for .json files)
+    // NOTE: When using -e with an environment name (not .json file),
+    // jsonr will look for that environment in this config file
     "environment": undefined,
 
     // Default headers to include in all requests
     "headers": undefined,
-
-    // Default input variables for @@variable@@ replacement
-    "input": undefined,
 
     // Expected response status code for validation
     "status": undefined,

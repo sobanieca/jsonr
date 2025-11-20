@@ -1,4 +1,5 @@
 import logger from "../logger.js";
+import config from "../config.js";
 
 /*
  * Available args:
@@ -28,9 +29,12 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
     let fileContent = await Deno.readTextFile(filePath);
+    const secretKeys = config.getSecretKeys();
     for (const [key, value] of variables) {
+      // Mask secret values in logs
+      const displayValue = secretKeys.has(key) ? config.maskSecret(value) : value;
       logger.debug(
-        `Replacing @@${key}@@ with ${value} for content of ${filePath}`,
+        `Replacing @@${key}@@ with ${displayValue} for content of ${filePath}`,
       );
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }
@@ -132,7 +136,16 @@ const convertJsObjectToJson = (jsCode) => {
 
 const getVariables = async (args) => {
   const result = new Map();
-  if (args.environment) {
+
+  // First, apply inputVariables from config if available
+  if (args.inputVariables && typeof args.inputVariables === "object") {
+    for (const [key, value] of Object.entries(args.inputVariables)) {
+      result.set(key, value);
+    }
+  }
+
+  // Then, apply variables from environment file (if it's a .json file path)
+  if (args.environment && args.environment.endsWith(".json")) {
     const environmentFilePath = args.environment;
     try {
       const environmentFileVariables = JSON.parse(
@@ -154,6 +167,7 @@ const getVariables = async (args) => {
     result.set(key, value);
   };
 
+  // Finally, apply variables from -i flag (highest priority)
   if (args.input) {
     if (Array.isArray(args.input)) {
       for (const inputVariable of args.input) {
