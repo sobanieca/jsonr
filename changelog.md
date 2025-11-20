@@ -1,7 +1,6 @@
-# 3.2.0
+# 4.0.0
 
-- Added `jsonr-config.json` support for default parameter configuration
-- Added `jsonr config` command to generate sample configuration file
+- Redesigned configuration system with named environments, secrets management, and hierarchical config file support.
 
 # 3.1.0
 
