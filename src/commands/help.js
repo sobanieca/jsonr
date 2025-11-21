@@ -58,44 +58,52 @@ EXAMPLE jsonr-config.json:
   "environments": {
     "prod": {
       "inputVariables": {
-        "baseUrl": "https://api.example.com"
+        "apiUrl": "https://api.example.com"
       },
       "secrets": "~/.secret/prod-secrets.json"
     },
     "dev": {
       "inputVariables": {
-        "baseUrl": "https://dev-api.example.com"
-      }
+        "apiUrl": "https://dev-api.example.com"
+      },
+      "secrets": "~/.secret/dev-secrets.json"
     }
   },
   "defaults": {
     "inputVariables": {
-      "baseUrl": "http://localhost:3000"
-    },
-    "verbose": false
+      "apiUrl": "http://localhost:3000"
+    }
   }
 }
 
-Use 'jsonr config' to generate a complete sample configuration with all available options.
+Example .http file:
+
+GET @@apiUrl@@/users
+Authorization: Bearer @@apiKey@@
+
+Example secrets file (~/.secret/prod-secrets.json):
+
+{
+  "apiKey": "sk-1234567890abcdef",
+  "token": "Bearer xyz123"
+}
 
 Using environments:
-  jsonr -e prod ./sample.http     # Uses prod environment from config
+  jsonr -e prod ./sample.http     # Uses prod environment (apiUrl from config, apiKey from secrets)
+  jsonr -e dev ./sample.http      # Uses dev environment
   jsonr ./sample.http              # Uses defaults section
 
 Secrets files:
 - Store sensitive variables (API keys, tokens) in a separate JSON file outside your repo
 - Reference the secrets file path in your config with the "secrets" property
-- Secrets are automatically masked in logs as *****
-- Example secrets file (~/.secret/prod-secrets.json):
-  {
-    "apiKey": "sk-1234567890abcdef",
-    "token": "Bearer xyz123"
-  }
+- Variables from secrets are merged with inputVariables and can be used with @@variable@@ syntax
+
+Use 'jsonr config' to generate a complete sample configuration with all available options.
 
 Supported configuration keys (use camelCase for property names):
 
   inputVariables        Input variables for @@variable@@ replacement
-  secrets               Path to secrets file (variables masked in logs as *****)
+  secrets               Path to secrets file (merged with inputVariables)
   headers               Default headers to include in all requests
   status                Expected response status code for validation
   text                  Expected text in response body

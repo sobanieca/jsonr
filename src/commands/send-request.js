@@ -29,12 +29,9 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
     let fileContent = await Deno.readTextFile(filePath);
-    const secretKeys = config.getSecretKeys();
     for (const [key, value] of variables) {
-      // Mask secret values in logs
-      const displayValue = secretKeys.has(key) ? config.maskSecret(value) : value;
       logger.debug(
-        `Replacing @@${key}@@ with ${displayValue} for content of ${filePath}`,
+        `Replacing @@${key}@@ with ${value} for content of ${filePath}`,
       );
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }

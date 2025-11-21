@@ -416,7 +416,7 @@ snapshot[`Given API 18`] = `
 ' +
     '      "inputVariables": {
 ' +
-    '        "baseUrl": "https://api.example.com"
+    '        "apiUrl": "https://api.example.com"
 ' +
     "      },
 " +
@@ -428,10 +428,12 @@ snapshot[`Given API 18`] = `
 ' +
     '      "inputVariables": {
 ' +
-    '        "baseUrl": "https://dev-api.example.com"
+    '        "apiUrl": "https://dev-api.example.com"
 ' +
-    "      }
+    "      },
 " +
+    '      "secrets": "~/.secret/dev-secrets.json"
+' +
     "    }
 " +
     "  },
@@ -440,25 +442,45 @@ snapshot[`Given API 18`] = `
 ' +
     '    "inputVariables": {
 ' +
-    '      "baseUrl": "http://localhost:3000"
+    '      "apiUrl": "http://localhost:3000"
 ' +
-    "    },
+    "    }
 " +
-    '    "verbose": false
-' +
     "  }
 " +
     "}
 " +
     "
 " +
-    "Use 'jsonr config' to generate a complete sample configuration with all available options.
+    "Example .http file:
+" +
+    "
+" +
+    "GET @@apiUrl@@/users
+" +
+    "Authorization: Bearer @@apiKey@@
+" +
+    "
+" +
+    "Example secrets file (~/.secret/prod-secrets.json):
+" +
+    "
+" +
+    "{
+" +
+    '  "apiKey": "sk-1234567890abcdef",
+' +
+    '  "token": "Bearer xyz123"
+' +
+    "}
 " +
     "
 " +
     "Using environments:
 " +
-    "  jsonr -e prod ./sample.http     # Uses prod environment from config
+    "  jsonr -e prod ./sample.http     # Uses prod environment (apiUrl from config, apiKey from secrets)
+" +
+    "  jsonr -e dev ./sample.http      # Uses dev environment
 " +
     "  jsonr ./sample.http              # Uses defaults section
 " +
@@ -470,17 +492,11 @@ snapshot[`Given API 18`] = `
 " +
     '- Reference the secrets file path in your config with the "secrets" property
 ' +
-    "- Secrets are automatically masked in logs as *****
+    "- Variables from secrets are merged with inputVariables and can be used with @@variable@@ syntax
 " +
-    "- Example secrets file (~/.secret/prod-secrets.json):
+    "
 " +
-    "  {
-" +
-    '    "apiKey": "sk-1234567890abcdef",
-' +
-    '    "token": "Bearer xyz123"
-' +
-    "  }
+    "Use 'jsonr config' to generate a complete sample configuration with all available options.
 " +
     "
 " +
@@ -490,7 +506,7 @@ snapshot[`Given API 18`] = `
 " +
     "  inputVariables        Input variables for @@variable@@ replacement
 " +
-    "  secrets               Path to secrets file (variables masked in logs as *****)
+    "  secrets               Path to secrets file (merged with inputVariables)
 " +
     "  headers               Default headers to include in all requests
 " +

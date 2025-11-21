@@ -23,7 +23,6 @@ const commands = [
 logger.debug("Args provided:");
 logger.debug(args);
 
-// Load and apply config files
 const enrichedArgs = await config.loadAndApplyConfig(args);
 
 logger.debug("Args after applying config:");

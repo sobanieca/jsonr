@@ -3,40 +3,6 @@ import { deps } from "./deps.js";
 
 const CONFIG_FILE_NAME = "jsonr-config.json";
 
-// Global set of secret keys for masking in logs
-let secretKeys = new Set();
-
-/**
- * Returns the set of secret keys that should be masked in logs
- */
-export const getSecretKeys = () => secretKeys;
-
-/**
- * Masks a value if it's a secret
- */
-export const maskSecret = (value) => {
-  if (!value) return value;
-  return "*****";
-};
-
-/**
- * Expands tilde (~) in file paths to the user's home directory
- */
-const expandTilde = (filePath) => {
-  if (typeof filePath !== "string") {
-    return filePath;
-  }
-  if (filePath.startsWith("~/") || filePath === "~") {
-    const homeDir = Deno.env.get("HOME") || Deno.env.get("USERPROFILE");
-    if (!homeDir) {
-      logger.debug("Could not determine home directory for tilde expansion");
-      return filePath;
-    }
-    return filePath.replace(/^~/, homeDir);
-  }
-  return filePath;
-};
-
 /**
  * Reads and parses a JSON file, stripping comments
  */
@@ -80,35 +46,28 @@ const readConfigFile = async (filePath) => {
 
 /**
  * Loads secrets from a secrets file
- * Returns an object with variables and marks them as secrets
+ * Returns an object with variables from the secrets file
  */
 const loadSecretsFile = async (secretsPath) => {
   if (!secretsPath) {
     return {};
   }
 
-  const expandedPath = expandTilde(secretsPath);
-  logger.debug(`Loading secrets from ${expandedPath}`);
+  logger.debug(`Loading secrets from ${secretsPath}`);
 
   try {
-    const secrets = await readJsonFile(expandedPath);
-
-    // Mark all keys from secrets file as secret
-    for (const key of Object.keys(secrets)) {
-      secretKeys.add(key);
-      logger.debug(`Marked '${key}' as secret (will be masked in logs)`);
-    }
-
+    const secrets = await readJsonFile(secretsPath);
+    logger.debug(`Loaded ${Object.keys(secrets).length} variables from secrets file`);
     return secrets;
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
       logger.error(
-        `Error: Secrets file not found at ${expandedPath}. Please check the path in your config file.`,
+        `Error: Secrets file not found at ${secretsPath}. Please check the path in your config file.`,
       );
       Deno.exit(1);
     }
     logger.error(
-      `Error: Failed to read secrets file at ${expandedPath}: ${err.message}`,
+      `Error: Failed to read secrets file at ${secretsPath}: ${err.message}`,
     );
     Deno.exit(1);
   }
@@ -181,19 +140,15 @@ const mergeEnvironmentConfigs = (configs, envName) => {
       config.environments[envName] &&
       typeof config.environments[envName] === "object"
     ) {
-      // Merge environment settings
       for (const [key, value] of Object.entries(config.environments[envName])) {
-        if (key === "variables" || key === "inputVariables") {
-          // Merge variables
+        if (key === "inputVariables") {
           if (!merged.inputVariables) {
             merged.inputVariables = {};
           }
           Object.assign(merged.inputVariables, value);
         } else if (key === "secrets") {
-          // Take the most specific secrets path
-          merged.secrets = expandTilde(value);
+          merged.secrets = value;
         } else {
-          // Other config values
           merged[key] = value;
         }
       }
@@ -212,17 +167,14 @@ const mergeDefaultConfigs = (configs) => {
 
   for (const config of configs) {
     if (config.defaults && typeof config.defaults === "object") {
-      // Merge defaults
       for (const [key, value] of Object.entries(config.defaults)) {
         if (key === "inputVariables") {
-          // Merge inputVariables
           if (!merged.inputVariables) {
             merged.inputVariables = {};
           }
           Object.assign(merged.inputVariables, value);
         } else if (key === "secrets") {
-          // Take the most specific secrets path
-          merged.secrets = expandTilde(value);
+          merged.secrets = value;
         } else {
           merged[key] = value;
         }
@@ -242,10 +194,8 @@ const applyConfigToArgs = async (args, configData) => {
     return args;
   }
 
-  // Create a new args object with config applied
   const enrichedArgs = { ...args };
 
-  // Map of config keys to args keys
   const argMapping = {
     environment: "environment",
     headers: "headers",
@@ -262,26 +212,21 @@ const applyConfigToArgs = async (args, configData) => {
     js: "js",
   };
 
-  // Load secrets if specified
   let secretsVariables = {};
   if (configData.secrets) {
     secretsVariables = await loadSecretsFile(configData.secrets);
   }
 
-  // Apply config values to args (only if not already provided via CLI)
   for (const [configKey, configValue] of Object.entries(configData)) {
     if (configKey === "secrets") {
-      // Skip secrets path itself
       continue;
     }
 
     const argsKey = argMapping[configKey] || configKey;
 
     if (configKey === "inputVariables") {
-      // Merge inputVariables from config with secrets
       const allVariables = { ...configValue, ...secretsVariables };
 
-      // Store in enrichedArgs for later use
       if (!enrichedArgs.inputVariables) {
         enrichedArgs.inputVariables = {};
       }
@@ -302,7 +247,6 @@ const applyConfigToArgs = async (args, configData) => {
     }
   }
 
-  // If we have secrets but no inputVariables from config, still add them
   if (Object.keys(secretsVariables).length > 0 && !configData.inputVariables) {
     if (!enrichedArgs.inputVariables) {
       enrichedArgs.inputVariables = {};
@@ -321,9 +265,6 @@ const applyConfigToArgs = async (args, configData) => {
  */
 export const loadAndApplyConfig = async (args) => {
   try {
-    // Reset secret keys for each invocation
-    secretKeys = new Set();
-
     const configFiles = await findConfigFiles();
 
     if (configFiles.length === 0) {
@@ -333,7 +274,6 @@ export const loadAndApplyConfig = async (args) => {
 
     logger.debug(`Found ${configFiles.length} config file(s)`);
 
-    // If environment is specified via -e flag, look for that environment
     if (args.environment && !args.environment.endsWith(".json")) {
       const envName = args.environment;
       logger.debug(`Looking for environment '${envName}' in config files`);
@@ -353,7 +293,6 @@ export const loadAndApplyConfig = async (args) => {
 
       return await applyConfigToArgs(args, envConfig);
     } else {
-      // Use defaults
       logger.debug("Using default configuration (no environment specified)");
       const defaultConfig = mergeDefaultConfigs(configFiles);
       logger.debug("Merged default config:");
@@ -370,6 +309,4 @@ export const loadAndApplyConfig = async (args) => {
 
 export default {
   loadAndApplyConfig,
-  getSecretKeys,
-  maskSecret,
 };

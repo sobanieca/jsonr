@@ -32,7 +32,6 @@ const createConfig = async () => {
   const configFileName = "jsonr-config.json";
 
   try {
-    // Check if config file already exists
     try {
       await Deno.lstat(configFileName);
       logger.error(
@@ -43,13 +42,11 @@ const createConfig = async () => {
       if (!(err instanceof Deno.errors.NotFound)) {
         throw err;
       }
-      // File doesn't exist, continue
     }
 
-    // Create the config file with comments
     await Deno.writeTextFile(configFileName, configWithComments);
 
-    logger.info(`✓ Created ${configFileName} in the current directory`);
+    logger.info(`Created ${configFileName} in the current directory`);
     logger.info("");
     logger.info("Edit this file to customize your environments and defaults.");
   } catch (err) {
