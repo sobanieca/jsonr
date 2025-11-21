@@ -144,24 +144,6 @@ const getVariables = async (args) => {
     }
   }
 
-  // Then, apply variables from environment file (if it's a .json file path)
-  if (args.environment && args.environment.endsWith(".json")) {
-    const environmentFilePath = args.environment;
-    try {
-      const environmentFileVariables = JSON.parse(
-        await Deno.readTextFile(environmentFilePath),
-      );
-      for (const variable of Object.keys(environmentFileVariables)) {
-        result.set(variable, environmentFileVariables[variable]);
-      }
-    } catch (err) {
-      logger.debug(err);
-      logger.error(
-        `There was a problem when reading variables for environment file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`,
-      );
-    }
-  }
-
   const setInputVariable = (variable) => {
     const [key, value] = variable.split(":").map((x) => x.trim());
     result.set(key, value);

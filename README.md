@@ -40,31 +40,52 @@ Authorization: Bearer @@apiKey@@
 jsonr post-pet.http -i "apiKey: myApiKey123"
 ```
 
-**3. Create environment file with proper input variable values**
+**3. Initialize jsonr config file**
 
 ```bash
-cat prod.json
+jsonr config
 ```
+
+This creates a `jsonr-config.json` file with environment configurations:
 
 ```json
 {
-  "apiKey": "prod_ApiKey123"
+  "environments": {
+    "prod": {
+      "inputVariables": {
+        "baseUrl": "https://petstore.swagger.io/v2",
+        "apiKey": "prod_ApiKey123"
+      }
+    }
+  }
 }
 ```
 
-**4. Use environment file when sending request**
+**4. Update .http file to use variables**
 
-```bash
-jsonr post-pet.http -e prod.json
+```
+POST @@baseUrl@@/pet
+Authorization: Bearer @@apiKey@@
+
+{
+  "name": "Sample Pet",
+  "status": "available"
+}
 ```
 
-**5. Skip .http files and send request directly** (Content-Type: application/json is added automatically)
+**5. Use environment from config when sending request**
+
+```bash
+jsonr post-pet.http -e prod
+```
+
+**6. Skip .http files and send request directly** (Content-Type: application/json is added automatically)
 
 ```bash
 jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status": "available"}' https://petstore.swagger.io/v2/pet
 ```
 
-**6. Write simple smoke tests with status code/response body assertions**
+**7. Write simple smoke tests with status code/response body assertions**
 
 ```bash
 jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status": "available"}' https://petstore.swagger.io/v2/pet -s 201
@@ -171,91 +192,6 @@ POST http://my-api.com/endpoint
 ```
 
 Type `jsonr --help` for more details on usage once you have a tool installed.
-
-### Configuration Files
-
-jsonr supports configuration files named `jsonr-config.json` that can store
-default values for command-line parameters. This feature eliminates the need to
-repeat common parameters (like environment files) in every command.
-
-#### How it works
-
-jsonr automatically searches for `jsonr-config.json` files starting from your
-current directory and moving up to your home directory. Configuration files
-closer to your current directory take precedence over those in parent
-directories, and command-line parameters always override configuration defaults.
-
-#### Example Configuration
-
-Generate a sample configuration file with all available options:
-
-```bash
-jsonr config
-```
-
-Or create a `jsonr-config.json` file manually in your project directory:
-
-```json
-{
-  "defaults": {
-    "environment": "~/.secret/sandbox-env.json"
-  }
-}
-```
-
-With this configuration, you can run:
-
-```bash
-jsonr ./my-request.http
-```
-
-Instead of having to type:
-
-```bash
-jsonr -e ~/.secret/sandbox-env.json ./my-request.http
-```
-
-The environment file will be automatically loaded from the config. You can still
-override it by explicitly providing the `-e` flag:
-
-```bash
-jsonr -e ./production-env.json ./my-request.http
-```
-
-#### Supported Configuration Keys
-
-Use camelCase for property names (matching the SDK options):
-
-- `environment` - Default environment file path (supports `~` for home
-  directory)
-- `headers` - Default headers to include in all requests
-- `input` - Default input variables for @@variable@@ replacement
-- `status` - Expected response status code for validation
-- `text` - Expected text in response body
-- `method` - Default HTTP method
-- `body` - Default request body
-- `verbose` - Enable verbose mode (true/false)
-- `raw` - Enable raw mode (true/false)
-- `followRedirects` - Automatically follow HTTP redirects (true/false)
-- `output` - Default output file path
-- `omitDefaultContentTypeHeader` - Omit default Content-Type header (true/false)
-- `js` - Treat body as JavaScript object literal (true/false)
-
-Run `jsonr config` to generate a complete sample configuration file with
-detailed comments for each option.
-
-#### Configuration Hierarchy
-
-You can place `jsonr-config.json` files at different levels to create a
-configuration hierarchy:
-
-- `~/jsonr-config.json` - Global defaults for all projects
-- `~/projects/jsonr-config.json` - Defaults for all projects in this directory
-- `~/projects/my-app/jsonr-config.json` - Defaults specific to my-app
-
-When you run jsonr from `~/projects/my-app/`, it will merge all three
-configurations, with more specific configurations (closer to your working
-directory) taking precedence.
 
 ### Programmatic Usage - chaining requests
 

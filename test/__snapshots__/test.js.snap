@@ -111,9 +111,9 @@ snapshot[`Given API 7`] = `
 " +
     "
 " +
-    '{ id: "sample-post" }
-' +
-    "200 - OK obtained in *ms
+    "No response body returned from server
+" +
+    "401 - Unauthorized obtained in *ms
 ",
   outputError: "",
 }
@@ -346,6 +346,20 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
+    "  config      Generate a sample jsonr-config.json file in the current directory.
+" +
+    "              Usage: jsonr config
+" +
+    "
+" +
+    "              Creates a jsonr-config.json file with all available configuration options.
+" +
+    "              Edit this file to set default values for command-line parameters.
+" +
+    '              See "Configuration Files" section below for more details.
+' +
+    "
+" +
     "  update      Display instructions for updating jsonr to the latest version.
 " +
     "              Usage: jsonr update [--deno]
@@ -364,6 +378,188 @@ snapshot[`Given API 18`] = `
 " +
     'jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
 ' +
+    "
+" +
+    "Configuration Files:
+" +
+    "
+" +
+    "jsonr supports configuration files named 'jsonr-config.json' for managing environments and default parameters.
+" +
+    "
+" +
+    "Key features:
+" +
+    "- Define named environments (e.g., prod, dev, test) with specific configurations
+" +
+    "- Store sensitive variables in separate secrets files (masked in logs as *****)
+" +
+    "- Set default values to avoid repeating common parameters
+" +
+    "- Hierarchical search from current directory up to home directory
+" +
+    "- Files closer to current directory take precedence
+" +
+    "- Command-line parameters always override config values
+" +
+    "
+" +
+    "EXAMPLE jsonr-config.json:
+" +
+    "
+" +
+    "{
+" +
+    '  "environments": {
+' +
+    '    "prod": {
+' +
+    '      "inputVariables": {
+' +
+    '        "baseUrl": "https://api.example.com"
+' +
+    "      },
+" +
+    '      "secrets": "~/.secret/prod-secrets.json"
+' +
+    "    },
+" +
+    '    "dev": {
+' +
+    '      "inputVariables": {
+' +
+    '        "baseUrl": "https://dev-api.example.com"
+' +
+    "      }
+" +
+    "    }
+" +
+    "  },
+" +
+    '  "defaults": {
+' +
+    '    "inputVariables": {
+' +
+    '      "baseUrl": "http://localhost:3000"
+' +
+    "    },
+" +
+    '    "verbose": false
+' +
+    "  }
+" +
+    "}
+" +
+    "
+" +
+    "Use 'jsonr config' to generate a complete sample configuration with all available options.
+" +
+    "
+" +
+    "Using environments:
+" +
+    "  jsonr -e prod ./sample.http     # Uses prod environment from config
+" +
+    "  jsonr ./sample.http              # Uses defaults section
+" +
+    "
+" +
+    "Secrets files:
+" +
+    "- Store sensitive variables (API keys, tokens) in a separate JSON file outside your repo
+" +
+    '- Reference the secrets file path in your config with the "secrets" property
+' +
+    "- Secrets are automatically masked in logs as *****
+" +
+    "- Example secrets file (~/.secret/prod-secrets.json):
+" +
+    "  {
+" +
+    '    "apiKey": "sk-1234567890abcdef",
+' +
+    '    "token": "Bearer xyz123"
+' +
+    "  }
+" +
+    "
+" +
+    "Supported configuration keys (use camelCase for property names):
+" +
+    "
+" +
+    "  inputVariables        Input variables for @@variable@@ replacement
+" +
+    "  secrets               Path to secrets file (variables masked in logs as *****)
+" +
+    "  headers               Default headers to include in all requests
+" +
+    "  status                Expected response status code for validation
+" +
+    "  text                  Expected text in response body
+" +
+    "  method                Default HTTP method
+" +
+    "  body                  Default request body
+" +
+    "  verbose               Enable verbose mode (true/false)
+" +
+    "  raw                   Enable raw mode (true/false)
+" +
+    "  followRedirects       Automatically follow HTTP redirects (true/false)
+" +
+    "  output                Default output file path
+" +
+    "  omitDefaultContentTypeHeader  Omit default Content-Type header (true/false)
+" +
+    "  js                    Treat body as JavaScript object literal (true/false)
+" +
+    "
+" +
+    "How configuration files work:
+" +
+    "
+" +
+    "jsonr automatically searches for jsonr-config.json files starting from your
+" +
+    "current directory and moving up to your home directory. Configuration files
+" +
+    "closer to your current directory take precedence over those in parent
+" +
+    "directories, and command-line parameters always override configuration defaults.
+" +
+    "
+" +
+    "You can place jsonr-config.json files at different levels to create a
+" +
+    "configuration hierarchy:
+" +
+    "
+" +
+    "- ~/jsonr-config.json (global defaults for all projects)
+" +
+    "- ~/projects/jsonr-config.json (defaults for all projects in this directory)
+" +
+    "- ~/projects/my-app/jsonr-config.json (defaults specific to my-app)
+" +
+    "
+" +
+    "When you run jsonr from ~/projects/my-app/, it will merge all three
+" +
+    "configurations, with more specific configurations (closer to your working
+" +
+    "directory) taking precedence.
+" +
+    "
+" +
+    "Priority order (highest to lowest):
+" +
+    "1. Command-line arguments (-i, -e <envName>, -h, etc.)
+" +
+    "2. Named environment from config (when using -e <envName>)
+" +
+    "3. Defaults section from config files (closer to cwd takes precedence)
+" +
     "
 " +
     "Parameters:
@@ -526,45 +722,33 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "  Environment file path.
+    "  Environment name from jsonr-config.json.
 " +
     "
 " +
-    "  Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files.
-" +
-    "  For instance you can have following sample.http file:
+    "  Specify which environment to use from your jsonr-config.json file.
 " +
     "
 " +
-    "  POST https://@@apiUrl@@/value
+    "  EXAMPLE:
 " +
-    "
-" +
-    "  {
-" +
-    '    "username": "user@email.com"
+    '  jsonr -e prod ./sample.http      # Uses "prod" environment from config
 ' +
-    "  }
-" +
-    "
-" +
-    "  Now, you can create environment file test.json:
-" +
-    "
-" +
-    "  {
-" +
-    '    "apiUrl": "my-api-on-test-environment.com"
+    '  jsonr -e dev ./sample.http       # Uses "dev" environment from config
 ' +
-    "  }
+    "
+" +
+    "  jsonr will search for the environment in your jsonr-config.json files (starting from
+" +
+    "  the current directory up to your home directory). If the environment is not found,
+" +
+    "  jsonr will exit with an error.
 " +
     "
 " +
-    "  And use it later as:
+    "  Named environments allow you to organize different configurations (prod, dev, test),
 " +
-    "
-" +
-    "  jsonr -e ./test.json ./sample.http
+    "  manage secrets separately, and leverage hierarchical configuration across projects.
 " +
     "
 " +

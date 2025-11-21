@@ -92,11 +92,10 @@ Secrets files:
     "token": "Bearer xyz123"
   }
 
-Supported configuration keys:
+Supported configuration keys (use camelCase for property names):
 
   inputVariables        Input variables for @@variable@@ replacement
-  secrets               Path to secrets file (variables masked in logs)
-  environment           Environment file path for legacy .json files
+  secrets               Path to secrets file (variables masked in logs as *****)
   headers               Default headers to include in all requests
   status                Expected response status code for validation
   text                  Expected text in response body
@@ -109,15 +108,28 @@ Supported configuration keys:
   omitDefaultContentTypeHeader  Omit default Content-Type header (true/false)
   js                    Treat body as JavaScript object literal (true/false)
 
-Configuration hierarchy:
-- ~/jsonr-config.json (applies to all projects)
-- ~/projects/jsonr-config.json (applies to all projects in this directory)
-- ~/projects/my-app/jsonr-config.json (applies only to my-app)
+How configuration files work:
+
+jsonr automatically searches for jsonr-config.json files starting from your
+current directory and moving up to your home directory. Configuration files
+closer to your current directory take precedence over those in parent
+directories, and command-line parameters always override configuration defaults.
+
+You can place jsonr-config.json files at different levels to create a
+configuration hierarchy:
+
+- ~/jsonr-config.json (global defaults for all projects)
+- ~/projects/jsonr-config.json (defaults for all projects in this directory)
+- ~/projects/my-app/jsonr-config.json (defaults specific to my-app)
+
+When you run jsonr from ~/projects/my-app/, it will merge all three
+configurations, with more specific configurations (closer to your working
+directory) taking precedence.
 
 Priority order (highest to lowest):
-1. Command-line arguments (-i, -e with .json file, etc.)
+1. Command-line arguments (-i, -e <envName>, -h, etc.)
 2. Named environment from config (when using -e <envName>)
-3. Default section from config files (closer to cwd takes precedence)
+3. Defaults section from config files (closer to cwd takes precedence)
 
 Parameters:
 
@@ -199,43 +211,20 @@ path to .http file name or url
 
 -e, --environment
 
-  Environment name or file path.
+  Environment name from jsonr-config.json.
 
-  This parameter works in two ways:
+  Specify which environment to use from your jsonr-config.json file.
 
-  1. Environment name (from jsonr-config.json):
-     When you provide a name (not ending with .json), jsonr will look for that environment
-     in your jsonr-config.json files.
+  EXAMPLE:
+  jsonr -e prod ./sample.http      # Uses "prod" environment from config
+  jsonr -e dev ./sample.http       # Uses "dev" environment from config
 
-     EXAMPLE:
-     jsonr -e prod ./sample.http      # Uses "prod" environment from config
+  jsonr will search for the environment in your jsonr-config.json files (starting from
+  the current directory up to your home directory). If the environment is not found,
+  jsonr will exit with an error.
 
-     If the environment is not found in any config file, jsonr will exit with an error.
-
-  2. Environment file path (legacy .json files):
-     When you provide a path ending with .json, jsonr treats it as a direct path to a
-     JSON file with variables and their values (similar to -i parameter).
-
-     EXAMPLE sample.http file:
-
-     POST https://@@apiUrl@@/value
-
-     {
-       "username": "user@email.com"
-     }
-
-     Environment file test.json:
-
-     {
-       "apiUrl": "my-api-on-test-environment.com"
-     }
-
-     Usage:
-
-     jsonr -e ./test.json ./sample.http
-
-  Using named environments from config is recommended as it provides better organization,
-  supports secrets management, and allows hierarchical configuration across projects.
+  Named environments allow you to organize different configurations (prod, dev, test),
+  manage secrets separately, and leverage hierarchical configuration across projects.
 
 -m, --method
 
