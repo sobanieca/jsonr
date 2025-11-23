@@ -199,19 +199,6 @@ Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`,
 
 Use `jsonr update` command and follow presented instructions to update.
 
-## SSL Certificate Issues
-
-If your requests are failing due to certificate validation errors (and you trust
-target server) you can run `temporary` command like:
-
-`deno run --allow-net --unsafely-ignore-certificate-errors jsr:@sobanieca/jsonr ...`
-
-It will display warning about disable ssl verification, but you should be able
-to perform requests. If you work frequently with such unsafe servers you can
-consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
-
-`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
-
 ## Hints
 
 - If you want to disable colors (at least for main log messages), you can use:
@@ -230,6 +217,19 @@ jsonr "https://api.example.com/users?filter=active&sort=name"
 
 When dealing with large response bodies, you can pipe the output to `grep` to
 filter specific content:
+
+- SSL Certificate Issues
+
+If your requests are failing due to certificate validation errors (and you trust
+target server) you can run `temporary` command like:
+
+`deno run --allow-net --unsafely-ignore-certificate-errors jsr:@sobanieca/jsonr ...`
+
+It will display warning about disable ssl verification, but you should be able
+to perform requests. If you work frequently with such unsafe servers you can
+consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
+
+`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
 
 ```bash
 # Search for a specific property in a large JSON response
