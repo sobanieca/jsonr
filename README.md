@@ -20,7 +20,7 @@ solution for everything. That's why it's so simple to use. No more need to
 browse lots of documentation about tons of features that you don't need. 5
 minutes and you are ready to send any requests.
 
-## Quick Examples
+## Usage
 
 **1. Create .http files** (store them in your git repository to share with other developers)
 
@@ -93,6 +93,58 @@ jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status
 
 Run `jsonr --help` for details.
 
+**8. Programmatic Usage - chaining requests**
+
+You can use `jsonr` programmatically in your Javascript scripts to chain
+multiple requests and handle responses in code.
+
+To get started, generate a template script:
+
+```bash
+jsonr init
+jsonr init https://api.example.com/endpoint
+```
+
+This creates a `jsonr-script.js` file that you can customize. Here's an example
+that creates a user and then posts an order using the returned user ID:
+
+```javascript
+// Create a new user
+const userResponse = await jsonr("https://api.example.com/users", {
+  method: "POST",
+  body: {
+    name: "John Doe",
+    email: "john@example.com",
+  },
+  status: 201,
+});
+
+const userId = userResponse.body.id;
+console.log(`Created user with ID: ${userId}`);
+
+// Create an order for the newly created user
+const orderResponse = await jsonr("https://api.example.com/orders", {
+  method: "POST",
+  body: {
+    userId: userId,
+    items: ["product-123", "product-456"],
+    total: 99.99,
+  },
+  status: 201,
+});
+
+console.log(`Order created with ID: ${orderResponse.body.id}`);
+```
+
+Run your script with:
+
+```bash
+jsonr run jsonr-script.js
+```
+
+The `jsonr` function is automatically available in scripts run with
+`jsonr run` - no import needed!
+
 ## Prerequisites
 
 Deno runtime environment `https://deno.com` (required for recommended
@@ -145,22 +197,7 @@ Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`,
 
 ## Updating
 
-### For Deno Installations
-
-To update `jsonr` to the latest version, use the `update` command:
-
-```bash
-jsonr update --deno
-```
-
-This will ask for run permission and automatically update jsonr to the latest
-version from JSR.
-
-### For Pre-compiled Binaries
-
-Run the `install.sh` script to update to the latest version, or download the
-latest binary from the
-[releases page](https://github.com/sobanieca/jsonr/releases/latest).
+Use `jsonr update` command and follow presented instructions to update.
 
 ## SSL Certificate Issues
 
@@ -175,90 +212,6 @@ consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
 
 `deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
 
-## Usage
-
-Sample usage:
-
-`jsonr -h "Authorization: Bearer MyToken" my-request.http`
-
-`my-request.http` file content:
-
-```
-POST http://my-api.com/endpoint
-
-{
-  "someKey": "someValue"
-}
-```
-
-Type `jsonr --help` for more details on usage once you have a tool installed.
-
-### Programmatic Usage - chaining requests
-
-You can use `jsonr` programmatically in your Javascript scripts to chain
-multiple requests and handle responses in code.
-
-To get started, generate a template script:
-
-```bash
-jsonr init
-jsonr init ./requests/get.http
-jsonr init https://api.example.com/endpoint
-```
-
-This creates a `jsonr-script.js` file that you can customize. Here's an example
-that creates a user and then posts an order using the returned user ID:
-
-```javascript
-// Create a new user
-const userResponse = await jsonr("https://api.example.com/users", {
-  method: "POST",
-  body: {
-    name: "John Doe",
-    email: "john@example.com",
-  },
-  status: 201,
-});
-
-const userId = userResponse.body.id;
-console.log(`Created user with ID: ${userId}`);
-
-// Create an order for the newly created user
-const orderResponse = await jsonr("https://api.example.com/orders", {
-  method: "POST",
-  body: {
-    userId: userId,
-    items: ["product-123", "product-456"],
-    total: 99.99,
-  },
-  status: 201,
-});
-
-console.log(`Order created with ID: ${orderResponse.body.id}`);
-```
-
-Run your script with:
-
-```bash
-jsonr run jsonr-script.js
-```
-
-The `jsonr` function is automatically available in scripts run with
-`jsonr run` - no import needed!
-
-### Working with Large Responses
-
-When dealing with large response bodies, you can pipe the output to `grep` to
-filter specific content:
-
-```bash
-# Search for a specific property in a large JSON response
-jsonr my-api-request.http | grep "someProperty" -C 10
-
-# Extract specific fields from JSON responses
-jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
-```
-
 ## Hints
 
 - If you want to disable colors (at least for main log messages), you can use:
@@ -271,6 +224,19 @@ NO_COLOR=1 jsonr ...
 
 ```bash
 jsonr "https://api.example.com/users?filter=active&sort=name"
+```
+
+- Working with Large Responses
+
+When dealing with large response bodies, you can pipe the output to `grep` to
+filter specific content:
+
+```bash
+# Search for a specific property in a large JSON response
+jsonr my-api-request.http | grep "someProperty" -C 10
+
+# Extract specific fields from JSON responses
+jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
 ```
 
 ## Contribution
