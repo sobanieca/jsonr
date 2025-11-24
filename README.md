@@ -25,19 +25,19 @@ minutes and you are ready to send any requests.
 **1. Create .http files** (store them in your git repository to share with other developers)
 
 ```
-POST https://petstore.swagger.io/v2/pet
+POST https://api.example.com/users
 Authorization: Bearer @@apiKey@@
 
 {
-  "name": "Sample Pet",
-  "status": "available"
+  "name": "John Doe",
+  "email": "john.doe@example.com"
 }
 ```
 
 **2. Use simple command to send request and set input variable**
 
 ```bash
-jsonr post-pet.http -i "apiKey: myApiKey123"
+jsonr create-user.http -i "apiKey: myApiKey123"
 ```
 
 **3. Initialize jsonr config file**
@@ -53,7 +53,7 @@ This creates a `jsonr-config.json` file with environment configurations:
   "environments": {
     "prod": {
       "inputVariables": {
-        "baseUrl": "https://petstore.swagger.io/v2",
+        "baseUrl": "https://prod.api.example.com",
         "apiKey": "prod_ApiKey123"
       }
     }
@@ -64,12 +64,12 @@ This creates a `jsonr-config.json` file with environment configurations:
 **4. Update .http file to use variables**
 
 ```
-POST @@baseUrl@@/pet
+POST @@baseUrl@@/users
 Authorization: Bearer @@apiKey@@
 
 {
-  "name": "Sample Pet",
-  "status": "available"
+  "name": "John Doe",
+  "example": "john.doe@example.com"
 }
 ```
 
@@ -82,16 +82,14 @@ jsonr post-pet.http -e prod
 **6. Skip .http files and send request directly** (Content-Type: application/json is added automatically)
 
 ```bash
-jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status": "available"}' https://petstore.swagger.io/v2/pet
+jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users
 ```
 
 **7. Write simple smoke tests with status code/response body assertions**
 
 ```bash
-jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "Sample Pet", "status": "available"}' https://petstore.swagger.io/v2/pet -s 201
+jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users -s 201
 ```
-
-Run `jsonr --help` for details.
 
 **8. Programmatic Usage - chaining requests**
 
@@ -102,7 +100,7 @@ To get started, generate a template script:
 
 ```bash
 jsonr init
-jsonr init https://api.example.com/endpoint
+jsonr init https://api.example.com/users
 ```
 
 This creates a `jsonr-script.js` file that you can customize. Here's an example
@@ -110,9 +108,8 @@ that creates a user and then posts an order using the returned user ID:
 
 ```javascript
 // Create a new user
-const userResponse = await jsonr("https://api.example.com/users", {
-  method: "POST",
-  body: {
+const userResponse = await jsonr("create-user.http", {
+  inputVariables: {
     name: "John Doe",
     email: "john@example.com",
   },
@@ -126,7 +123,7 @@ console.log(`Created user with ID: ${userId}`);
 const orderResponse = await jsonr("https://api.example.com/orders", {
   method: "POST",
   body: {
-    userId: userId,
+    userId,
     items: ["product-123", "product-456"],
     total: 99.99,
   },
@@ -145,14 +142,25 @@ jsonr run jsonr-script.js
 The `jsonr` function is automatically available in scripts run with
 `jsonr run` - no import needed!
 
-## Prerequisites
+## Learn More
 
-Deno runtime environment `https://deno.com` (required for recommended
-installation method)
+For complete documentation of all available options and detailed usage
+instructions run `jsonr --help` or view the help text at:
+
+https://sobanieca.github.io/jsonr/src/commands/help.js
+
+This URL is particularly useful when working with AI assistants or LLMs - you
+can provide this link to give them comprehensive information about jsonr's
+capabilities and command-line options.
 
 ## Installation
 
 ### Option 1: Install via Deno (Recommended)
+
+> Prerequisites
+>
+> Deno runtime environment `https://deno.com` (required for recommended
+> installation method)
 
 ```bash
 deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
@@ -247,13 +255,4 @@ use and cover ~80% of use cases for playing around with JSON HTTP API's.
 Instructions (--help) for this tool should be possible to read in less than 5
 minutes. If more features will be added this may be hard to achieve.
 
-## Learn More
 
-For complete documentation of all available options and detailed usage
-instructions, view the help text at:
-
-https://sobanieca.github.io/jsonr/src/commands/help.js
-
-This URL is particularly useful when working with AI assistants or LLMs - you
-can provide this link to give them comprehensive information about jsonr's
-capabilities and command-line options.
