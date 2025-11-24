@@ -201,12 +201,6 @@ Use `jsonr update` command and follow presented instructions to update.
 
 ## Hints
 
-- If you want to disable colors (at least for main log messages), you can use:
-
-```
-NO_COLOR=1 jsonr ...
-```
-
 - It is recommended to wrap URLs with quotes to avoid shell conflicts:
 
 ```bash
@@ -217,6 +211,14 @@ jsonr "https://api.example.com/users?filter=active&sort=name"
 
 When dealing with large response bodies, you can pipe the output to `grep` to
 filter specific content:
+
+```bash
+# Search for a specific property in a large JSON response
+jsonr my-api-request.http | grep "someProperty" -C 10
+
+# Extract specific fields from JSON responses
+jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
+```
 
 - SSL Certificate Issues
 
@@ -231,12 +233,10 @@ consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
 
 `deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
 
-```bash
-# Search for a specific property in a large JSON response
-jsonr my-api-request.http | grep "someProperty" -C 10
+- If you want to disable colors (at least for main log messages), you can use:
 
-# Extract specific fields from JSON responses
-jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
+```bash
+NO_COLOR=1 jsonr ...
 ```
 
 ## Contribution
