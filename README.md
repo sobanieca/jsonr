@@ -76,10 +76,10 @@ Authorization: Bearer @@apiKey@@
 **5. Use environment from config when sending request**
 
 ```bash
-jsonr post-pet.http -e prod
+jsonr create-user.http -e prod
 ```
 
-**6. Skip .http files and send request directly** (Content-Type: application/json is added automatically)
+**6. Skip .http files and send request directly** (`Content-Type: application/json` header is added automatically)
 
 ```bash
 jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users
@@ -99,7 +99,6 @@ multiple requests and handle responses in code.
 To get started, generate a template script:
 
 ```bash
-jsonr init
 jsonr init https://api.example.com/users
 ```
 
