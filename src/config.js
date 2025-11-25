@@ -3,16 +3,19 @@ import { deps } from "./deps.js";
 
 const CONFIG_FILE_NAME = "jsonr-config.json";
 
-/**
- * Reads and parses a JSON file, stripping comments
- */
+const stripJsonComments = (content) => {
+  return content.replace(/^\s*(\/\/|#).*$/gm, "");
+};
+
+const removeTrailingCommas = (content) => {
+  return content.replace(/,(\s*[}\]])/g, "$1");
+};
+
 const readJsonFile = async (filePath) => {
   try {
     let content = await Deno.readTextFile(filePath);
-    // Remove comments from JSON (lines starting with // or # after optional whitespace)
-    content = content.replace(/^\s*(\/\/|#).*$/gm, "");
-    // Remove trailing commas before closing brackets
-    content = content.replace(/,(\s*[}\]])/g, "$1");
+    content = stripJsonComments(content);
+    content = removeTrailingCommas(content);
     return JSON.parse(content);
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
@@ -22,10 +25,6 @@ const readJsonFile = async (filePath) => {
   }
 };
 
-/**
- * Reads and parses a jsonr-config.json file
- * Returns the config object or null if file doesn't exist or is invalid
- */
 const readConfigFile = async (filePath) => {
   try {
     const config = await readJsonFile(filePath);
@@ -44,10 +43,6 @@ const readConfigFile = async (filePath) => {
   }
 };
 
-/**
- * Loads secrets from a secrets file
- * Returns an object with variables from the secrets file
- */
 const loadSecretsFile = async (secretsPath) => {
   if (!secretsPath) {
     return {};
@@ -75,11 +70,6 @@ const loadSecretsFile = async (secretsPath) => {
   }
 };
 
-/**
- * Finds all jsonr-config.json files from the current directory up to the home directory
- * Returns an array of config objects, ordered from home directory to current directory
- * (so that configs closer to cwd can override parent configs)
- */
 const findConfigFiles = async () => {
   const configs = [];
   const homeDir = Deno.env.get("HOME") || Deno.env.get("USERPROFILE");
@@ -96,17 +86,14 @@ const findConfigFiles = async () => {
     `Searching for ${CONFIG_FILE_NAME} files from ${currentDir} to ${homeDirResolved}`,
   );
 
-  // Collect all directories from cwd to home
   const directories = [];
   while (true) {
     directories.push(currentDir);
 
-    // Stop if we've reached the home directory
     if (currentDir === homeDirResolved) {
       break;
     }
 
-    // Stop if we've reached the root directory
     const parentDir = deps.dirname(currentDir);
     if (parentDir === currentDir) {
       break;
@@ -115,8 +102,6 @@ const findConfigFiles = async () => {
     currentDir = parentDir;
   }
 
-  // Read configs in reverse order (from home to cwd)
-  // so that configs array is ordered from least specific to most specific
   for (let i = directories.length - 1; i >= 0; i--) {
     const dir = directories[i];
     const configPath = deps.join(dir, CONFIG_FILE_NAME);
@@ -129,10 +114,6 @@ const findConfigFiles = async () => {
   return configs;
 };
 
-/**
- * Merges environment configurations from multiple config files
- * Returns merged environment or null if not found
- */
 const mergeEnvironmentConfigs = (configs, envName) => {
   const merged = {};
 
@@ -160,10 +141,6 @@ const mergeEnvironmentConfigs = (configs, envName) => {
   return Object.keys(merged).length > 0 ? merged : null;
 };
 
-/**
- * Merges defaults from config objects
- * Later configs (closer to cwd) override earlier configs (closer to home)
- */
 const mergeDefaultConfigs = (configs) => {
   const merged = {};
 
@@ -187,10 +164,6 @@ const mergeDefaultConfigs = (configs) => {
   return merged;
 };
 
-/**
- * Applies config to command-line arguments
- * CLI arguments always take precedence over config
- */
 const applyConfigToArgs = async (args, configData) => {
   if (!configData) {
     return args;
@@ -272,9 +245,6 @@ const applyConfigToArgs = async (args, configData) => {
   return enrichedArgs;
 };
 
-/**
- * Main function to load config and apply it to args
- */
 export const loadAndApplyConfig = async (args) => {
   try {
     const configFiles = await findConfigFiles();
