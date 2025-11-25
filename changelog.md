@@ -1,6 +1,7 @@
 # 4.0.0
 
-- Redesigned configuration system with named environments, secrets management, and hierarchical config file support.
+- Redesigned configuration system with named environments, secrets management,
+  and hierarchical config file support.
 
 # 3.1.0
 

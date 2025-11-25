@@ -57,7 +57,9 @@ const loadSecretsFile = async (secretsPath) => {
 
   try {
     const secrets = await readJsonFile(secretsPath);
-    logger.debug(`Loaded ${Object.keys(secrets).length} variables from secrets file`);
+    logger.debug(
+      `Loaded ${Object.keys(secrets).length} variables from secrets file`,
+    );
     return secrets;
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
@@ -233,9 +235,15 @@ const applyConfigToArgs = async (args, configData) => {
       Object.assign(enrichedArgs.inputVariables, allVariables);
 
       logger.debug(
-        `Applied ${Object.keys(allVariables).length} input variables from config (${Object.keys(secretsVariables).length} from secrets)`,
+        `Applied ${
+          Object.keys(allVariables).length
+        } input variables from config (${
+          Object.keys(secretsVariables).length
+        } from secrets)`,
       );
-    } else if (enrichedArgs[argsKey] === undefined && configValue !== undefined) {
+    } else if (
+      enrichedArgs[argsKey] === undefined && configValue !== undefined
+    ) {
       logger.debug(
         `Applying config value: ${argsKey} = ${configValue}`,
       );
@@ -253,7 +261,9 @@ const applyConfigToArgs = async (args, configData) => {
     }
     Object.assign(enrichedArgs.inputVariables, secretsVariables);
     logger.debug(
-      `Applied ${Object.keys(secretsVariables).length} variables from secrets file`,
+      `Applied ${
+        Object.keys(secretsVariables).length
+      } variables from secrets file`,
     );
   }
 

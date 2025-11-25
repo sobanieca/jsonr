@@ -1,17 +1,15 @@
 # About
 
-- :pager: Are you tired of your UI http client asking you to sign in/sign up so
-  they can create proper `workspace` for you? (and get your email to send you
-  marketing emails)
-- :hourglass_flowing_sand: Are you waiting for ages until your UI http client
-  loads all it's functionalities and plugins that you don't need?
-- :file_cabinet: Are you spending lots of time trying to find requests you've
-  sent to given api months ago?
-- :microscope: Are you searching how to change request method in `curl` because
-  you don't use `curl` that often?
-- :clipboard: Are you working with modern json http api's?
-- :dash: Do you want to write smoke tests for your api?
-- :link: Need a scripting tool to chain requests?
+- :pager: Tired of UI HTTP clients forcing sign-in just to create a workspace
+  (and collect your email)?
+- :hourglass_flowing_sand: Waiting forever for UI clients to load features and
+  plugins you don’t need?
+- :file_cabinet: Struggling to find past requests from months ago?
+- :microscope: Searching how to change the request method in `curl` because you
+  rarely use it?
+- :clipboard: Working with modern JSON HTTP APIs?
+- :dash: Want to write quick smoke tests for your API?
+- :link: Need a scripting tool to chain requests together?
 
 `jsonr` is a simple CLI tool for interacting with json http api's and writing
 simple smoke tests. It's available from your terminal anytime when you need it
@@ -22,7 +20,8 @@ minutes and you are ready to send any requests.
 
 ## Usage
 
-**1. Create .http files** (store them in your git repository to share with other developers)
+**1. Create .http files** (store them in your git repository to share with other
+developers)
 
 ```
 POST https://api.example.com/users
@@ -79,7 +78,8 @@ Authorization: Bearer @@apiKey@@
 jsonr create-user.http -e prod
 ```
 
-**6. Skip .http files and send request directly** (`Content-Type: application/json` header is added automatically)
+**6. Skip .http files and send request directly**
+(`Content-Type: application/json` header is added automatically)
 
 ```bash
 jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users
@@ -253,5 +253,3 @@ contribute. Please keep in mind that this tool is supposed to be super simple to
 use and cover ~80% of use cases for playing around with JSON HTTP API's.
 Instructions (--help) for this tool should be possible to read in less than 5
 minutes. If more features will be added this may be hard to achieve.
-
-
