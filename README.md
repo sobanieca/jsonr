@@ -85,10 +85,10 @@ jsonr create-user.http -e prod
 jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users
 ```
 
-**7. Write simple smoke tests with status code/response body assertions**
+**7. Write simple smoke tests with response status code assertion (text assertion also available)*
 
 ```bash
-jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users -s 201
+jsonr create-user.http -e prod -s 201
 ```
 
 **8. Programmatic Usage - chaining requests**
