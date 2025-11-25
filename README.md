@@ -158,8 +158,7 @@ capabilities and command-line options.
 
 > Prerequisites
 >
-> Deno runtime environment `https://deno.com` (required for recommended
-> installation method)
+> Deno runtime environment `https://deno.com`
 
 ```bash
 deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
@@ -251,5 +250,5 @@ NO_COLOR=1 jsonr ...
 If you want to implement/request new features you are more than welcome to
 contribute. Please keep in mind that this tool is supposed to be super simple to
 use and cover ~80% of use cases for playing around with JSON HTTP API's.
-Instructions (--help) for this tool should be possible to read in less than 5
+Instructions (`jsonr --help`) for this tool should be possible to read in less than 5
 minutes. If more features will be added this may be hard to achieve.
