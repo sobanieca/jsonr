@@ -119,6 +119,13 @@ Deno.test("Given API", async (t) => {
   );
   await test("jsonr help");
 
+  await test("jsonr -e test requests/config-test.http");
+  await test("jsonr -e testWithAuth requests/config-auth.http");
+  await test("jsonr requests/config-test.http");
+  await test("jsonr -e parentTest requests/config-test.http");
+  await test("jsonr -e test -i 'testEndpoint: /auth-required' -i 'auth-token: 123' requests/config-auth.http");
+  await test("jsonr -e nonExistentEnv requests/config-test.http");
+
   await sdkTest("jsonr init requests/get.http");
   await sdkTest("jsonr init http://localhost:3000/sample");
 

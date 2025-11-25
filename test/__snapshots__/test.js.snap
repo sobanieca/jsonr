@@ -946,6 +946,102 @@ snapshot[`Given API 18`] = `
 
 snapshot[`Given API 19`] = `
 {
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 20`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 21`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 22`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 23`] = `
+{
+  code: 0,
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 24`] = `
+{
+  code: 1,
+  output: "Error: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
+" +
+    "Run 'jsonr --help' for details on configuration files.
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 25`] = `
+{
   initCode: 0,
   initOutput: "Created jsonr-script.js with jsonr SDK template
 ",
@@ -981,7 +1077,7 @@ snapshot[`Given API 19`] = `
 }
 `;
 
-snapshot[`Given API 20`] = `
+snapshot[`Given API 26`] = `
 {
   initCode: 0,
   initOutput: "Created jsonr-script.js with jsonr SDK template
