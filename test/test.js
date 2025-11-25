@@ -102,7 +102,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr requests/put.http");
   await test("jsonr requests/exception.http");
   await test("jsonr -s 401 requests/auth-401.http");
-  await test("jsonr -e requests/environments/test.json requests/auth.http");
+  await test("jsonr -i 'auth-token: 123' requests/auth.http");
   await test(
     'jsonr -m PUT -b \'{"name":"test"}\' localhost:3000/sample',
   );

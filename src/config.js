@@ -202,6 +202,7 @@ const applyConfigToArgs = async (args, configData) => {
     environment: "environment",
     headers: "headers",
     inputVariables: "inputVariables",
+    secrets: "secrets",
     status: "status",
     text: "text",
     method: "method",
@@ -215,8 +216,9 @@ const applyConfigToArgs = async (args, configData) => {
   };
 
   let secretsVariables = {};
-  if (configData.secrets) {
-    secretsVariables = await loadSecretsFile(configData.secrets);
+  const secretsPath = args.secrets || configData.secrets;
+  if (secretsPath) {
+    secretsVariables = await loadSecretsFile(secretsPath);
   }
 
   for (const [configKey, configValue] of Object.entries(configData)) {

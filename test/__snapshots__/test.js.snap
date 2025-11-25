@@ -111,9 +111,9 @@ snapshot[`Given API 7`] = `
 " +
     "
 " +
-    "No response body returned from server
-" +
-    "401 - Unauthorized obtained in *ms
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
 ",
   outputError: "",
 }

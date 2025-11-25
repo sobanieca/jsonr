@@ -15,6 +15,7 @@ const args = deps.parse(Deno.args, {
     "body",
     "headers",
     "environment",
+    "secrets",
     "status",
     "text",
     "method",

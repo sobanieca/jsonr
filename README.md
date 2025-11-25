@@ -85,7 +85,8 @@ jsonr create-user.http -e prod
 jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users
 ```
 
-**7. Write simple smoke tests with response status code assertion (text assertion also available)**
+**7. Write simple smoke tests with response status code assertion (text
+assertion also available)**
 
 ```bash
 jsonr create-user.http -e prod -s 201
@@ -250,5 +251,5 @@ NO_COLOR=1 jsonr ...
 If you want to implement/request new features you are more than welcome to
 contribute. Please keep in mind that this tool is supposed to be super simple to
 use and cover ~80% of use cases for playing around with JSON HTTP API's.
-Instructions (`jsonr --help`) for this tool should be possible to read in less than 5
-minutes. If more features will be added this may be hard to achieve.
+Instructions (`jsonr --help`) for this tool should be possible to read in less
+than 5 minutes. If more features will be added this may be hard to achieve.

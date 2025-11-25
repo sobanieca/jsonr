@@ -1,5 +1,4 @@
 import logger from "../logger.js";
-import config from "../config.js";
 
 /*
  * Available args:
@@ -7,7 +6,7 @@ import config from "../config.js";
  * headers (h) header -h "auth: abc"
  * status (s) expected response status code -s 200
  * text (t) expected text in response -t "abc"
- * environment (e) environment file path -e "./file.json"
+ * environment (e) environment name -e "prod"
  * method (m) http method -m POST
  * verbose (v) verbose - more details like response headers
  * body (b) body -b '{ test: "123" }'
@@ -131,7 +130,7 @@ const convertJsObjectToJson = (jsCode) => {
   return result;
 };
 
-const getVariables = async (args) => {
+const getVariables = (args) => {
   const result = new Map();
 
   // First, apply inputVariables from config if available
@@ -146,7 +145,6 @@ const getVariables = async (args) => {
     result.set(key, value);
   };
 
-  // Finally, apply variables from -i flag (highest priority)
   if (args.input) {
     if (Array.isArray(args.input)) {
       for (const inputVariable of args.input) {
@@ -193,7 +191,7 @@ export const sendRequestCore = async (args) => {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
-      const variables = await getVariables(args);
+      const variables = getVariables(args);
       const fileRequest = await parseHttpFile(
         urlOrFilePath,
         variables,
