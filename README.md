@@ -60,7 +60,7 @@ This creates a `jsonr-config.json` file with environment configurations:
 }
 ```
 
-**4. Update .http file to use variables**
+**4. Update .http file to use more variables**
 
 ```
 POST @@baseUrl@@/users
