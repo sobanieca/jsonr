@@ -1,9 +1,0 @@
-POST http://localhost:3000/sample
-
-# This is sample comment
-{
-  "name": "Some name",
-  "tags" [
-    "tag1"
-  ]
-}

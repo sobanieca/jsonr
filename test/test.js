@@ -107,39 +107,30 @@ Deno.test("Given API", async (t) => {
     });
   };
 
-  await test("jsonr requests/get.http");
-  await test("jsonr requests/post.http");
-  await test("jsonr requests/delete.http");
-  await test("jsonr requests/put.http");
-  await test("jsonr requests/exception.http");
-  await test("jsonr -s 401 requests/auth-401.http");
-  await test("jsonr -i 'auth-token: 123' requests/auth.http");
+  await test("jsonr -e test get.http", "test/requests/api2");
+  await test("jsonr -e test post.http", "test/requests/api2");
+  await test("jsonr -e test delete.http", "test/requests/api2");
+  await test("jsonr -e test put.http", "test/requests/api2");
+  await test("jsonr -e test exception.http", "test/requests/api2");
+  await test("jsonr -e test get-auth-401.http -s 401", "test/requests/api1");
+  await test("jsonr -e test get-auth.http", "test/requests/api1");
   await test(
     'jsonr -m PUT -b \'{"name":"test"}\' localhost:3000/sample',
   );
   await test("jsonr http://localhost:3000/sample");
-  await test("jsonr requests/put.http -s 303");
-  await test("jsonr requests/put.http -s 200");
-  await test("jsonr requests/get.http -t test");
-  await test("jsonr requests/get.http -t sample-get");
+  await test("jsonr -e test put.http -s 303", "test/requests/api2");
+  await test("jsonr -e test put.http -s 200", "test/requests/api2");
+  await test("jsonr -e test get.http -t test", "test/requests/api2");
+  await test("jsonr -e test get.http -t sample-get", "test/requests/api2");
   await test("jsonr http://localhost:3000/redirect");
   await test("jsonr http://localhost:3000/redirect -f");
-  await test("jsonr --js requests/post-js.http");
+  await test("jsonr -e test --js post-js.http", "test/requests/api2");
   await test(
     "jsonr --js -m POST -b '{ name: \"test\", count: 8 }' localhost:3000/sample",
   );
   await test("jsonr help");
-
-  await test("jsonr -e test get-auth.http", "test/requests/api1");
-  await test("jsonr -e test get-auth-401.http -s 401", "test/requests/api1");
-  await test("jsonr -e test get.http", "test/requests/api2");
-  await test("jsonr -e test post.http", "test/requests/api2");
-  await test("jsonr -e test put.http", "test/requests/api2");
-  await test("jsonr -e test delete.http", "test/requests/api2");
-  await test("jsonr -e test get.http -t sample-get", "test/requests/api2");
   await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
 
-  await sdkTest("jsonr init requests/get.http");
   await sdkTest("jsonr init http://localhost:3000/sample");
 
   apiProcess.kill();
