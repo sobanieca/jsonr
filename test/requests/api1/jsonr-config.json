@@ -6,5 +6,8 @@
       },
       "secrets": "environments/test-secrets.json"
     }
+  },
+  "defaults": {
+    "debug": false
   }
 }

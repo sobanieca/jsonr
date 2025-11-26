@@ -1,6 +1,6 @@
 {
   "defaults": {
-    "verbose": true,
+    "debug": true,
     "followRedirects": true
   }
 }

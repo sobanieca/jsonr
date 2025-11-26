@@ -223,6 +223,15 @@ const applyConfigToArgs = async (args, configData) => {
         `Applying config value: ${argsKey} = ${configValue}`,
       );
       enrichedArgs[argsKey] = configValue;
+    } else if (
+      typeof enrichedArgs[argsKey] === "boolean" &&
+      enrichedArgs[argsKey] === false &&
+      configValue !== undefined
+    ) {
+      logger.debug(
+        `Applying config value for boolean flag: ${argsKey} = ${configValue}`,
+      );
+      enrichedArgs[argsKey] = configValue;
     } else if (enrichedArgs[argsKey] !== undefined) {
       logger.debug(
         `CLI argument ${argsKey} provided, skipping config value`,
@@ -273,7 +282,21 @@ export const loadAndApplyConfig = async (args) => {
       logger.debug(`Found environment '${envName}' configuration`);
       logger.debug(envConfig);
 
-      return await applyConfigToArgs(args, envConfig);
+      const defaultConfig = mergeDefaultConfigs(configFiles);
+      logger.debug("Merged default config:");
+      logger.debug(defaultConfig);
+
+      const mergedConfig = { ...defaultConfig, ...envConfig };
+      if (defaultConfig.inputVariables || envConfig.inputVariables) {
+        mergedConfig.inputVariables = {
+          ...defaultConfig.inputVariables,
+          ...envConfig.inputVariables,
+        };
+      }
+      logger.debug("Final merged config (defaults + environment):");
+      logger.debug(mergedConfig);
+
+      return await applyConfigToArgs(args, mergedConfig);
     } else {
       logger.debug("Using default configuration (no environment specified)");
       const defaultConfig = mergeDefaultConfigs(configFiles);
