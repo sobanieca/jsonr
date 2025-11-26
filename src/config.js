@@ -216,6 +216,29 @@ const applyConfigToArgs = async (args, configData) => {
           Object.keys(secretsVariables).length
         } from secrets)`,
       );
+    } else if (configKey === "headers") {
+      // Convert headers object to array of strings in "key: value" format
+      if (typeof configValue === "object" && !Array.isArray(configValue)) {
+        const headerStrings = Object.entries(configValue).map(
+          ([key, value]) => `${key}: ${value}`,
+        );
+
+        // Merge with existing headers from CLI if any
+        if (enrichedArgs.headers) {
+          enrichedArgs.headers = Array.isArray(enrichedArgs.headers)
+            ? [...enrichedArgs.headers, ...headerStrings]
+            : [enrichedArgs.headers, ...headerStrings];
+        } else {
+          enrichedArgs.headers = headerStrings;
+        }
+
+        logger.debug(
+          `Applied ${headerStrings.length} headers from config`,
+        );
+      } else {
+        // If headers is already in the expected format, use it directly
+        enrichedArgs[argsKey] = configValue;
+      }
     } else if (
       enrichedArgs[argsKey] === undefined && configValue !== undefined
     ) {
