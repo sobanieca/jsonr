@@ -9,7 +9,7 @@ const configWithComments = `{
         "baseUrl": "https://api.example.com",
         "apiVersion": "v1"
       },
-      "secrets": "~/.secret/prod-secrets.json"
+      "secrets": "~/.secret/prod-secrets.json",
     },
     "dev": {
       "inputVariables": {
@@ -23,6 +23,9 @@ const configWithComments = `{
   "defaults": {
     "inputVariables": {
       "baseUrl": "http://localhost:3000"
+    },
+    "headers": {
+      "X-Request-Source": "jsonr-cli"
     }
   }
 }

@@ -420,8 +420,14 @@ snapshot[`Given API 18`] = `
 ' +
     "      },
 " +
-    '      "secrets": "~/.secret/prod-secrets.json"
+    '      "secrets": "~/.secret/prod-secrets.json",
 ' +
+    '      "headers": {
+' +
+    '        "X-TraceId": "jsonr"
+' +
+    "      }
+" +
     "    },
 " +
     '    "dev": {
@@ -443,6 +449,12 @@ snapshot[`Given API 18`] = `
     '    "inputVariables": {
 ' +
     '      "apiUrl": "http://localhost:3000"
+' +
+    "    },
+" +
+    '    "headers": {
+' +
+    '      "X-Request-Source": "jsonr-cli"
 ' +
     "    }
 " +
@@ -508,8 +520,10 @@ snapshot[`Given API 18`] = `
 " +
     "  secrets               Path to secrets file (merged with inputVariables)
 " +
-    "  headers               Default headers to include in all requests
+    "  headers               Default headers to include in all requests (object format)
 " +
+    '                        Example: { "Authorization": "Bearer xyz", "X-Custom": "value" }
+' +
     "  status                Expected response status code for validation
 " +
     "  text                  Expected text in response body

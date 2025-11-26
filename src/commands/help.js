@@ -60,7 +60,10 @@ EXAMPLE jsonr-config.json:
       "inputVariables": {
         "apiUrl": "https://api.example.com"
       },
-      "secrets": "~/.secret/prod-secrets.json"
+      "secrets": "~/.secret/prod-secrets.json",
+      "headers": {
+        "X-TraceId": "jsonr"
+      }
     },
     "dev": {
       "inputVariables": {
@@ -72,6 +75,9 @@ EXAMPLE jsonr-config.json:
   "defaults": {
     "inputVariables": {
       "apiUrl": "http://localhost:3000"
+    },
+    "headers": {
+      "X-Request-Source": "jsonr-cli"
     }
   }
 }
@@ -104,7 +110,8 @@ Supported configuration keys (use camelCase for property names):
 
   inputVariables        Input variables for @@variable@@ replacement
   secrets               Path to secrets file (merged with inputVariables)
-  headers               Default headers to include in all requests
+  headers               Default headers to include in all requests (object format)
+                        Example: { "Authorization": "Bearer xyz", "X-Custom": "value" }
   status                Expected response status code for validation
   text                  Expected text in response body
   method                Default HTTP method
