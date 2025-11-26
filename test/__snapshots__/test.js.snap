@@ -947,13 +947,13 @@ snapshot[`Given API 18`] = `
 snapshot[`Given API 19`] = `
 {
   code: 0,
-  output: "GET http://localhost:3000/sample...
+  output: "GET http://localhost:3000/auth-required...
 " +
     "Response:
 " +
     "
 " +
-    '{ id: "sample-get" }
+    '{ id: "sample-post" }
 ' +
     "200 - OK obtained in *ms
 ",
@@ -970,9 +970,9 @@ snapshot[`Given API 20`] = `
 " +
     "
 " +
-    '{ id: "sample-post" }
-' +
-    "200 - OK obtained in *ms
+    "No response body returned from server
+" +
+    "401 - Unauthorized obtained in *ms
 ",
   outputError: "",
 }
@@ -998,6 +998,57 @@ snapshot[`Given API 21`] = `
 snapshot[`Given API 22`] = `
 {
   code: 0,
+  output: "POST http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 23`] = `
+{
+  code: 0,
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "test" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 24`] = `
+{
+  code: 0,
+  output: "DELETE http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    "No response body returned from server
+" +
+    "204 - No Content obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 25`] = `
+{
+  code: 0,
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -1012,24 +1063,7 @@ snapshot[`Given API 22`] = `
 }
 `;
 
-snapshot[`Given API 23`] = `
-{
-  code: 0,
-  output: "GET http://localhost:3000/auth-required...
-" +
-    "Response:
-" +
-    "
-" +
-    '{ id: "sample-post" }
-' +
-    "200 - OK obtained in *ms
-",
-  outputError: "",
-}
-`;
-
-snapshot[`Given API 24`] = `
+snapshot[`Given API 26`] = `
 {
   code: 1,
   output: "Error: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
@@ -1040,7 +1074,7 @@ snapshot[`Given API 24`] = `
 }
 `;
 
-snapshot[`Given API 25`] = `
+snapshot[`Given API 27`] = `
 {
   initCode: 0,
   initOutput: "Created jsonr-script.js with jsonr SDK template
@@ -1077,7 +1111,7 @@ snapshot[`Given API 25`] = `
 }
 `;
 
-snapshot[`Given API 26`] = `
+snapshot[`Given API 28`] = `
 {
   initCode: 0,
   initOutput: "Created jsonr-script.js with jsonr SDK template

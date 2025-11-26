@@ -1,0 +1,6 @@
+{
+  "defaults": {
+    "verbose": true,
+    "followRedirects": true
+  }
+}

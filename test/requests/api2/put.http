@@ -1,0 +1,5 @@
+PUT @@baseUrl@@/sample
+
+{
+  "name": "test"
+}

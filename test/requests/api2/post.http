@@ -1,0 +1,5 @@
+POST @@baseUrl@@/sample
+
+{
+  "name": "test"
+}

@@ -1,10 +1,11 @@
 import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.ts";
 
-const run = async (cmd) => {
+const run = async (cmd, cwd) => {
   const command = new Deno.Command("sh", {
     args: ["-c", cmd],
     stdout: "piped",
     stderr: "piped",
+    cwd: cwd,
   });
 
   const { code, stdout, stderr } = await command.output();
@@ -55,10 +56,20 @@ Deno.test("Given API", async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 100));
   } while (true);
 
-  const test = async (jsonrCommand) => {
-    jsonrCommand = jsonrCommand.replace("jsonr", "deno run -A ../main.js");
-    await t.step(jsonrCommand, async () => {
-      const { code, output, outputError } = await run(jsonrCommand);
+  const test = async (jsonrCommand, cwd) => {
+    const originalCommand = jsonrCommand;
+    let mainPath = "../main.js";
+    let absoluteCwd;
+    if (cwd) {
+      const projectRoot = Deno.cwd().replace('/test', '');
+      absoluteCwd = `${projectRoot}/${cwd}`;
+      if (cwd.includes("api1") || cwd.includes("api2")) {
+        mainPath = "../../../main.js";
+      }
+    }
+    jsonrCommand = jsonrCommand.replace("jsonr", `deno run -A ${mainPath}`);
+    await t.step(originalCommand + (cwd ? ` [cwd: ${cwd}]` : ""), async () => {
+      const { code, output, outputError } = await run(jsonrCommand, absoluteCwd);
 
       await assertSnapshot(t, { code, output, outputError });
     });
@@ -119,12 +130,14 @@ Deno.test("Given API", async (t) => {
   );
   await test("jsonr help");
 
-  await test("jsonr -e test requests/config-test.http");
-  await test("jsonr -e testWithAuth requests/config-auth.http");
-  await test("jsonr requests/config-test.http");
-  await test("jsonr -e parentTest requests/config-test.http");
-  await test("jsonr -e test -i 'testEndpoint: /auth-required' -i 'auth-token: 123' requests/config-auth.http");
-  await test("jsonr -e nonExistentEnv requests/config-test.http");
+  await test("jsonr -e test get-auth.http", "test/requests/api1");
+  await test("jsonr -e test get-auth-401.http -s 401", "test/requests/api1");
+  await test("jsonr -e test get.http", "test/requests/api2");
+  await test("jsonr -e test post.http", "test/requests/api2");
+  await test("jsonr -e test put.http", "test/requests/api2");
+  await test("jsonr -e test delete.http", "test/requests/api2");
+  await test("jsonr -e test get.http -t sample-get", "test/requests/api2");
+  await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
 
   await sdkTest("jsonr init requests/get.http");
   await sdkTest("jsonr init http://localhost:3000/sample");

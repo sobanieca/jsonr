@@ -1,0 +1,10 @@
+{
+  "environments": {
+    "test": {
+      "inputVariables": {
+        "baseUrl": "http://localhost:3000"
+      },
+      "secrets": "environments/test-secrets.json"
+    }
+  }
+}
