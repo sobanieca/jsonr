@@ -61,7 +61,7 @@ Deno.test("Given API", async (t) => {
     let mainPath = "../main.js";
     let absoluteCwd;
     if (cwd) {
-      const projectRoot = Deno.cwd().replace('/test', '');
+      const projectRoot = Deno.cwd().replace("/test", "");
       absoluteCwd = `${projectRoot}/${cwd}`;
       if (cwd.includes("api1") || cwd.includes("api2")) {
         mainPath = "../../../main.js";
@@ -69,7 +69,10 @@ Deno.test("Given API", async (t) => {
     }
     jsonrCommand = jsonrCommand.replace("jsonr", `deno run -A ${mainPath}`);
     await t.step(originalCommand + (cwd ? ` [cwd: ${cwd}]` : ""), async () => {
-      const { code, output, outputError } = await run(jsonrCommand, absoluteCwd);
+      const { code, output, outputError } = await run(
+        jsonrCommand,
+        absoluteCwd,
+      );
 
       await assertSnapshot(t, { code, output, outputError });
     });
