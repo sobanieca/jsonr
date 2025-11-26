@@ -8,6 +8,8 @@
     }
   },
   "defaults": {
-    "debug": false
+    "headers": {
+      "traceId": "api1"
+    }
   }
 }

@@ -1,6 +1,8 @@
 {
   "defaults": {
-    "debug": true,
+    "headers": {
+      "traceId": "main"
+    },
     "followRedirects": true
   }
 }
