@@ -60,6 +60,10 @@ const createConfig = async () => {
   }
 };
 
+const kebabToCamel = (str) => {
+  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+};
+
 const displayConfig = async (args) => {
   const configFileName = "jsonr-config.json";
 
@@ -80,9 +84,16 @@ const displayConfig = async (args) => {
 
   const enrichedArgs = await loadAndApplyConfig(args);
 
+  const mapped = {};
+  for (const [key, value] of Object.entries(enrichedArgs)) {
+    if (key === "_" || key === "--" || key.length === 1) continue;
+    const mappedKey = kebabToCamel(key);
+    mapped[mappedKey] = value;
+  }
+
   logger.info(`Merged configuration:`);
   logger.info("");
-  const formattedConfig = Deno.inspect(enrichedArgs, {
+  const formattedConfig = Deno.inspect(mapped, {
     colors: true,
     strAbbreviateSize: 256000,
     iterableLimit: 20000,
