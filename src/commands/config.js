@@ -67,10 +67,8 @@ const kebabToCamel = (str) => {
 const displayConfig = async (args) => {
   const configFileName = "jsonr-config.json";
 
-  let fileExists = false;
   try {
     await Deno.lstat(configFileName);
-    fileExists = true;
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
       logger.info(`No ${configFileName} found in current directory.`);
