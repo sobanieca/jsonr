@@ -7,7 +7,8 @@
   "compilerOptions": {
     "checkJs": true,
     "noImplicitAny": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "useUnknownInCatchVariables": false
   },
   "lint": {
     "rules": {
