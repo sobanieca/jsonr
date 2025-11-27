@@ -52,11 +52,19 @@ This creates a `jsonr-config.json` file with environment configurations:
   "environments": {
     "prod": {
       "inputVariables": {
-        "baseUrl": "https://prod.api.example.com",
-        "apiKey": "prod_ApiKey123"
-      }
+        "baseUrl": "https://prod.api.example.com"
+      },
+      "secrets": "~/.secrets/jsonr-prod.json"
     }
   }
+}
+```
+
+The secrets file (`~/.secrets/jsonr-prod.json`) stores sensitive values separately:
+
+```json
+{
+  "apiKey": "prod_ApiKey123"
 }
 ```
 
