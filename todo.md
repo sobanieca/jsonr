@@ -1,7 +1,3 @@
-- Hide secrets in logs. Use simple algorithm - load all secrets and do simple
-  find and replace for secret value. For example: secret apiKey123, when
-  logger.debug is called it has to replace all apiKey123 occurences before
-  priting to stdout
 - Migrate test api to Hono
 - Remove all comments added to the code
 - Refactor config command. When called with `jsonr config --init` is should

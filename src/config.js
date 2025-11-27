@@ -1,4 +1,4 @@
-import logger from "./logger.js";
+import logger, { registerSecrets } from "./logger.js";
 import { deps } from "./deps.js";
 
 const CONFIG_FILE_NAME = "jsonr-config.json";
@@ -52,6 +52,7 @@ const loadSecretsFile = async (secretsPath) => {
 
   try {
     const secrets = await readJsonFile(secretsPath);
+    registerSecrets(secrets);
     logger.debug(
       `Loaded ${Object.keys(secrets).length} variables from secrets file`,
     );
