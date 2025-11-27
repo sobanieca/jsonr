@@ -133,7 +133,6 @@ const convertJsObjectToJson = (jsCode) => {
 const getVariables = (args) => {
   const result = new Map();
 
-  // First, apply inputVariables from config if available
   if (args.inputVariables && typeof args.inputVariables === "object") {
     for (const [key, value] of Object.entries(args.inputVariables)) {
       result.set(key, value);
