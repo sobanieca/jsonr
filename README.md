@@ -60,7 +60,8 @@ This creates a `jsonr-config.json` file with environment configurations:
 }
 ```
 
-The secrets file (`~/.secrets/jsonr-prod.json`) stores sensitive values separately:
+The secrets file (`~/.secrets/jsonr-prod.json`) stores sensitive values
+separately:
 
 ```json
 {
