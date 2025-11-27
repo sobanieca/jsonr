@@ -1,4 +1,3 @@
-- Migrate test api to Hono
 - Remove all comments added to the code
 - Refactor config command. When called with `jsonr config --init` is should
   produce config file. When called with `jsonr config` it should print resulting

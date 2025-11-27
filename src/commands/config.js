@@ -1,4 +1,5 @@
 import logger from "../logger.js";
+import { loadAndApplyConfig } from "../config.js";
 
 const configWithComments = `{
   // For detailed documentation about all configuration options, run: jsonr --help
@@ -9,7 +10,7 @@ const configWithComments = `{
         "baseUrl": "https://api.example.com",
         "apiVersion": "v1"
       },
-      "secrets": "~/.secret/prod-secrets.json",
+      "secrets": "~/.secret/prod-secrets.json"
     },
     "dev": {
       "inputVariables": {
@@ -59,7 +60,44 @@ const createConfig = async () => {
   }
 };
 
+const displayConfig = async (args) => {
+  const configFileName = "jsonr-config.json";
+
+  let fileExists = false;
+  try {
+    await Deno.lstat(configFileName);
+    fileExists = true;
+  } catch (err) {
+    if (err instanceof Deno.errors.NotFound) {
+      logger.info(`No ${configFileName} found in current directory.`);
+      logger.info("");
+      logger.info(`Run 'jsonr config --init' to initialize a config file.`);
+      logger.info("");
+    } else {
+      throw err;
+    }
+  }
+
+  const enrichedArgs = await loadAndApplyConfig(args);
+
+  logger.info(`Merged configuration:`);
+  logger.info("");
+  const formattedConfig = Deno.inspect(enrichedArgs, {
+    colors: true,
+    strAbbreviateSize: 256000,
+    iterableLimit: 20000,
+    depth: 100,
+  });
+  logger.info(formattedConfig);
+};
+
 export default {
-  execute: async () => await createConfig(),
+  execute: async (args) => {
+    if (args.init) {
+      await createConfig();
+    } else {
+      await displayConfig(args);
+    }
+  },
   match: (args) => args._[0] === "config",
 };
