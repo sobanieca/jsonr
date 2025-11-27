@@ -234,8 +234,8 @@ snapshot[`Given API 14`] = `
 " +
     "
 " +
-    '"Redirecting to /redirect-target."
-' +
+    "No response body returned from server
+" +
     "302 - Found obtained in *ms
 ",
   outputError: "",
@@ -994,11 +994,11 @@ snapshot[`Given API 20`] = `
 " +
     'Body: { id: "sample-get" }
 ' +
-    "Header content-type: application/json; charset=UTF-8
+    "Header content-length: 19
+" +
+    "Header content-type: application/json
 " +
     "Header date: *
-" +
-    "Header transfer-encoding: chunked
 " +
     "Header vary: Accept-Encoding
 ",

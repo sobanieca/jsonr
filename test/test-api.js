@@ -1,51 +1,50 @@
-import { Application, Router } from "https://deno.land/x/oak@14.2.0/mod.ts";
-const app = new Application();
-const router = new Router();
+import { Hono } from "jsr:@hono/hono@4.7.9";
 
-app.addEventListener("error", (evt) => {
+const app = new Hono();
+
+app.onError((err, c) => {
   console.log("Unhandled ERROR:");
-  console.log(evt.error);
+  console.log(err);
+  return c.text("Internal Server Error", 500);
 });
 
-router.get("/sample", (context) => {
-  context.response.body = { id: "sample-get" };
+app.get("/sample", (c) => {
+  return c.json({ id: "sample-get" });
 });
 
-router.post("/sample", (context) => {
-  context.response.body = { id: "sample-post" };
+app.post("/sample", (c) => {
+  return c.json({ id: "sample-post" });
 });
 
-router.delete("/sample", (context) => {
-  context.response.status = 204;
+app.delete("/sample", (c) => {
+  return c.body(null, 204);
 });
 
-router.put("/sample", async (context) => {
-  const body = await context.request.body.json();
-  context.response.body = { id: "sample-put", ...body };
+app.put("/sample", async (c) => {
+  const body = await c.req.json();
+  return c.json({ id: "sample-put", ...body });
 });
 
-router.get("/exception", () => {
+app.get("/exception", () => {
   throw new Error("Sample exception");
 });
 
-router.get("/redirect", (context) => {
-  context.response.redirect("/redirect-target");
+app.get("/redirect", (c) => {
+  return c.redirect("/redirect-target");
 });
 
-router.get("/redirect-target", (context) => {
-  context.response.body = { msg: "redirect-target" };
+app.get("/redirect-target", (c) => {
+  return c.json({ msg: "redirect-target" });
 });
 
-router.get("/auth-required", (context) => {
-  if (context.request.headers.get("Authorization") == "123") {
-    context.response.body = { id: "sample-post" };
+app.get("/auth-required", (c) => {
+  if (c.req.header("Authorization") == "123") {
+    return c.json({ id: "sample-post" });
   } else {
-    context.response.status = 401;
+    return c.body(null, 401);
   }
 });
 
-app.use(router.routes());
-
 const port = 3000;
 console.log(`Listening on port ${port}...`);
-await app.listen({ port });
+Deno.serve({ port }, app.fetch);
