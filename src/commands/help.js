@@ -23,11 +23,15 @@ Commands:
               The standalone binary includes the runtime, so no separate Deno installation is needed.
               Scripts run with the same permissions as jsonr (--allow-net, --allow-read, --allow-write).
 
-  config      Generate a sample jsonr-config.json file in the current directory.
-              Usage: jsonr config
+  config      Manage jsonr configuration.
+              Usage: jsonr config [--init]
 
-              Creates a jsonr-config.json file with all available configuration options.
-              Edit this file to set default values for command-line parameters.
+              Without --init: Displays the merged configuration from all jsonr-config.json files
+                             found in the directory hierarchy (from home directory to current directory).
+
+              With --init: Creates a new jsonr-config.json file in the current directory with all
+                          available configuration options and example environments.
+
               See "Configuration Files" section below for more details.
 
   update      Display instructions for updating jsonr to the latest version.
@@ -104,7 +108,8 @@ Secrets files:
 - Reference the secrets file path in your config with the "secrets" property
 - Variables from secrets are merged with inputVariables and can be used with @@variable@@ syntax
 
-Use 'jsonr config' to generate a complete sample configuration with all available options.
+Use 'jsonr config --init' to generate a complete sample configuration with all available options.
+Use 'jsonr config' to view your current merged configuration.
 
 Supported configuration keys (use camelCase for property names):
 

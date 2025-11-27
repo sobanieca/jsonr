@@ -42,7 +42,7 @@ jsonr create-user.http -i "apiKey: myApiKey123"
 **3. Initialize jsonr config file**
 
 ```bash
-jsonr config
+jsonr config --init
 ```
 
 This creates a `jsonr-config.json` file with environment configurations:

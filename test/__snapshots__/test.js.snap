@@ -346,15 +346,23 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "  config      Generate a sample jsonr-config.json file in the current directory.
+    "  config      Manage jsonr configuration.
 " +
-    "              Usage: jsonr config
+    "              Usage: jsonr config [--init]
 " +
     "
 " +
-    "              Creates a jsonr-config.json file with all available configuration options.
+    "              Without --init: Displays the merged configuration from all jsonr-config.json files
 " +
-    "              Edit this file to set default values for command-line parameters.
+    "                             found in the directory hierarchy (from home directory to current directory).
+" +
+    "
+" +
+    "              With --init: Creates a new jsonr-config.json file in the current directory with all
+" +
+    "                          available configuration options and example environments.
+" +
+    "
 " +
     '              See "Configuration Files" section below for more details.
 ' +
@@ -508,7 +516,9 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "Use 'jsonr config' to generate a complete sample configuration with all available options.
+    "Use 'jsonr config --init' to generate a complete sample configuration with all available options.
+" +
+    "Use 'jsonr config' to view your current merged configuration.
 " +
     "
 " +
@@ -970,6 +980,37 @@ snapshot[`Given API 19`] = `
 `;
 
 snapshot[`Given API 20`] = `
+{
+  code: 0,
+  output: "Merged configuration:
+" +
+    "
+" +
+    "{
+" +
+    "  help: false,
+" +
+    "  debug: false,
+" +
+    "  omitDefaultContentTypeHeader: false,
+" +
+    "  verbose: false,
+" +
+    "  raw: false,
+" +
+    "  followRedirects: true,
+" +
+    "  js: false,
+" +
+    '  headers: [ "traceId: api1", "traceId: api1" ]
+' +
+    "}
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 21`] = `
 {
   initCode: 0,
   initOutput: "Created jsonr-script.js with jsonr SDK template
