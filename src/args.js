@@ -12,15 +12,17 @@ const args = deps.parse(Deno.args, {
     "js",
   ],
   string: [
-    "input",
     "body",
-    "headers",
     "environment",
     "secrets",
     "status",
     "text",
     "method",
     "output",
+  ],
+  collect: [
+    "input",
+    "headers",
   ],
   alias: {
     v: "verbose",
