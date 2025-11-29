@@ -30,9 +30,9 @@ export async function jsonr(filePathOrUrl, options = {}) {
     args.environment = options.environment;
   }
 
-  if (options.input) {
+  if (options.inputVariables) {
     args.input = [];
-    for (const [key, value] of Object.entries(options.input)) {
+    for (const [key, value] of Object.entries(options.inputVariables)) {
       args.input.push(`${key}: ${value}`);
     }
   }

@@ -4,6 +4,7 @@ const args = deps.parse(Deno.args, {
   boolean: [
     "help",
     "debug",
+    "init",
     "omit-default-content-type-header",
     "verbose",
     "raw",

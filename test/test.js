@@ -135,7 +135,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
   await test("jsonr config", "test/requests/api1");
 
-  await sdkTest("jsonr init http://localhost:3000/sample");
+  await sdkTest("jsonr run --init http://localhost:3000/sample");
 
   apiProcess.kill();
   await apiProcess.output();

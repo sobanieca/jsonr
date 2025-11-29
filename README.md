@@ -109,7 +109,7 @@ multiple requests and handle responses in code.
 To get started, generate a template script:
 
 ```bash
-jsonr init https://api.example.com/users
+jsonr run --init https://api.example.com/users
 ```
 
 This creates a `jsonr-script.js` file that you can customize. Here's an example

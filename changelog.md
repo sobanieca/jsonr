@@ -2,6 +2,8 @@
 
 - Redesigned configuration system with named environments, secrets management,
   and hierarchical config file support.
+- Breaking change: `jsonr init` is now `jsonr run --init`. The init
+  functionality has been integrated into the run command as a flag.
 
 # 3.1.0
 

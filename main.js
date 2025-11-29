@@ -4,18 +4,16 @@ import logger from "./src/logger.js";
 import config from "./src/config.js";
 import help from "./src/commands/help.js";
 import version from "./src/commands/version.js";
-import init from "./src/commands/init.js";
 import update from "./src/commands/update.js";
-import runScript from "./src/commands/run-script.js";
+import run from "./src/commands/run.js";
 import configCommand from "./src/commands/config.js";
 import sendRequest from "./src/commands/send-request.js";
 
 const commands = [
   { name: "help", engine: help },
   { name: "version", engine: version },
-  { name: "init", engine: init },
   { name: "update", engine: update },
-  { name: "run-script", engine: runScript },
+  { name: "run", engine: run },
   { name: "config", engine: configCommand },
   { name: "send-request", engine: sendRequest },
 ];
