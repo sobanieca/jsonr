@@ -92,20 +92,22 @@ Deno.test("Given API", async (t) => {
           .replace(/Header date: [^\n]+/g, "Header date: *");
       };
 
-      await assertSnapshot(t, {
-        jsonrCommand,
-        initCode: initResult.code,
-        initOutput: initResult.output,
-        initOutputError: initResult.outputError,
-        scriptCode: scriptResult.code,
-        scriptOutput: normalizeScriptOutput(scriptResult.output),
-        scriptOutputError: scriptResult.outputError,
-      });
-
       try {
-        await Deno.remove("jsonr-script.js");
-      } catch {
-        // Ignore if file doesn't exist
+        await assertSnapshot(t, {
+          jsonrCommand,
+          initCode: initResult.code,
+          initOutput: initResult.output,
+          initOutputError: initResult.outputError,
+          scriptCode: scriptResult.code,
+          scriptOutput: normalizeScriptOutput(scriptResult.output),
+          scriptOutputError: scriptResult.outputError,
+        });
+      } finally {
+        try {
+          await Deno.remove("jsonr-script.js");
+        } catch {
+          // Ignore if file doesn't exist
+        }
       }
     });
   };

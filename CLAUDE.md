@@ -92,3 +92,4 @@ standard library v0.174.0:
 - No build step required - JavaScript runs directly with Deno
 - TypeScript checking enabled via `deno.json` compilerOptions
 - Main module exported through `main.js` with type definitions in `main.d.ts`
+- Avoid comments in code - try to write self explanatory code
