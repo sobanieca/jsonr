@@ -16,15 +16,17 @@ const run = async (cmd, cwd) => {
     return input.replace(ansiEscapeSequences, "");
   };
 
-  const removeDuration = (input) => {
-    const durationRegEx = /obtained in \d+ms/g;
-    return input.replace(durationRegEx, "obtained in *ms");
+  const removeVaryingOutput = (input) => {
+    return input
+      .replace(/obtained in \d+ms/g, "obtained in *ms")
+      .replace(/date: [^\n]+/g, "date: *")
+      .replace(/content-length: [^\n]+/g, "content-length: *");
   };
 
   let output = new TextDecoder().decode(stdout);
   let outputError = new TextDecoder().decode(stderr);
 
-  output = removeDuration(removeAnsi(output));
+  output = removeVaryingOutput(removeAnsi(output));
   outputError = removeAnsi(outputError);
 
   return {
@@ -124,6 +126,8 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e test put.http -s 303", "test/requests/api2");
   await test("jsonr -e test put.http -s 200", "test/requests/api2");
   await test("jsonr -e test get.http -t test", "test/requests/api2");
+  await test("jsonr -e test -h 'X-SampleHeader: abc' -v get-auth.http", "test/requests/api1")
+  await test("jsonr -e test -h 'X-SampleHeader: abc' -v get.http", "test/requests/api2")
   await test("jsonr -e test get.http -t sample-get", "test/requests/api2");
   await test("jsonr http://localhost:3000/redirect");
   await test("jsonr http://localhost:3000/redirect -f");
