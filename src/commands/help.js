@@ -174,11 +174,11 @@ path to .http file name or url
   If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
   Http files can include comments. In order to provide comment start a new line with '#' or '//'.
 
--i, --input
+-i, --input-variable
 
   Provide value for input variables.
 
-  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. 
+  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file.
   This will allow to either provide it's value via -i flag, or via environment file option (read further)
 
   EXAMPLE of sample.http file content with variables:

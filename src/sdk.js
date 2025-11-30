@@ -6,16 +6,16 @@ export async function jsonr(filePathOrUrl, options = {}) {
     _: [filePathOrUrl],
     headers: undefined,
     environment: undefined,
-    input: undefined,
+    inputVariables: undefined,
     status: undefined,
     text: undefined,
     method: undefined,
     body: undefined,
     verbose: false,
     raw: false,
-    "follow-redirects": false,
+    followRedirects: false,
     output: undefined,
-    "omit-default-content-type-header": false,
+    omitDefaultContentTypeHeader: false,
     js: false,
   };
 
@@ -31,9 +31,9 @@ export async function jsonr(filePathOrUrl, options = {}) {
   }
 
   if (options.inputVariables) {
-    args.input = [];
+    args.inputVariables = [];
     for (const [key, value] of Object.entries(options.inputVariables)) {
-      args.input.push(`${key}: ${value}`);
+      args.inputVariables.push(`${key}: ${value}`);
     }
   }
 
@@ -64,7 +64,7 @@ export async function jsonr(filePathOrUrl, options = {}) {
   }
 
   if (options.followRedirects) {
-    args["follow-redirects"] = true;
+    args.followRedirects = true;
   }
 
   if (options.output) {
@@ -72,7 +72,7 @@ export async function jsonr(filePathOrUrl, options = {}) {
   }
 
   if (options.omitDefaultContentTypeHeader) {
-    args["omit-default-content-type-header"] = true;
+    args.omitDefaultContentTypeHeader = true;
   }
 
   if (options.js) {

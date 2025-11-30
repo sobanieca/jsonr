@@ -1,23 +1,5 @@
 import logger from "../logger.js";
 
-/*
- * Available args:
- * input (i) input variable -i "variable1: abc"
- * headers (h) header -h "auth: abc"
- * status (s) expected response status code -s 200
- * text (t) expected text in response -t "abc"
- * environment (e) environment name -e "prod"
- * method (m) http method -m POST
- * verbose (v) verbose - more details like response headers
- * body (b) body -b '{ test: "123" }'
- * --omit-default-content-type-header
- * output (o) output file -o output.json
- * raw (r) request raw mode
- * follow-redirects (f) follow redirects
- * js treat body content as JavaScript object and serialize to JSON
- * input http file / url
- */
-
 const getHeaderValues = (header) => {
   const [headerKey, ...headersValues] = header.split(":");
   const headerValue = headersValues?.join(":");
@@ -133,7 +115,10 @@ const convertJsObjectToJson = (jsCode) => {
 const getVariables = (args) => {
   const result = new Map();
 
-  if (args.inputVariables && typeof args.inputVariables === "object") {
+  if (
+    args.inputVariables && typeof args.inputVariables === "object" &&
+    !Array.isArray(args.inputVariables)
+  ) {
     for (const [key, value] of Object.entries(args.inputVariables)) {
       result.set(key, value);
     }
@@ -144,13 +129,9 @@ const getVariables = (args) => {
     result.set(key, value);
   };
 
-  if (args.input) {
-    if (Array.isArray(args.input)) {
-      for (const inputVariable of args.input) {
-        setInputVariable(inputVariable);
-      }
-    } else {
-      setInputVariable(args.input);
+  if (args.inputVariables && Array.isArray(args.inputVariables)) {
+    for (const inputVariable of args.inputVariables) {
+      setInputVariable(inputVariable);
     }
   }
 
@@ -165,7 +146,7 @@ export const sendRequestCore = async (args) => {
     url: "",
   };
 
-  if (args["omit-default-content-type-header"]) {
+  if (args.omitDefaultContentTypeHeader) {
     logger.debug(
       "Parameter --omit-default-content-type-header provided - removing default Content-Type header",
     );
@@ -262,7 +243,7 @@ export const sendRequestCore = async (args) => {
 
   let redirect = "manual";
 
-  if (args["follow-redirects"]) {
+  if (args.followRedirects) {
     redirect = "follow";
   }
 

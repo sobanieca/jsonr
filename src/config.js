@@ -172,23 +172,6 @@ const applyConfigToArgs = async (args, configData) => {
 
   const enrichedArgs = { ...args };
 
-  const argMapping = {
-    environment: "environment",
-    headers: "headers",
-    inputVariables: "inputVariables",
-    secrets: "secrets",
-    status: "status",
-    text: "text",
-    method: "method",
-    body: "body",
-    verbose: "verbose",
-    raw: "raw",
-    followRedirects: "follow-redirects",
-    output: "output",
-    omitDefaultContentTypeHeader: "omit-default-content-type-header",
-    js: "js",
-  };
-
   let secretsVariables = {};
   const secretsPath = args.secrets || configData.secrets;
   if (secretsPath) {
@@ -199,8 +182,6 @@ const applyConfigToArgs = async (args, configData) => {
     if (configKey === "secrets") {
       continue;
     }
-
-    const argsKey = argMapping[configKey] || configKey;
 
     if (configKey === "inputVariables") {
       const allVariables = { ...configValue, ...secretsVariables };
@@ -235,27 +216,27 @@ const applyConfigToArgs = async (args, configData) => {
           `Applied ${headerStrings.length} headers from config`,
         );
       } else {
-        enrichedArgs[argsKey] = configValue;
+        enrichedArgs[configKey] = configValue;
       }
     } else if (
-      enrichedArgs[argsKey] === undefined && configValue !== undefined
+      enrichedArgs[configKey] === undefined && configValue !== undefined
     ) {
       logger.debug(
-        `Applying config value: ${argsKey} = ${configValue}`,
+        `Applying config value: ${configKey} = ${configValue}`,
       );
-      enrichedArgs[argsKey] = configValue;
+      enrichedArgs[configKey] = configValue;
     } else if (
-      typeof enrichedArgs[argsKey] === "boolean" &&
-      enrichedArgs[argsKey] === false &&
+      typeof enrichedArgs[configKey] === "boolean" &&
+      enrichedArgs[configKey] === false &&
       configValue !== undefined
     ) {
       logger.debug(
-        `Applying config value for boolean flag: ${argsKey} = ${configValue}`,
+        `Applying config value for boolean flag: ${configKey} = ${configValue}`,
       );
-      enrichedArgs[argsKey] = configValue;
-    } else if (enrichedArgs[argsKey] !== undefined) {
+      enrichedArgs[configKey] = configValue;
+    } else if (enrichedArgs[configKey] !== undefined) {
       logger.debug(
-        `CLI argument ${argsKey} provided, skipping config value`,
+        `CLI argument ${configKey} provided, skipping config value`,
       );
     }
   }

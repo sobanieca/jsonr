@@ -648,7 +648,7 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "-i, --input
+    "-i, --input-variable
 " +
     "
 " +
@@ -656,7 +656,7 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. 
+    "  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file.
 " +
     "  This will allow to either provide it's value via -i flag, or via environment file option (read further)
 " +
