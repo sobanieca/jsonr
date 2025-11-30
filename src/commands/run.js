@@ -1,18 +1,21 @@
 import logger from "../logger.js";
-import { jsonr } from "../sdk.js";
+import { sendRequest } from "./send-request.js";
 
 const generateTemplate = (urlOrFile) =>
   `// Run with: jsonr run jsonr-script.js
 
-const response = await jsonr('${urlOrFile}', {
-  // Headers to include in the request
-  headers: { "Authorization": "Bearer token" },
+const response = await jsonr({
+  _: ['${urlOrFile}'],
+
+  // Headers to include in the request (array of "key: value" strings)
+  // headers: ["Authorization: Bearer token"],
 
   // Environment name from jsonr-config.json (e.g., "prod", "dev")
   // environment: "prod",
 
   // Input variables for @@variable@@ replacement in .http files
-  inputVariables: { "key": "value" },
+  // Can be object or array of "key: value" strings
+  // inputVariables: { "key": "value" },
 
   // Expected response status code (assertion)
   // status: 200,
@@ -23,26 +26,26 @@ const response = await jsonr('${urlOrFile}', {
   // HTTP method (GET, POST, PUT, DELETE, etc.)
   // method: "POST",
 
-  // Request body (object or string)
-  // body: { data: "example" },
+  // Request body (string or will be stringified)
+  // body: '{"data":"example"}',
 
   // Enable verbose output (show headers)
   // verbose: true,
 
   // Raw mode (don't strip whitespace from request body)
-  // raw: true,
+  // raw: false,
 
   // Follow HTTP redirects
-  // followRedirects: true,
+  // followRedirects: false,
 
   // Save response to file
   // output: "./response.json",
 
   // Omit default Content-Type: application/json header
-  // omitDefaultContentTypeHeader: true,
+  // omitDefaultContentTypeHeader: false,
 
   // Treat body as JavaScript object literal (not strict JSON)
-  // js: true,
+  // js: false,
 });
 
 console.log("Status:", response.status);
@@ -70,10 +73,10 @@ const executeInit = async (args) => {
   }
 
   const urlOrFile = args._[1] || "url or http file";
-  const sdkTemplate = generateTemplate(urlOrFile);
+  const template = generateTemplate(urlOrFile);
 
   try {
-    await Deno.writeTextFile(filename, sdkTemplate);
+    await Deno.writeTextFile(filename, template);
     console.log(`Created ${filename} with jsonr SDK template`);
   } catch (err) {
     throw new Error(
@@ -107,13 +110,13 @@ const executeScript = async (args) => {
       ? scriptPath
       : `${Deno.cwd()}/${scriptPath}`;
 
-    // @ts-ignore: Expose jsonr SDK to the script
-    globalThis.jsonr = jsonr;
+    // @ts-ignore: Expose jsonr (sendRequest) to the script
+    globalThis.jsonr = sendRequest;
 
     const fileUrl = new URL(`file://${absolutePath}`).href;
     await import(fileUrl);
 
-    // @ts-ignore: Expose jsonr SDK to the script
+    // @ts-ignore: Clean up jsonr from global scope
     delete globalThis.jsonr;
   } catch (err) {
     throw new Error(

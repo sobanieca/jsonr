@@ -138,7 +138,7 @@ const getVariables = (args) => {
   return result;
 };
 
-export const sendRequestCore = async (args) => {
+export const sendRequest = async (args) => {
   const request = {
     method: "GET",
     headers: [{ key: "Content-Type", value: "application/json" }],
@@ -357,10 +357,6 @@ export const sendRequestCore = async (args) => {
     body: originalResponseBody,
     elapsed,
   };
-};
-
-const sendRequest = async (args) => {
-  await sendRequestCore(args);
 };
 
 export default {
