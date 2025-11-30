@@ -200,20 +200,14 @@ const applyConfigToArgs = async (args, configData) => {
       );
     } else if (configKey === "headers") {
       if (typeof configValue === "object" && !Array.isArray(configValue)) {
-        const headerStrings = Object.entries(configValue).map(
-          ([key, value]) => `${key}: ${value}`,
-        );
-
-        if (enrichedArgs.headers) {
-          enrichedArgs.headers = Array.isArray(enrichedArgs.headers)
-            ? [...enrichedArgs.headers, ...headerStrings]
-            : [enrichedArgs.headers, ...headerStrings];
-        } else {
-          enrichedArgs.headers = headerStrings;
+        if (!enrichedArgs.headers) {
+          enrichedArgs.headers = {};
         }
 
+        Object.assign(enrichedArgs.headers, configValue);
+
         logger.debug(
-          `Applied ${headerStrings.length} headers from config`,
+          `Applied ${Object.keys(configValue).length} headers from config`,
         );
       } else {
         enrichedArgs[configKey] = configValue;

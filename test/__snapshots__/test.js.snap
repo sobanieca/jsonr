@@ -792,15 +792,15 @@ snapshot[`Given API 20`] = `
 ' +
     "
 " +
-    "-h, --headers
+    "-h, --header
 " +
     "
 " +
-    "  Provide value for additional headers.
+    "  Provide value for additional header.
 " +
     "
 " +
-    "  If there are additional headers that you want to append to the request you can use this parameter. If there are many headers you want to append, use many -h flags:
+    "  If there are additional headers that you want to append to the request you can use this parameter multiple times:
 " +
     "
 " +
@@ -1094,7 +1094,7 @@ snapshot[`Given API 22`] = `
 " +
     "  js: false,
 " +
-    '  headers: [ "traceId: api1", "traceId: api1" ]
+    '  headers: { traceId: "api1" }
 ' +
     "}
 ",

@@ -22,7 +22,7 @@ const rawArgs = deps.parse(Deno.args, {
   ],
   collect: [
     "input-variable",
-    "headers",
+    "header",
   ],
   alias: {
     v: "verbose",
@@ -30,7 +30,7 @@ const rawArgs = deps.parse(Deno.args, {
     f: "follow-redirects",
     i: "input-variable",
     b: "body",
-    h: "headers",
+    h: "header",
     e: "environment",
     s: "status",
     t: "text",
@@ -44,17 +44,51 @@ const kebabToCamel = (str) => {
   return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 };
 
-const normalizeArgs = (args) => {
-  const specialMappings = {
-    "input-variable": "inputVariables",
-  };
+const parseKeyValueArray = (arr) => {
+  const result = {};
+  if (!arr) return result;
 
+  const items = Array.isArray(arr) ? arr : Object.values(arr);
+
+  for (const item of items) {
+    if (typeof item !== "string") continue;
+
+    const colonIndex = item.indexOf(":");
+    if (colonIndex === -1) continue;
+
+    const key = item.substring(0, colonIndex).trim();
+    const value = item.substring(colonIndex + 1).trim();
+    result[key] = value;
+  }
+
+  return result;
+};
+
+const keyValueFields = {
+  "input-variable": "inputVariables",
+  "i": "inputVariables",
+  "header": "headers",
+  "h": "headers",
+};
+
+const normalizeArgs = (args) => {
   const normalized = {};
 
   for (const [key, value] of Object.entries(args)) {
-    if (key.includes("-")) {
-      const mappedKey = specialMappings[key] || kebabToCamel(key);
-      normalized[mappedKey] = value;
+    const targetName = keyValueFields[key];
+    const shouldNormalize = key.includes("-") || targetName;
+
+    if (shouldNormalize) {
+      const mappedKey = targetName || kebabToCamel(key);
+
+      if (targetName) {
+        if (!normalized[mappedKey]) {
+          normalized[mappedKey] = {};
+        }
+        Object.assign(normalized[mappedKey], parseKeyValueArray(value));
+      } else {
+        normalized[mappedKey] = value;
+      }
     } else {
       normalized[key] = value;
     }

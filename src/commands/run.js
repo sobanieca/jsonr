@@ -7,14 +7,13 @@ const generateTemplate = (urlOrFile) =>
 const response = await jsonr({
   _: ['${urlOrFile}'],
 
-  // Headers to include in the request (array of "key: value" strings)
-  // headers: ["Authorization: Bearer token"],
+  // Headers to include in the request (object format, same as jsonr-config.json)
+  // headers: { "Authorization": "Bearer token" },
 
   // Environment name from jsonr-config.json (e.g., "prod", "dev")
   // environment: "prod",
 
-  // Input variables for @@variable@@ replacement in .http files
-  // Can be object or array of "key: value" strings
+  // Input variables for @@variable@@ replacement in .http files (object format)
   // inputVariables: { "key": "value" },
 
   // Expected response status code (assertion)

@@ -124,17 +124,6 @@ const getVariables = (args) => {
     }
   }
 
-  const setInputVariable = (variable) => {
-    const [key, value] = variable.split(":").map((x) => x.trim());
-    result.set(key, value);
-  };
-
-  if (args.inputVariables && Array.isArray(args.inputVariables)) {
-    for (const inputVariable of args.inputVariables) {
-      setInputVariable(inputVariable);
-    }
-  }
-
   return result;
 };
 
@@ -219,18 +208,10 @@ export const sendRequest = async (args) => {
     }
   }
 
-  if (args.headers) {
-    const appendHeader = (headerArg) => {
-      logger.debug(`Adding ${headerArg} header to request`);
-      const headerValues = getHeaderValues(headerArg);
-      request.headers.push(headerValues);
-    };
-    if (Array.isArray(args.headers)) {
-      for (const h of args.headers) {
-        appendHeader(h);
-      }
-    } else {
-      appendHeader(args.headers);
+  if (args.headers && typeof args.headers === "object") {
+    for (const [key, value] of Object.entries(args.headers)) {
+      logger.debug(`Adding ${key}: ${value} header to request`);
+      request.headers.push({ key, value });
     }
   }
 

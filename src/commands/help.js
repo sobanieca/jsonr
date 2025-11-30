@@ -200,11 +200,11 @@ path to .http file name or url
 
   jsonr -i "variable1: a" -i "variable2: b" ./some-other-sample.http
 
--h, --headers
+-h, --header
 
-  Provide value for additional headers.
+  Provide value for additional header.
 
-  If there are additional headers that you want to append to the request you can use this parameter. If there are many headers you want to append, use many -h flags:
+  If there are additional headers that you want to append to the request you can use this parameter multiple times:
 
   jsonr -h "Authorization: Bearer 123" -h "TrackingId: xyz" ./sample.http
 
