@@ -3,7 +3,7 @@ export const snapshot = {};
 snapshot[`Given API 1`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test get.http",
+  jsonrCommand: "jsonr -e test get.http",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -21,7 +21,7 @@ snapshot[`Given API 1`] = `
 snapshot[`Given API 2`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test post.http",
+  jsonrCommand: "jsonr -e test post.http",
   output: "POST http://localhost:3000/sample...
 " +
     "Response:
@@ -39,7 +39,7 @@ snapshot[`Given API 2`] = `
 snapshot[`Given API 3`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test delete.http",
+  jsonrCommand: "jsonr -e test delete.http",
   output: "DELETE http://localhost:3000/sample...
 " +
     "Response:
@@ -57,7 +57,7 @@ snapshot[`Given API 3`] = `
 snapshot[`Given API 4`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test put.http",
+  jsonrCommand: "jsonr -e test put.http",
   output: "PUT http://localhost:3000/sample...
 " +
     "Response:
@@ -75,7 +75,7 @@ snapshot[`Given API 4`] = `
 snapshot[`Given API 5`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test exception.http",
+  jsonrCommand: "jsonr -e test exception.http",
   output: "GET http://localhost:3000/exception...
 " +
     "Response:
@@ -93,7 +93,7 @@ snapshot[`Given API 5`] = `
 snapshot[`Given API 6`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test get-auth-401.http -s 401",
+  jsonrCommand: "jsonr -e test get-auth-401.http -s 401",
   output: "GET http://localhost:3000/auth-required...
 " +
     "Response:
@@ -111,7 +111,7 @@ snapshot[`Given API 6`] = `
 snapshot[`Given API 7`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test get-auth.http",
+  jsonrCommand: "jsonr -e test get-auth.http",
   output: "GET http://localhost:3000/auth-required...
 " +
     "Response:
@@ -129,7 +129,7 @@ snapshot[`Given API 7`] = `
 snapshot[`Given API 8`] = `
 {
   code: 0,
-  jsonrCommand: \`deno run -A ../main.js -m PUT -b '{"name":"test"}' localhost:3000/sample\`,
+  jsonrCommand: \`jsonr -m PUT -b '{"name":"test"}' localhost:3000/sample\`,
   output: "PUT localhost:3000/sample...
 " +
     "Response:
@@ -147,7 +147,7 @@ snapshot[`Given API 8`] = `
 snapshot[`Given API 9`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../main.js http://localhost:3000/sample",
+  jsonrCommand: "jsonr http://localhost:3000/sample",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -165,7 +165,7 @@ snapshot[`Given API 9`] = `
 snapshot[`Given API 10`] = `
 {
   code: 1,
-  jsonrCommand: "deno run -A ../../../main.js -e test put.http -s 303",
+  jsonrCommand: "jsonr -e test put.http -s 303",
   output: "PUT http://localhost:3000/sample...
 " +
     "Response:
@@ -185,7 +185,7 @@ snapshot[`Given API 10`] = `
 snapshot[`Given API 11`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test put.http -s 200",
+  jsonrCommand: "jsonr -e test put.http -s 200",
   output: "PUT http://localhost:3000/sample...
 " +
     "Response:
@@ -203,7 +203,7 @@ snapshot[`Given API 11`] = `
 snapshot[`Given API 12`] = `
 {
   code: 1,
-  jsonrCommand: "deno run -A ../../../main.js -e test get.http -t test",
+  jsonrCommand: "jsonr -e test get.http -t test",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -223,7 +223,7 @@ snapshot[`Given API 12`] = `
 snapshot[`Given API 13`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test -h 'X-SampleHeader: abc' -v get-auth.http",
+  jsonrCommand: "jsonr -e test -h 'X-SampleHeader: abc' -v get-auth.http",
   output: "GET http://localhost:3000/auth-required...
 " +
     "Request:
@@ -261,7 +261,7 @@ snapshot[`Given API 13`] = `
 snapshot[`Given API 14`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test -h 'X-SampleHeader: abc' -v get.http",
+  jsonrCommand: "jsonr -e test -h 'X-SampleHeader: abc' -v get.http",
   output: "GET http://localhost:3000/sample...
 " +
     "Request:
@@ -297,7 +297,7 @@ snapshot[`Given API 14`] = `
 snapshot[`Given API 15`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test get.http -t sample-get",
+  jsonrCommand: "jsonr -e test get.http -t sample-get",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -315,7 +315,7 @@ snapshot[`Given API 15`] = `
 snapshot[`Given API 16`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../main.js http://localhost:3000/redirect",
+  jsonrCommand: "jsonr http://localhost:3000/redirect",
   output: "GET http://localhost:3000/redirect...
 " +
     "Response:
@@ -333,7 +333,7 @@ snapshot[`Given API 16`] = `
 snapshot[`Given API 17`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../main.js http://localhost:3000/redirect -f",
+  jsonrCommand: "jsonr http://localhost:3000/redirect -f",
   output: "GET http://localhost:3000/redirect...
 " +
     "Response:
@@ -351,7 +351,7 @@ snapshot[`Given API 17`] = `
 snapshot[`Given API 18`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js -e test --js post-js.http",
+  jsonrCommand: "jsonr -e test --js post-js.http",
   output: "POST http://localhost:3000/sample...
 " +
     "Response:
@@ -369,7 +369,7 @@ snapshot[`Given API 18`] = `
 snapshot[`Given API 19`] = `
 {
   code: 0,
-  jsonrCommand: \`deno run -A ../main.js --js -m POST -b '{ name: "test", count: 8 }' localhost:3000/sample\`,
+  jsonrCommand: \`jsonr --js -m POST -b '{ name: "test", count: 8 }' localhost:3000/sample\`,
   output: "POST localhost:3000/sample...
 " +
     "Response:
@@ -387,7 +387,7 @@ snapshot[`Given API 19`] = `
 snapshot[`Given API 20`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../main.js help",
+  jsonrCommand: "jsonr help",
   output: "
 " +
     "jsonr - A CLI tool for interacting with JSON HTTP APIs and writing simple smoke tests.
@@ -1059,7 +1059,7 @@ snapshot[`Given API 20`] = `
 snapshot[`Given API 21`] = `
 {
   code: 1,
-  jsonrCommand: "deno run -A ../../../main.js -e nonExistentEnv get.http",
+  jsonrCommand: "jsonr -e nonExistentEnv get.http",
   output: "Error: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
 " +
     "Run 'jsonr --help' for details on configuration files.
@@ -1071,7 +1071,7 @@ snapshot[`Given API 21`] = `
 snapshot[`Given API 22`] = `
 {
   code: 0,
-  jsonrCommand: "deno run -A ../../../main.js config",
+  jsonrCommand: "jsonr config",
   output: "Merged configuration:
 " +
     "
@@ -1108,7 +1108,7 @@ snapshot[`Given API 23`] = `
   initOutput: "Created jsonr-script.js with jsonr SDK template
 ",
   initOutputError: "",
-  jsonrCommand: "deno run -A ../main.js run --init http://localhost:3000/sample",
+  jsonrCommand: "jsonr run --init http://localhost:3000/sample",
   scriptCode: 0,
   scriptOutput: "GET http://localhost:3000/sample...
 " +

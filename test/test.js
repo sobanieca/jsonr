@@ -59,7 +59,6 @@ Deno.test("Given API", async (t) => {
   } while (true);
 
   const test = async (jsonrCommand, cwd) => {
-    const originalCommand = jsonrCommand;
     let mainPath = "../main.js";
     let absoluteCwd;
     if (cwd) {
@@ -69,10 +68,9 @@ Deno.test("Given API", async (t) => {
         mainPath = "../../../main.js";
       }
     }
-    jsonrCommand = jsonrCommand.replace("jsonr", `deno run -A ${mainPath}`);
-    await t.step(originalCommand + (cwd ? ` [cwd: ${cwd}]` : ""), async () => {
+    await t.step(jsonrCommand + (cwd ? ` [cwd: ${cwd}]` : ""), async () => {
       const { code, output, outputError } = await run(
-        jsonrCommand,
+        jsonrCommand.replace("jsonr", `deno run -A ${mainPath}`),
         absoluteCwd,
       );
 
@@ -81,9 +79,8 @@ Deno.test("Given API", async (t) => {
   };
 
   const sdkTest = async (jsonrCommand) => {
-    jsonrCommand = jsonrCommand.replace("jsonr", "deno run -A ../main.js");
     await t.step(jsonrCommand, async () => {
-      const initResult = await run(jsonrCommand);
+      const initResult = await run(jsonrCommand.replace("jsonr", "deno run -A ../main.js"));
 
       const scriptResult = await run(
         "deno run -A ../main.js run jsonr-script.js",
