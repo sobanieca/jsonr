@@ -76,7 +76,7 @@ Deno.test("Given API", async (t) => {
         absoluteCwd,
       );
 
-      await assertSnapshot(t, { code, output, outputError });
+      await assertSnapshot(t, { jsonrCommand, code, output, outputError });
     });
   };
 
@@ -96,6 +96,7 @@ Deno.test("Given API", async (t) => {
       };
 
       await assertSnapshot(t, {
+        jsonrCommand,
         initCode: initResult.code,
         initOutput: initResult.output,
         initOutputError: initResult.outputError,
@@ -126,8 +127,14 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e test put.http -s 303", "test/requests/api2");
   await test("jsonr -e test put.http -s 200", "test/requests/api2");
   await test("jsonr -e test get.http -t test", "test/requests/api2");
-  await test("jsonr -e test -h 'X-SampleHeader: abc' -v get-auth.http", "test/requests/api1")
-  await test("jsonr -e test -h 'X-SampleHeader: abc' -v get.http", "test/requests/api2")
+  await test(
+    "jsonr -e test -h 'X-SampleHeader: abc' -v get-auth.http",
+    "test/requests/api1",
+  );
+  await test(
+    "jsonr -e test -h 'X-SampleHeader: abc' -v get.http",
+    "test/requests/api2",
+  );
   await test("jsonr -e test get.http -t sample-get", "test/requests/api2");
   await test("jsonr http://localhost:3000/redirect");
   await test("jsonr http://localhost:3000/redirect -f");
