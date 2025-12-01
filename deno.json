@@ -10,12 +10,17 @@
     "strictNullChecks": false,
     "useUnknownInCatchVariables": false
   },
+  "fmt": {
+    "include": [".", "test/"]
+  },
   "lint": {
+    "include": [".", "test/"],
     "rules": {
       "exclude": ["no-import-prefix"]
     }
   },
   "tasks": {
-    "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js"
+    "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js",
+    "check": "deno check main.js && deno check test/test.js"
   }
 }
