@@ -4,47 +4,20 @@ import { sendRequest } from "./send-request.js";
 const generateTemplate = (urlOrFile) =>
   `// Run with: jsonr run jsonr-script.js
 
-const response = await jsonr({
-  _: ['${urlOrFile}'],
-
-  // Headers to include in the request (object format, same as jsonr-config.json)
-  // headers: { "Authorization": "Bearer token" },
-
-  // Environment name from jsonr-config.json (e.g., "prod", "dev")
-  // environment: "prod",
-
-  // Input variables for @@variable@@ replacement in .http files (object format)
-  // inputVariables: { "key": "value" },
-
-  // Expected response status code (assertion)
-  // status: 200,
-
-  // Expected text in response body (assertion)
-  // text: "success",
-
-  // HTTP method (GET, POST, PUT, DELETE, etc.)
-  // method: "POST",
-
-  // Request body (string or will be stringified)
-  // body: '{"data":"example"}',
-
-  // Enable verbose output (show headers)
-  // verbose: true,
-
-  // Raw mode (don't strip whitespace from request body)
-  // raw: false,
-
-  // Follow HTTP redirects
-  // followRedirects: false,
-
-  // Save response to file
-  // output: "./response.json",
-
-  // Omit default Content-Type: application/json header
-  // omitDefaultContentTypeHeader: false,
-
-  // Treat body as JavaScript object literal (not strict JSON)
-  // js: false,
+const response = await jsonr('${urlOrFile}', {
+  headers: { "Authorization": "Bearer token" },
+  environment: "prod",
+  inputVariables: { "key": "value" },
+  status: 200,
+  text: "success",
+  method: "POST",
+  body: '{"data":"example"}',
+  verbose: true,
+  raw: false,
+  followRedirects: false,
+  output: "./response.json",
+  omitDefaultContentTypeHeader: false,
+  js: false
 });
 
 console.log("Status:", response.status);
@@ -109,8 +82,10 @@ const executeScript = async (args) => {
       ? scriptPath
       : `${Deno.cwd()}/${scriptPath}`;
 
-    // @ts-ignore: Expose jsonr (sendRequest) to the script
-    globalThis.jsonr = sendRequest;
+    // @ts-ignore: Expose jsonr wrapper to the script
+    globalThis.jsonr = (urlOrFile, options = {}) => {
+      return sendRequest({ _: [urlOrFile], ...options });
+    };
 
     const fileUrl = new URL(`file://${absolutePath}`).href;
     await import(fileUrl);
