@@ -420,7 +420,7 @@ snapshot[`Given API 20`] = `
 " +
     "
 " +
-    "              Without --init: Executes a JavaScript file with the jsonr SDK available.
+    "              Without --init: Executes a JavaScript file with the jsonr available.
 " +
     "
 " +
@@ -1104,13 +1104,19 @@ snapshot[`Given API 22`] = `
 
 snapshot[`Given API 23`] = `
 {
-  initCode: 0,
-  initOutput: "Created jsonr-script.js with jsonr SDK template
-",
-  initOutputError: "",
+  code: 0,
   jsonrCommand: "jsonr run --init http://localhost:3000/sample",
-  scriptCode: 0,
-  scriptOutput: "GET http://localhost:3000/sample...
+  output: "Created jsonr-script.js with jsonr usage template
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 24`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script.js",
+  output: "GET http://localhost:3000/sample...
 " +
     "Response:
 " +
@@ -1120,22 +1126,48 @@ snapshot[`Given API 23`] = `
 ' +
     "200 - OK obtained in *ms
 " +
-    "Status: 200
-" +
-    "Status Text: OK
-" +
-    "Elapsed: * ms
-" +
-    'Body: { id: "sample-get" }
+    'Response: { id: "sample-get" }
 ' +
-    "Header content-length: *
-" +
-    "Header content-type: application/json
-" +
-    "Header date: *
-" +
-    "Header vary: Accept-Encoding
+    "Status: 200
 ",
-  scriptOutputError: "",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 25`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script.js -v",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "traceId: main
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-get" }
+' +
+    "Status: 200
+",
+  outputError: "",
 }
 `;

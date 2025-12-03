@@ -14,7 +14,7 @@ Commands:
               Usage: jsonr run script.js
                      jsonr run --init [url or .http file]
 
-              Without --init: Executes a JavaScript file with the jsonr SDK available.
+              Without --init: Executes a JavaScript file with the jsonr available.
 
               With --init: Generates a jsonr example script (jsonr-script.js) to get started using jsonr
                           programmatically in your code. Allows you to chain multiple requests and handle

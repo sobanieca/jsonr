@@ -1,9 +1,8 @@
-import { createSdkTestRunner, createTestRunner } from "./test-utils.js";
+import { createTestRunner } from "./test-utils.js";
 
 Deno.test("Given API", async (t) => {
   const apiProcess = await startTestApi();
   const test = createTestRunner(t);
-  const sdkTest = createSdkTestRunner(t);
 
   await test("jsonr -e test get.http", "test/requests/api2");
   await test("jsonr -e test post.http", "test/requests/api2");
@@ -12,9 +11,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e test exception.http", "test/requests/api2");
   await test("jsonr -e test get-auth-401.http -s 401", "test/requests/api1");
   await test("jsonr -e test get-auth.http", "test/requests/api1");
-  await test(
-    'jsonr -m PUT -b \'{"name":"test"}\' localhost:3000/sample',
-  );
+  await test('jsonr -m PUT -b \'{"name":"test"}\' localhost:3000/sample');
   await test("jsonr http://localhost:3000/sample");
   await test("jsonr -e test put.http -s 303", "test/requests/api2");
   await test("jsonr -e test put.http -s 200", "test/requests/api2");
@@ -38,7 +35,15 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
   await test("jsonr config", "test/requests/api1");
 
-  await sdkTest("jsonr run --init http://localhost:3000/sample");
+  await test("jsonr run --init http://localhost:3000/sample");
+  try {
+    await Deno.remove("jsonr-script.js");
+  } catch {
+    // Ignore if file doesn't exist
+  }
+
+  await test("jsonr run jsonr-script.js", "test/requests");
+  await test("jsonr run jsonr-script.js -v", "test/requests");
 
   apiProcess.kill();
   await apiProcess.output();

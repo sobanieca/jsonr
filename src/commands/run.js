@@ -49,7 +49,7 @@ const executeInit = async (args) => {
 
   try {
     await Deno.writeTextFile(filename, template);
-    console.log(`Created ${filename} with jsonr SDK template`);
+    console.log(`Created ${filename} with jsonr usage template`);
   } catch (err) {
     throw new Error(
       `Failed to create ${filename}: ${
@@ -84,7 +84,7 @@ const executeScript = async (args) => {
 
     // @ts-ignore: Expose jsonr wrapper to the script
     globalThis.jsonr = (urlOrFile, options = {}) => {
-      return sendRequest({ _: [urlOrFile], ...options });
+      return sendRequest({ ...args, _: [urlOrFile], ...options });
     };
 
     const fileUrl = new URL(`file://${absolutePath}`).href;

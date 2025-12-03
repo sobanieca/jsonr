@@ -45,6 +45,8 @@ export const createTestRunner = (t) => {
       absoluteCwd = `${projectRoot}/${cwd}`;
       if (cwd.includes("api1") || cwd.includes("api2")) {
         mainPath = "../../../main.js";
+      } else if (cwd === "test/requests") {
+        mainPath = "../../main.js";
       }
     }
     await t.step(jsonrCommand + (cwd ? ` [cwd: ${cwd}]` : ""), async () => {
@@ -54,44 +56,6 @@ export const createTestRunner = (t) => {
       );
 
       await assertSnapshot(t, { jsonrCommand, code, output, outputError });
-    });
-  };
-};
-
-export const createSdkTestRunner = (t) => {
-  return async (jsonrCommand) => {
-    await t.step(jsonrCommand, async () => {
-      const initResult = await run(
-        jsonrCommand.replace("jsonr", "deno run -A ../main.js"),
-      );
-
-      const scriptResult = await run(
-        "deno run -A ../main.js run jsonr-script.js",
-      );
-
-      const normalizeScriptOutput = (output) => {
-        return output
-          .replace(/Elapsed: \d+ ms/g, "Elapsed: * ms")
-          .replace(/Header date: [^\n]+/g, "Header date: *");
-      };
-
-      try {
-        await assertSnapshot(t, {
-          jsonrCommand,
-          initCode: initResult.code,
-          initOutput: initResult.output,
-          initOutputError: initResult.outputError,
-          scriptCode: scriptResult.code,
-          scriptOutput: normalizeScriptOutput(scriptResult.output),
-          scriptOutputError: scriptResult.outputError,
-        });
-      } finally {
-        try {
-          await Deno.remove("jsonr-script.js");
-        } catch {
-          // Ignore if file doesn't exist
-        }
-      }
     });
   };
 };
