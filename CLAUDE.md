@@ -1,95 +1,133 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with
-code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Overview
 
-jsonr is a CLI tool for interacting with JSON HTTP APIs and writing simple smoke
-tests. It's built with Deno and uses JavaScript with TypeScript checking
-enabled.
+`jsonr` is a CLI tool for interacting with JSON HTTP APIs and writing simple smoke tests. It's built with Deno and JavaScript, using JSDoc type annotations for type checking without TypeScript compilation.
 
 ## Development Commands
 
+### Running the tool locally
+```bash
+deno task run [args]
+```
+This runs `main.js` with all permissions and ignores certificate errors for testing.
+
+### Code quality checks
+```bash
+deno task check
+```
+This is the primary pre-commit verification command that runs:
+- `deno fmt --check` - Check code formatting
+- `deno lint` - Lint the codebase
+- `deno check main.js` - Type check main entry point
+- `deno check test/test.js` - Type check test entry point
+- Test suite in the `test/` directory
+
+### Formatting and linting
+```bash
+deno fmt          # Format all code
+deno fmt --check  # Check formatting without changes
+deno lint         # Lint the codebase
+```
+
+### Type checking
+```bash
+deno check main.js       # Check main entry point
+deno check test/test.js  # Check test entry point
+```
+
 ### Testing
+```bash
+cd test && deno task test              # Run all tests
+cd test && deno task update-snapshots  # Update test snapshots
+cd test && deno task api               # Run the test API server
+```
 
-- `cd test && deno task test` - Run all tests
-- `cd test && deno task update-snapshots` - Update test snapshots
-
-### Lint and fmt
-
-- `deno lint` - run linter
-- `deno fmt` - run formatter
-- `deno check` - check type errors
-
-### Running the Application
-
-- `deno task run` - Run the main application with all permissions
-- `deno run --allow-all main.js` - Alternative way to run the application
-
-### Manual Testing
-
-- Use `.http` files in `test/requests/` directory as examples
-- Example: `deno run --allow-all main.js test/requests/get.http`
+To run a single test, modify `test/test.js` to focus on specific test cases.
 
 ## Architecture
 
 ### Entry Point and Command System
 
-- `main.js` - Main entry point that orchestrates command matching and execution
-- Uses a command pattern with three main commands: help, version, and
-  send-request
-- Each command implements `match()` and `execute()` methods
+The application uses a command pattern architecture (`main.js:12-45`):
 
-### Core Components
+1. **Args parsing** (`src/args.js`) - Uses `deno_std/cli/parseArgs` to parse CLI arguments, normalizes kebab-case to camelCase, and handles special key-value arguments (`-i`, `-h`) by converting them to objects
+2. **Config loading** (`src/config.js`) - Searches for `jsonr-config.json` files from home directory down to current directory, merges them hierarchically, and applies environment-specific configuration
+3. **Command matching** - Each command exports a `match(args)` function to determine if it should handle the request
+4. **Command execution** - The first matching command's `execute(args)` function is called
 
-- `src/args.js` - Argument parsing using Deno's standard library flags
-- `src/logger.js` - Logging system with debug/info/error levels
-- `src/deps.js` - Centralized dependency imports from Deno standard library
-- `src/commands/` - Command implementations
-  - `help.js` - Help command
-  - `version.js` - Version command
-  - `send-request.js` - Main HTTP request functionality
+### Commands
 
-### HTTP Request Processing
+All commands are in `src/commands/`:
+- `send-request.js` - Core functionality for sending HTTP requests (handles both .http files and direct URLs)
+- `run.js` - Executes JavaScript files with jsonr API available, or generates example scripts
+- `config.js` - Manages jsonr-config.json files
+- `help.js` - Displays help text
+- `version.js` - Shows version information
+- `update.js` - Updates the tool to latest version
 
-The `send-request.js` command handles:
+### Configuration System
 
-- Parsing `.http` files with method, URL, headers, and body
-- Variable substitution using `@@variable@@` syntax
-- Environment file support (`-e` flag)
-- Request/response logging and validation
-- Response assertions (status codes, content matching)
+The config system (`src/config.js`) has several key features:
 
-### Key Features
+1. **Hierarchical loading** - Searches from `$HOME` to current directory for `jsonr-config.json` files and merges them (closer to current directory wins)
+2. **Environment support** - Config files can define named environments with different input variables, headers, and secrets
+3. **Secrets management** - Supports separate JSON files for secrets (referenced via `secrets` field), which are automatically masked in debug logs
+4. **JSON comment support** - Strips `//` and `#` comments from JSON files and removes trailing commas before parsing
 
-- Supports standard HTTP methods (GET, POST, PUT, DELETE, etc.)
-- Header management with `-h` flag
-- Environment variables from JSON files
-- Response validation with `-s` (status) and `-t` (text) flags
-- Output to file with `-o` flag
-- Raw request mode with `-r` flag
-- Redirect following with `-f` flag
+### Request Processing
 
-### Dependencies
+HTTP request handling (`src/commands/send-request.js`):
 
-All external dependencies are managed through `src/deps.js` and use Deno
-standard library v0.174.0:
+1. **Input sources**:
+   - `.http` files (VSCode REST Client format)
+   - Direct URL with options (`-m`, `-b`, `-h` flags)
 
-- Logging (`std/log`)
-- Colors (`std/fmt/colors`)
-- Argument parsing (`std/flags`)
+2. **Variable substitution** - `@@variableName@@` placeholders are replaced with values from:
+   - Command-line input variables (`-i`)
+   - Config file input variables
+   - Secrets files
 
-### Testing Strategy
+3. **.http file format**:
+   ```
+   METHOD URL
+   Header: value
 
-- Uses Deno's built-in testing with snapshot testing
-- Test files are in `test/` directory
-- Sample HTTP requests in `test/requests/` for integration testing
-- Environment configurations in `test/requests/environments/`
+   body content
+   ```
 
-## File Structure Notes
+4. **Response handling**:
+   - Status code assertions (`-s` flag)
+   - Text content assertions (`-t` flag)
+   - Output to file (`-o` flag)
+   - Raw mode (`-r` flag) - shows response without formatting
 
-- No build step required - JavaScript runs directly with Deno
-- TypeScript checking enabled via `deno.json` compilerOptions
-- Main module exported through `main.js` with type definitions in `main.d.ts`
-- Avoid comments in code - try to write self explanatory code
+### Programmatic API
+
+The `run` command (`src/commands/run.js`) enables JavaScript scripting:
+
+- Exposes a global `jsonr()` function when executing scripts via `jsonr run script.js`
+- The function accepts same arguments as CLI but in object form
+- Allows chaining requests and programmatic response handling
+- Can generate starter templates with `jsonr run --init`
+
+## Type Checking
+
+The project uses JavaScript with JSDoc type annotations:
+
+- `main.js` has types defined in `main.d.ts` via `@ts-self-types` directive
+- TypeScript checking is enabled via `deno.json` `compilerOptions.checkJs: true`
+- Some strict checks are disabled (`noImplicitAny`, `strictNullChecks`, `useUnknownInCatchVariables`)
+
+## Logging
+
+`src/logger.js` provides debug logging:
+- Debug logs only appear when `--debug` flag is used
+- Secrets from secrets files are automatically masked in logs
+- Color output can be disabled with `NO_COLOR=1` environment variable
+
+## Publishing
+
+The package is published to JSR as `@sobanieca/jsonr`. Precompiled binaries are built for multiple platforms (Linux/macOS, x64/arm64) and distributed via GitHub releases.
