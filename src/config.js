@@ -132,6 +132,11 @@ const mergeEnvironmentConfigs = (configs, envName) => {
           Object.assign(merged.inputVariables, value);
         } else if (key === "secrets") {
           merged.secrets = value;
+        } else if (typeof value === "object" && !Array.isArray(value) && value !== null) {
+          if (!merged[key]) {
+            merged[key] = {};
+          }
+          Object.assign(merged[key], value);
         } else {
           merged[key] = value;
         }
@@ -155,6 +160,11 @@ const mergeDefaultConfigs = (configs) => {
           Object.assign(merged.inputVariables, value);
         } else if (key === "secrets") {
           merged.secrets = value;
+        } else if (typeof value === "object" && !Array.isArray(value) && value !== null) {
+          if (!merged[key]) {
+            merged[key] = {};
+          }
+          Object.assign(merged[key], value);
         } else {
           merged[key] = value;
         }
