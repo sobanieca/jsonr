@@ -310,4 +310,5 @@ export const loadAndApplyConfig = async (args) => {
 
 export default {
   loadAndApplyConfig,
+  findConfigFiles,
 };

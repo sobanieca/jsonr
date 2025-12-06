@@ -1,5 +1,5 @@
 import logger from "../logger.js";
-import { loadAndApplyConfig } from "../config.js";
+import config from "../config.js";
 
 const configWithComments = `{
   // For detailed documentation about all configuration options, run: jsonr --help
@@ -65,22 +65,16 @@ const kebabToCamel = (str) => {
 };
 
 const displayConfig = async (args) => {
-  const configFileName = "jsonr-config.json";
+  const configFiles = await config.findConfigFiles();
 
-  try {
-    await Deno.lstat(configFileName);
-  } catch (err) {
-    if (err instanceof Deno.errors.NotFound) {
-      logger.info(`No ${configFileName} found in current directory.`);
-      logger.info("");
-      logger.info(`Run 'jsonr config --init' to initialize a config file.`);
-      logger.info("");
-    } else {
-      throw err;
-    }
+  if (configFiles.length === 0) {
+    logger.info("No jsonr-config.json files found.");
+    logger.info("");
+    logger.info("Run 'jsonr config --init' to create a config file.");
+    return;
   }
 
-  const enrichedArgs = await loadAndApplyConfig(args);
+  const enrichedArgs = await config.loadAndApplyConfig(args);
 
   const mapped = {};
   for (const [key, value] of Object.entries(enrichedArgs)) {
