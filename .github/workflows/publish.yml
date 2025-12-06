@@ -20,10 +20,7 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - run: deno fmt --check
-      - run: deno lint
       - run: deno task check
-      - run: cd test && deno task test
 
   publish:
     needs: check

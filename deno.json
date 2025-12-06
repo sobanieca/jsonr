@@ -21,6 +21,6 @@
   },
   "tasks": {
     "run": "deno run --unsafely-ignore-certificate-errors --allow-all main.js",
-    "check": "deno check main.js && deno check test/test.js"
+    "check": "deno fmt --check && deno lint && deno check main.js && deno check test/test.js && cd test && deno task test"
   }
 }
