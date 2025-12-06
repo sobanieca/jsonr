@@ -4,8 +4,14 @@
     "noImplicitAny": false,
     "strictNullChecks": false
   },
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
+  },
   "tasks": {
     "test": "deno test -A test.js",
-    "update-snapshots": "deno test -A test.js -- --update"
+    "update-snapshots": "deno test -A test.js -- --update",
+    "api": "deno run -A test-api.js"
   }
 }

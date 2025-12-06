@@ -1,4 +1,4 @@
-POST http://localhost:3000/sample
+POST @@baseUrl@@/sample
 
 {
   name: "test",

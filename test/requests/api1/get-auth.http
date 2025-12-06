@@ -1,0 +1,2 @@
+GET @@baseUrl@@/auth-required
+Authorization: @@auth-token@@

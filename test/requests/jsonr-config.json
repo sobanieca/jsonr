@@ -1,0 +1,8 @@
+{
+  "defaults": {
+    "headers": {
+      "traceId": "main"
+    },
+    "followRedirects": true
+  }
+}

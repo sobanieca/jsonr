@@ -1,17 +1,15 @@
 # About
 
-- :pager: Are you tired of your UI http client asking you to sign in/sign up so
-  they can create proper `workspace` for you? (and get your email to send you
-  marketing emails)
-- :hourglass_flowing_sand: Are you waiting for ages until your UI http client
-  loads all it's functionalities and plugins that you don't need?
-- :file_cabinet: Are you spending lots of time trying to find requests you've
-  sent to given api months ago?
-- :microscope: Are you searching how to change request method in `curl` because
-  you don't use `curl` that often?
-- :clipboard: Are you working with modern json http api's?
-- :dash: Do you want to write smoke tests for your api?
-- :link: Need a scripting tool to chain requests?
+- :pager: Tired of UI HTTP clients forcing sign-in just to create a workspace
+  (and collect your email)?
+- :hourglass_flowing_sand: Waiting forever for UI clients to load features and
+  plugins you don’t need?
+- :file_cabinet: Struggling to find past requests from months ago?
+- :microscope: Searching how to change the request method in `curl` because you
+  rarely use it?
+- :clipboard: Working with modern JSON HTTP APIs?
+- :dash: Want to write quick smoke tests for your API?
+- :link: Need a scripting tool to chain requests together?
 
 `jsonr` is a simple CLI tool for interacting with json http api's and writing
 simple smoke tests. It's available from your terminal anytime when you need it
@@ -20,18 +18,157 @@ solution for everything. That's why it's so simple to use. No more need to
 browse lots of documentation about tons of features that you don't need. 5
 minutes and you are ready to send any requests.
 
-![image](./jsonr.png)
+## Usage
 
-Run `jsonr --help` for details.
+**1. Create .http files** (store them in your git repository to share with other
+developers)
 
-## Prerequisites
+```
+POST https://api.example.com/users
+Authorization: Bearer @@apiKey@@
 
-Deno runtime environment `https://deno.com` (required for recommended
-installation method)
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com"
+}
+```
+
+**2. Use simple command to send request and set input variable**
+
+```bash
+jsonr create-user.http -i "apiKey: myApiKey123"
+```
+
+**3. Initialize jsonr config file**
+
+```bash
+jsonr config --init
+```
+
+This creates a `jsonr-config.json` file with environment configurations:
+
+```json
+{
+  "environments": {
+    "prod": {
+      "inputVariables": {
+        "baseUrl": "https://prod.api.example.com"
+      },
+      "secrets": "~/.secrets/jsonr-prod.json"
+    }
+  }
+}
+```
+
+The secrets file (`~/.secrets/jsonr-prod.json`) stores sensitive values
+separately:
+
+```json
+{
+  "apiKey": "prod_ApiKey123"
+}
+```
+
+**4. Update .http file to use more variables**
+
+```
+POST @@baseUrl@@/users
+Authorization: Bearer @@apiKey@@
+
+{
+  "name": "John Doe",
+  "example": "john.doe@example.com"
+}
+```
+
+**5. Use environment from config when sending request**
+
+```bash
+jsonr create-user.http -e prod
+```
+
+**6. Skip .http files and send request directly**
+(`Content-Type: application/json` header is added automatically)
+
+```bash
+jsonr -m POST -h 'Authorization: myApiKey123' -b '{"name": "John Doe", "email": "john.doe@example.com"}' https://api.example.com/users
+```
+
+**7. Write simple smoke tests with response status code assertion (text
+assertion also available)**
+
+```bash
+jsonr create-user.http -e prod -s 201
+```
+
+**8. Programmatic Usage - chaining requests**
+
+You can use `jsonr` programmatically in your Javascript scripts to chain
+multiple requests and handle responses in code.
+
+To get started, generate a template script:
+
+```bash
+jsonr run --init https://api.example.com/users
+```
+
+This creates a `jsonr-script.js` file that you can customize. Here's an example
+that creates a user and then posts an order using the returned user ID:
+
+```javascript
+// Create a new user
+const userResponse = await jsonr("create-user.http", {
+  inputVariables: {
+    name: "John Doe",
+    email: "john@example.com",
+  },
+  status: 201,
+});
+
+const userId = userResponse.body.id;
+console.log(`Created user with ID: ${userId}`);
+
+// Create an order for the newly created user
+const orderResponse = await jsonr("https://api.example.com/orders", {
+  method: "POST",
+  body: {
+    userId,
+    items: ["product-123", "product-456"],
+    total: 99.99,
+  },
+  status: 201,
+});
+
+console.log(`Order created with ID: ${orderResponse.body.id}`);
+```
+
+Run your script with:
+
+```bash
+jsonr run jsonr-script.js
+```
+
+The `jsonr` function is automatically available in scripts run with
+`jsonr run` - no import needed!
+
+## Learn More
+
+For complete documentation of all available options and detailed usage
+instructions run `jsonr --help` or view the help text at:
+
+https://sobanieca.github.io/jsonr/src/commands/help.js
+
+This URL is particularly useful when working with AI assistants or LLMs - you
+can provide this link to give them comprehensive information about jsonr's
+capabilities and command-line options.
 
 ## Installation
 
 ### Option 1: Install via Deno (Recommended)
+
+> Prerequisites
+>
+> Deno runtime environment `https://deno.com`
 
 ```bash
 deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
@@ -76,108 +213,17 @@ Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`,
 
 ## Updating
 
-### For Deno Installations
+Use `jsonr update` command and follow presented instructions to update.
 
-To update `jsonr` to the latest version, use the `update` command:
+## Hints
 
-```bash
-jsonr update --deno
-```
-
-This will ask for run permission and automatically update jsonr to the latest
-version from JSR.
-
-### For Pre-compiled Binaries
-
-Run the `install.sh` script to update to the latest version, or download the
-latest binary from the
-[releases page](https://github.com/sobanieca/jsonr/releases/latest).
-
-## SSL Certificate Issues
-
-If your requests are failing due to certificate validation errors (and you trust
-target server) you can run `temporary` command like:
-
-`deno run --allow-net --unsafely-ignore-certificate-errors jsr:@sobanieca/jsonr ...`
-
-It will display warning about disable ssl verification, but you should be able
-to perform requests. If you work frequently with such unsafe servers you can
-consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
-
-`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
-
-## Usage
-
-Sample usage:
-
-`jsonr -h "Authorization: Bearer MyToken" my-request.http`
-
-`my-request.http` file content:
-
-```
-POST http://my-api.com/endpoint
-
-{
-  "someKey": "someValue"
-}
-```
-
-Type `jsonr --help` for more details on usage once you have a tool installed.
-
-### Programmatic Usage - chaining requests
-
-You can use `jsonr` programmatically in your JavaScript/TypeScript scripts to
-chain multiple requests and handle responses in code.
-
-To get started, generate a template script:
+- It is recommended to wrap URLs with quotes to avoid shell conflicts:
 
 ```bash
-jsonr init
-jsonr init ./requests/get.http
-jsonr init https://api.example.com/endpoint
+jsonr "https://api.example.com/users?filter=active&sort=name"
 ```
 
-This creates a `jsonr-script.js` file that you can customize. Here's an example
-that creates a user and then posts an order using the returned user ID:
-
-```javascript
-// Create a new user
-const userResponse = await jsonr("https://api.example.com/users", {
-  method: "POST",
-  body: {
-    name: "John Doe",
-    email: "john@example.com",
-  },
-  status: 201,
-});
-
-const userId = userResponse.body.id;
-console.log(`Created user with ID: ${userId}`);
-
-// Create an order for the newly created user
-const orderResponse = await jsonr("https://api.example.com/orders", {
-  method: "POST",
-  body: {
-    userId: userId,
-    items: ["product-123", "product-456"],
-    total: 99.99,
-  },
-  status: 201,
-});
-
-console.log(`Order created with ID: ${orderResponse.body.id}`);
-```
-
-Run your script with:
-
-```bash
-jsonr run jsonr-script.js
-```
-
-The `jsonr` function is automatically available in scripts run with
-`jsonr run` - no import needed!
-
-### Working with Large Responses
+- Working with Large Responses
 
 When dealing with large response bodies, you can pipe the output to `grep` to
 filter specific content:
@@ -190,18 +236,23 @@ jsonr my-api-request.http | grep "someProperty" -C 10
 jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
 ```
 
-## Hints
+- SSL Certificate Issues
+
+If your requests are failing due to certificate validation errors (and you trust
+target server) you can run `temporary` command like:
+
+`deno run --allow-net --unsafely-ignore-certificate-errors jsr:@sobanieca/jsonr ...`
+
+It will display warning about disable ssl verification, but you should be able
+to perform requests. If you work frequently with such unsafe servers you can
+consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
+
+`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
 
 - If you want to disable colors (at least for main log messages), you can use:
 
-```
-NO_COLOR=1 jsonr ...
-```
-
-- It is recommended to wrap URLs with quotes to avoid shell conflicts:
-
 ```bash
-jsonr "https://api.example.com/users?filter=active&sort=name"
+NO_COLOR=1 jsonr ...
 ```
 
 ## Contribution
@@ -209,5 +260,5 @@ jsonr "https://api.example.com/users?filter=active&sort=name"
 If you want to implement/request new features you are more than welcome to
 contribute. Please keep in mind that this tool is supposed to be super simple to
 use and cover ~80% of use cases for playing around with JSON HTTP API's.
-Instructions (--help) for this tool should be possible to read in less than 5
-minutes. If more features will be added this may be hard to achieve.
+Instructions (`jsonr --help`) for this tool should be possible to read in less
+than 5 minutes. If more features will be added this may be hard to achieve.

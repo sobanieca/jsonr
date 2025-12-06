@@ -3,6 +3,7 @@ export const snapshot = {};
 snapshot[`Given API 1`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test get.http",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -20,6 +21,7 @@ snapshot[`Given API 1`] = `
 snapshot[`Given API 2`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test post.http",
   output: "POST http://localhost:3000/sample...
 " +
     "Response:
@@ -37,6 +39,7 @@ snapshot[`Given API 2`] = `
 snapshot[`Given API 3`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test delete.http",
   output: "DELETE http://localhost:3000/sample...
 " +
     "Response:
@@ -54,13 +57,14 @@ snapshot[`Given API 3`] = `
 snapshot[`Given API 4`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test put.http",
   output: "PUT http://localhost:3000/sample...
 " +
     "Response:
 " +
     "
 " +
-    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+    '{ id: "sample-put", name: "test" }
 ' +
     "200 - OK obtained in *ms
 ",
@@ -71,6 +75,7 @@ snapshot[`Given API 4`] = `
 snapshot[`Given API 5`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test exception.http",
   output: "GET http://localhost:3000/exception...
 " +
     "Response:
@@ -88,6 +93,7 @@ snapshot[`Given API 5`] = `
 snapshot[`Given API 6`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test get-auth-401.http -s 401",
   output: "GET http://localhost:3000/auth-required...
 " +
     "Response:
@@ -105,6 +111,7 @@ snapshot[`Given API 6`] = `
 snapshot[`Given API 7`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test get-auth.http",
   output: "GET http://localhost:3000/auth-required...
 " +
     "Response:
@@ -122,6 +129,7 @@ snapshot[`Given API 7`] = `
 snapshot[`Given API 8`] = `
 {
   code: 0,
+  jsonrCommand: \`jsonr -m PUT -b '{"name":"test"}' localhost:3000/sample\`,
   output: "PUT localhost:3000/sample...
 " +
     "Response:
@@ -139,6 +147,7 @@ snapshot[`Given API 8`] = `
 snapshot[`Given API 9`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr http://localhost:3000/sample",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -156,13 +165,14 @@ snapshot[`Given API 9`] = `
 snapshot[`Given API 10`] = `
 {
   code: 1,
+  jsonrCommand: "jsonr -e test put.http -s 303",
   output: "PUT http://localhost:3000/sample...
 " +
     "Response:
 " +
     "
 " +
-    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+    '{ id: "sample-put", name: "test" }
 ' +
     "200 - OK obtained in *ms
 " +
@@ -175,13 +185,14 @@ snapshot[`Given API 10`] = `
 snapshot[`Given API 11`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test put.http -s 200",
   output: "PUT http://localhost:3000/sample...
 " +
     "Response:
 " +
     "
 " +
-    '{ id: "sample-put", name: "Some name", tags: [ "tag1", "tag2" ] }
+    '{ id: "sample-put", name: "test" }
 ' +
     "200 - OK obtained in *ms
 ",
@@ -192,6 +203,7 @@ snapshot[`Given API 11`] = `
 snapshot[`Given API 12`] = `
 {
   code: 1,
+  jsonrCommand: "jsonr -e test get.http -t test",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -211,6 +223,81 @@ snapshot[`Given API 12`] = `
 snapshot[`Given API 13`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test -h 'X-SampleHeader: abc' -v get-auth.http",
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "Authorization: *****
+" +
+    "X-SampleHeader: abc
+" +
+    "traceId: api1
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 14`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test -h 'X-SampleHeader: abc' -v get.http",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "X-SampleHeader: abc
+" +
+    "traceId: main
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 15`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test get.http -t sample-get",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -225,26 +312,28 @@ snapshot[`Given API 13`] = `
 }
 `;
 
-snapshot[`Given API 14`] = `
+snapshot[`Given API 16`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr http://localhost:3000/redirect",
   output: "GET http://localhost:3000/redirect...
 " +
     "Response:
 " +
     "
 " +
-    '"Redirecting to /redirect-target."
-' +
+    "No response body returned from server
+" +
     "302 - Found obtained in *ms
 ",
   outputError: "",
 }
 `;
 
-snapshot[`Given API 15`] = `
+snapshot[`Given API 17`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr http://localhost:3000/redirect -f",
   output: "GET http://localhost:3000/redirect...
 " +
     "Response:
@@ -259,9 +348,10 @@ snapshot[`Given API 15`] = `
 }
 `;
 
-snapshot[`Given API 16`] = `
+snapshot[`Given API 18`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test --js post-js.http",
   output: "POST http://localhost:3000/sample...
 " +
     "Response:
@@ -276,9 +366,10 @@ snapshot[`Given API 16`] = `
 }
 `;
 
-snapshot[`Given API 17`] = `
+snapshot[`Given API 19`] = `
 {
   code: 0,
+  jsonrCommand: \`jsonr --js -m POST -b '{ name: "test", count: 8 }' localhost:3000/sample\`,
   output: "POST localhost:3000/sample...
 " +
     "Response:
@@ -293,9 +384,10 @@ snapshot[`Given API 17`] = `
 }
 `;
 
-snapshot[`Given API 18`] = `
+snapshot[`Given API 20`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr help",
   output: "
 " +
     "jsonr - A CLI tool for interacting with JSON HTTP APIs and writing simple smoke tests.
@@ -320,30 +412,48 @@ snapshot[`Given API 18`] = `
 " +
     "  version     Display version info
 " +
-    "  init        Generate a jsonr example script to get started using jsonr programmatically in your code.
-" +
-    "              Usage: jsonr init [url or .http file]
-" +
-    "
-" +
-    "              Allows you to chain multiple requests and handle responses programmatically.
-" +
-    "              When you provide an optional URL or .http file path, the generated script will include it as a starting example.
-" +
-    "
-" +
-    "  run         Execute a JavaScript file with the built-in runtime.
+    "  run         Execute a JavaScript file with the built-in runtime, or generate a jsonr example script.
 " +
     "              Usage: jsonr run script.js
 " +
+    "                     jsonr run --init [url or .http file]
+" +
     "
 " +
-    "              This is particularly useful for running scripts generated by 'jsonr init'.
+    "              Without --init: Executes a JavaScript file with the jsonr available.
 " +
-    "              The standalone binary includes the runtime, so no separate Deno installation is needed.
+    "
 " +
-    "              Scripts run with the same permissions as jsonr (--allow-net, --allow-read, --allow-write).
+    "              With --init: Generates a jsonr example script (jsonr-script.js) to get started using jsonr
 " +
+    "                          programmatically in your code. Allows you to chain multiple requests and handle
+" +
+    "                          responses programmatically. When you provide an optional URL or .http file path,
+" +
+    "                          the generated script will include it as a starting example.
+" +
+    "
+" +
+    "  config      Manage jsonr configuration.
+" +
+    "              Usage: jsonr config [--init]
+" +
+    "
+" +
+    "              Without --init: Displays the merged configuration from all jsonr-config.json files
+" +
+    "                             found in the directory hierarchy (from home directory to current directory).
+" +
+    "
+" +
+    "              With --init: Creates a new jsonr-config.json file in the current directory with all
+" +
+    "                          available configuration options and example environments.
+" +
+    "
+" +
+    '              See "Configuration Files" section below for more details.
+' +
     "
 " +
     "  update      Display instructions for updating jsonr to the latest version.
@@ -364,6 +474,220 @@ snapshot[`Given API 18`] = `
 " +
     'jsonr -h "Authorization: Bearer ..." -m POST ./sample.http
 ' +
+    "
+" +
+    "Configuration Files:
+" +
+    "
+" +
+    "jsonr supports configuration files named 'jsonr-config.json' for managing environments and default parameters.
+" +
+    "
+" +
+    "Key features:
+" +
+    "- Define named environments (e.g., prod, dev, test) with specific configurations
+" +
+    "- Store sensitive variables in separate secrets files (masked in logs as *****)
+" +
+    "- Set default values to avoid repeating common parameters
+" +
+    "- Hierarchical search from current directory up to home directory
+" +
+    "- Files closer to current directory take precedence
+" +
+    "- Command-line parameters always override config values
+" +
+    "
+" +
+    "EXAMPLE jsonr-config.json:
+" +
+    "
+" +
+    "{
+" +
+    '  "environments": {
+' +
+    '    "prod": {
+' +
+    '      "inputVariables": {
+' +
+    '        "apiUrl": "https://api.example.com"
+' +
+    "      },
+" +
+    '      "secrets": "~/.secret/prod-secrets.json",
+' +
+    '      "headers": {
+' +
+    '        "X-TraceId": "jsonr"
+' +
+    "      }
+" +
+    "    },
+" +
+    '    "dev": {
+' +
+    '      "inputVariables": {
+' +
+    '        "apiUrl": "https://dev-api.example.com"
+' +
+    "      },
+" +
+    '      "secrets": "~/.secret/dev-secrets.json"
+' +
+    "    }
+" +
+    "  },
+" +
+    '  "defaults": {
+' +
+    '    "inputVariables": {
+' +
+    '      "apiUrl": "http://localhost:3000"
+' +
+    "    },
+" +
+    '    "headers": {
+' +
+    '      "X-Request-Source": "jsonr-cli"
+' +
+    "    }
+" +
+    "  }
+" +
+    "}
+" +
+    "
+" +
+    "Example .http file:
+" +
+    "
+" +
+    "GET @@apiUrl@@/users
+" +
+    "Authorization: Bearer @@apiKey@@
+" +
+    "
+" +
+    "Example secrets file (~/.secret/prod-secrets.json):
+" +
+    "
+" +
+    "{
+" +
+    '  "apiKey": "sk-1234567890abcdef",
+' +
+    '  "token": "Bearer xyz123"
+' +
+    "}
+" +
+    "
+" +
+    "Using environments:
+" +
+    "  jsonr -e prod ./sample.http     # Uses prod environment (apiUrl from config, apiKey from secrets)
+" +
+    "  jsonr -e dev ./sample.http      # Uses dev environment
+" +
+    "  jsonr ./sample.http              # Uses defaults section
+" +
+    "
+" +
+    "Secrets files:
+" +
+    "- Store sensitive variables (API keys, tokens) in a separate JSON file outside your repo
+" +
+    '- Reference the secrets file path in your config with the "secrets" property
+' +
+    "- Variables from secrets are merged with inputVariables and can be used with @@variable@@ syntax
+" +
+    "
+" +
+    "Use 'jsonr config --init' to generate a complete sample configuration with all available options.
+" +
+    "Use 'jsonr config' to view your current merged configuration.
+" +
+    "
+" +
+    "Supported configuration keys (use camelCase for property names):
+" +
+    "
+" +
+    "  inputVariables        Input variables for @@variable@@ replacement
+" +
+    "  secrets               Path to secrets file (merged with inputVariables)
+" +
+    "  headers               Default headers to include in all requests (object format)
+" +
+    '                        Example: { "Authorization": "Bearer xyz", "X-Custom": "value" }
+' +
+    "  status                Expected response status code for validation
+" +
+    "  text                  Expected text in response body
+" +
+    "  method                Default HTTP method
+" +
+    "  body                  Default request body
+" +
+    "  verbose               Enable verbose mode (true/false)
+" +
+    "  raw                   Enable raw mode (true/false)
+" +
+    "  followRedirects       Automatically follow HTTP redirects (true/false)
+" +
+    "  output                Default output file path
+" +
+    "  omitDefaultContentTypeHeader  Omit default Content-Type header (true/false)
+" +
+    "  js                    Treat body as JavaScript object literal (true/false)
+" +
+    "
+" +
+    "How configuration files work:
+" +
+    "
+" +
+    "jsonr automatically searches for jsonr-config.json files starting from your
+" +
+    "current directory and moving up to your home directory. Configuration files
+" +
+    "closer to your current directory take precedence over those in parent
+" +
+    "directories, and command-line parameters always override configuration defaults.
+" +
+    "
+" +
+    "You can place jsonr-config.json files at different levels to create a
+" +
+    "configuration hierarchy:
+" +
+    "
+" +
+    "- ~/jsonr-config.json (global defaults for all projects)
+" +
+    "- ~/projects/jsonr-config.json (defaults for all projects in this directory)
+" +
+    "- ~/projects/my-app/jsonr-config.json (defaults specific to my-app)
+" +
+    "
+" +
+    "When you run jsonr from ~/projects/my-app/, it will merge all three
+" +
+    "configurations, with more specific configurations (closer to your working
+" +
+    "directory) taking precedence.
+" +
+    "
+" +
+    "Priority order (highest to lowest):
+" +
+    "1. Command-line arguments (-i, -e <envName>, -h, etc.)
+" +
+    "2. Named environment from config (when using -e <envName>)
+" +
+    "3. Defaults section from config files (closer to cwd takes precedence)
+" +
     "
 " +
     "Parameters:
@@ -416,7 +740,7 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "-i, --input
+    "-i, --input-variable
 " +
     "
 " +
@@ -424,7 +748,7 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file. 
+    "  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file.
 " +
     "  This will allow to either provide it's value via -i flag, or via environment file option (read further)
 " +
@@ -468,15 +792,15 @@ snapshot[`Given API 18`] = `
 ' +
     "
 " +
-    "-h, --headers
+    "-h, --header
 " +
     "
 " +
-    "  Provide value for additional headers.
+    "  Provide value for additional header.
 " +
     "
 " +
-    "  If there are additional headers that you want to append to the request you can use this parameter. If there are many headers you want to append, use many -h flags:
+    "  If there are additional headers that you want to append to the request you can use this parameter multiple times:
 " +
     "
 " +
@@ -526,45 +850,33 @@ snapshot[`Given API 18`] = `
 " +
     "
 " +
-    "  Environment file path.
+    "  Environment name from jsonr-config.json.
 " +
     "
 " +
-    "  Environment file a json file with variables and their values (similar to -i parameter) it allows you to reuse existing .http files.
-" +
-    "  For instance you can have following sample.http file:
+    "  Specify which environment to use from your jsonr-config.json file.
 " +
     "
 " +
-    "  POST https://@@apiUrl@@/value
+    "  EXAMPLE:
 " +
-    "
-" +
-    "  {
-" +
-    '    "username": "user@email.com"
+    '  jsonr -e prod ./sample.http      # Uses "prod" environment from config
 ' +
-    "  }
-" +
-    "
-" +
-    "  Now, you can create environment file test.json:
-" +
-    "
-" +
-    "  {
-" +
-    '    "apiUrl": "my-api-on-test-environment.com"
+    '  jsonr -e dev ./sample.http       # Uses "dev" environment from config
 ' +
-    "  }
+    "
+" +
+    "  jsonr will search for the environment in your jsonr-config.json files (starting from
+" +
+    "  the current directory up to your home directory). If the environment is not found,
+" +
+    "  jsonr will exit with an error.
 " +
     "
 " +
-    "  And use it later as:
+    "  Named environments allow you to organize different configurations (prod, dev, test),
 " +
-    "
-" +
-    "  jsonr -e ./test.json ./sample.http
+    "  manage secrets separately, and leverage hierarchical configuration across projects.
 " +
     "
 " +
@@ -744,51 +1056,67 @@ snapshot[`Given API 18`] = `
 }
 `;
 
-snapshot[`Given API 19`] = `
+snapshot[`Given API 21`] = `
 {
-  initCode: 0,
-  initOutput: "Created jsonr-script.js with jsonr SDK template
+  code: 1,
+  jsonrCommand: "jsonr -e nonExistentEnv get.http",
+  output: "Error: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
+" +
+    "Run 'jsonr --help' for details on configuration files.
 ",
-  initOutputError: "",
-  scriptCode: 0,
-  scriptOutput: "GET http://localhost:3000/sample...
-" +
-    "Response:
-" +
-    "
-" +
-    '{ id: "sample-get" }
-' +
-    "200 - OK obtained in *ms
-" +
-    "Status: 200
-" +
-    "Status Text: OK
-" +
-    "Elapsed: * ms
-" +
-    'Body: { id: "sample-get" }
-' +
-    "Header content-type: application/json; charset=UTF-8
-" +
-    "Header date: *
-" +
-    "Header transfer-encoding: chunked
-" +
-    "Header vary: Accept-Encoding
-",
-  scriptOutputError: "",
+  outputError: "",
 }
 `;
 
-snapshot[`Given API 20`] = `
+snapshot[`Given API 22`] = `
 {
-  initCode: 0,
-  initOutput: "Created jsonr-script.js with jsonr SDK template
+  code: 0,
+  jsonrCommand: "jsonr config",
+  output: "Merged configuration:
+" +
+    "
+" +
+    "{
+" +
+    "  help: false,
+" +
+    "  debug: false,
+" +
+    "  init: false,
+" +
+    "  omitDefaultContentTypeHeader: false,
+" +
+    "  verbose: false,
+" +
+    "  raw: false,
+" +
+    "  followRedirects: true,
+" +
+    "  js: false,
+" +
+    '  headers: { traceId: "api1" }
+' +
+    "}
 ",
-  initOutputError: "",
-  scriptCode: 0,
-  scriptOutput: "GET http://localhost:3000/sample...
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 23`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run --init http://localhost:3000/sample",
+  output: "Created jsonr-script.js with jsonr usage template
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 24`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script.js",
+  output: "GET http://localhost:3000/sample...
 " +
     "Response:
 " +
@@ -798,22 +1126,88 @@ snapshot[`Given API 20`] = `
 ' +
     "200 - OK obtained in *ms
 " +
-    "Status: 200
-" +
-    "Status Text: OK
-" +
-    "Elapsed: * ms
-" +
-    'Body: { id: "sample-get" }
+    'Response: { id: "sample-get" }
 ' +
-    "Header content-type: application/json; charset=UTF-8
-" +
-    "Header date: *
-" +
-    "Header transfer-encoding: chunked
-" +
-    "Header vary: Accept-Encoding
+    "Status: 200
 ",
-  scriptOutputError: "",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 25`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script.js -v",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "traceId: main
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-get" }
+' +
+    "Status: 200
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 26`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script.js -e test -v",
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "Authorization: *****
+" +
+    "traceId: api1
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-post" }
+' +
+    "Status: 200
+",
+  outputError: "",
 }
 `;

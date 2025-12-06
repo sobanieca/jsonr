@@ -1,23 +1,5 @@
 import logger from "../logger.js";
 
-/*
- * Available args:
- * input (i) input variable -i "variable1: abc"
- * headers (h) header -h "auth: abc"
- * status (s) expected response status code -s 200
- * text (t) expected text in response -t "abc"
- * environment (e) environment file path -e "./file.json"
- * method (m) http method -m POST
- * verbose (v) verbose - more details like response headers
- * body (b) body -b '{ test: "123" }'
- * --omit-default-content-type-header
- * output (o) output file -o output.json
- * raw (r) request raw mode
- * follow-redirects (f) follow redirects
- * js treat body content as JavaScript object and serialize to JSON
- * input http file / url
- */
-
 const getHeaderValues = (header) => {
   const [headerKey, ...headersValues] = header.split(":");
   const headerValue = headersValues?.join(":");
@@ -130,44 +112,22 @@ const convertJsObjectToJson = (jsCode) => {
   return result;
 };
 
-const getVariables = async (args) => {
+const getVariables = (args) => {
   const result = new Map();
-  if (args.environment) {
-    const environmentFilePath = args.environment;
-    try {
-      const environmentFileVariables = JSON.parse(
-        await Deno.readTextFile(environmentFilePath),
-      );
-      for (const variable of Object.keys(environmentFileVariables)) {
-        result.set(variable, environmentFileVariables[variable]);
-      }
-    } catch (err) {
-      logger.debug(err);
-      logger.error(
-        `There was a problem when reading variables for environment file ${environmentFilePath}. Ensure that the file exists and contains proper JSON structure. Refer to --help for details.`,
-      );
-    }
-  }
 
-  const setInputVariable = (variable) => {
-    const [key, value] = variable.split(":").map((x) => x.trim());
-    result.set(key, value);
-  };
-
-  if (args.input) {
-    if (Array.isArray(args.input)) {
-      for (const inputVariable of args.input) {
-        setInputVariable(inputVariable);
-      }
-    } else {
-      setInputVariable(args.input);
+  if (
+    args.inputVariables && typeof args.inputVariables === "object" &&
+    !Array.isArray(args.inputVariables)
+  ) {
+    for (const [key, value] of Object.entries(args.inputVariables)) {
+      result.set(key, value);
     }
   }
 
   return result;
 };
 
-export const sendRequestCore = async (args) => {
+export const sendRequest = async (args) => {
   const request = {
     method: "GET",
     headers: [{ key: "Content-Type", value: "application/json" }],
@@ -175,7 +135,7 @@ export const sendRequestCore = async (args) => {
     url: "",
   };
 
-  if (args["omit-default-content-type-header"]) {
+  if (args.omitDefaultContentTypeHeader) {
     logger.debug(
       "Parameter --omit-default-content-type-header provided - removing default Content-Type header",
     );
@@ -200,7 +160,7 @@ export const sendRequestCore = async (args) => {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
-      const variables = await getVariables(args);
+      const variables = getVariables(args);
       const fileRequest = await parseHttpFile(
         urlOrFilePath,
         variables,
@@ -248,18 +208,10 @@ export const sendRequestCore = async (args) => {
     }
   }
 
-  if (args.headers) {
-    const appendHeader = (headerArg) => {
-      logger.debug(`Adding ${headerArg} header to request`);
-      const headerValues = getHeaderValues(headerArg);
-      request.headers.push(headerValues);
-    };
-    if (Array.isArray(args.headers)) {
-      for (const h of args.headers) {
-        appendHeader(h);
-      }
-    } else {
-      appendHeader(args.headers);
+  if (args.headers && typeof args.headers === "object") {
+    for (const [key, value] of Object.entries(args.headers)) {
+      logger.debug(`Adding ${key}: ${value} header to request`);
+      request.headers.push({ key, value });
     }
   }
 
@@ -272,7 +224,7 @@ export const sendRequestCore = async (args) => {
 
   let redirect = "manual";
 
-  if (args["follow-redirects"]) {
+  if (args.followRedirects) {
     redirect = "follow";
   }
 
@@ -386,10 +338,6 @@ export const sendRequestCore = async (args) => {
     body: originalResponseBody,
     elapsed,
   };
-};
-
-const sendRequest = async (args) => {
-  await sendRequestCore(args);
 };
 
 export default {
