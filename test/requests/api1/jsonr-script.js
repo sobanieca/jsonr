@@ -1,3 +1,4 @@
+// @ts-nocheck
 const response = await jsonr("get-auth.http");
 
 console.log("Response:", response.body);
