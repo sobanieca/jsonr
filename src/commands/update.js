@@ -13,6 +13,7 @@ export default {
           "--allow-write",
           "--allow-net",
           "--allow-read",
+          "--allow-env=HOME,USERPROFILE",
           "-f",
           "-r",
           "-n",
@@ -37,7 +38,7 @@ export default {
       logger.info("To update jsonr to the latest version, run:");
       logger.info("");
       logger.info(
-        "  deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr",
+        "  deno install -g --allow-write --allow-net --allow-read --allow-env=HOME,USERPROFILE -f -r -n jsonr jsr:@sobanieca/jsonr",
       );
       logger.info("");
       logger.info("Or use deno updater:");

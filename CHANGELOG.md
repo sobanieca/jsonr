@@ -1,3 +1,9 @@
+# 4.0.1
+
+- Fixed permission prompt for HOME and USERPROFILE environment variables by
+  adding `--allow-env=HOME,USERPROFILE` to binary compilation and installation
+  instructions
+
 # 4.0.0
 
 - Redesigned configuration system with named environments, secrets management,

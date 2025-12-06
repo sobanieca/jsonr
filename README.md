@@ -171,11 +171,17 @@ capabilities and command-line options.
 > Deno runtime environment `https://deno.com`
 
 ```bash
-deno install -g --allow-write --allow-net --allow-read -f -r -n jsonr jsr:@sobanieca/jsonr
+deno install -g --allow-write --allow-net --allow-read --allow-env=HOME,USERPROFILE -f -r -n jsonr jsr:@sobanieca/jsonr
 ```
 
-`--allow-write` permission is needed only if you are planning to use `-o`
-parameter (write response body to file, check `jsonr --help` for details)
+**Permissions:**
+
+- `--allow-write` - Required for writing response bodies to files (`-o` flag)
+  and creating config/script files
+- `--allow-net` - Required for making HTTP requests
+- `--allow-read` - Required for reading `.http` files and config files
+- `--allow-env=HOME,USERPROFILE` - Required for finding `jsonr-config.json`
+  files in your home directory hierarchy
 
 ### Option 2: Quick Install Script (Standalone Binary)
 
@@ -247,7 +253,7 @@ It will display warning about disable ssl verification, but you should be able
 to perform requests. If you work frequently with such unsafe servers you can
 consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
 
-`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/jsonr`
+`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE jsr:@sobanieca/jsonr`
 
 - If you want to disable colors (at least for main log messages), you can use:
 
