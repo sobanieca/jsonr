@@ -1171,3 +1171,43 @@ snapshot[`Given API 25`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 26`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script.js -e test -v",
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "Authorization: *****
+" +
+    "traceId: api1
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-post" }
+' +
+    "Status: 200
+",
+  outputError: "",
+}
+`;
