@@ -1,3 +1,8 @@
+# 4.1.0
+
+- Added `--dry` flag to print request without sending it (automatically enables
+  verbose mode)
+
 # 4.0.1
 
 - Fixed permission prompt for HOME and USERPROFILE environment variables by

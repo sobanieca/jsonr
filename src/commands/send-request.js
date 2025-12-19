@@ -135,6 +135,11 @@ export const sendRequest = async (args) => {
     url: "",
   };
 
+  if (args.dry) {
+    logger.debug("Dry mode enabled - request will be printed but not sent");
+    args.verbose = true;
+  }
+
   if (args.omitDefaultContentTypeHeader) {
     logger.debug(
       "Parameter --omit-default-content-type-header provided - removing default Content-Type header",
@@ -233,6 +238,11 @@ export const sendRequest = async (args) => {
   requestLog("");
   if (request.body) {
     requestLog(request.body);
+  }
+
+  if (args.dry) {
+    logger.info("Dry mode: Request not sent");
+    return null;
   }
 
   const timestamp = new Date();
