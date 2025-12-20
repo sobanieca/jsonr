@@ -154,6 +154,8 @@ export const sendRequest = async (args) => {
   }
 
   const urlOrFilePath = args["_"][0];
+  const looksLikeFile = urlOrFilePath.endsWith(".http");
+
   if (
     urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")
   ) {
@@ -180,6 +182,15 @@ export const sendRequest = async (args) => {
         request.headers = [...request.headers, ...fileRequest.headers];
       }
     } catch (err) {
+      if (looksLikeFile && err instanceof Deno.errors.NotFound) {
+        logger.error(`File not found: ${urlOrFilePath}`);
+        Deno.exit(1);
+      }
+
+      if (looksLikeFile) {
+        throw err;
+      }
+
       logger.debug(
         `Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`,
       );

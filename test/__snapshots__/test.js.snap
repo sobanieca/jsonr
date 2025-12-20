@@ -406,6 +406,16 @@ snapshot[`Given API 20`] = `
 
 snapshot[`Given API 21`] = `
 {
+  code: 1,
+  jsonrCommand: "jsonr nonexistent.http",
+  output: "File not found: nonexistent.http
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 22`] = `
+{
   code: 0,
   jsonrCommand: "jsonr help",
   output: "
@@ -1088,7 +1098,7 @@ snapshot[`Given API 21`] = `
 }
 `;
 
-snapshot[`Given API 22`] = `
+snapshot[`Given API 23`] = `
 {
   code: 1,
   jsonrCommand: "jsonr -e nonExistentEnv get.http",
@@ -1100,7 +1110,7 @@ snapshot[`Given API 22`] = `
 }
 `;
 
-snapshot[`Given API 23`] = `
+snapshot[`Given API 24`] = `
 {
   code: 0,
   jsonrCommand: "jsonr config",
@@ -1136,7 +1146,7 @@ snapshot[`Given API 23`] = `
 }
 `;
 
-snapshot[`Given API 24`] = `
+snapshot[`Given API 25`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run --init http://localhost:3000/sample",
@@ -1146,7 +1156,7 @@ snapshot[`Given API 24`] = `
 }
 `;
 
-snapshot[`Given API 25`] = `
+snapshot[`Given API 26`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js",
@@ -1168,7 +1178,7 @@ snapshot[`Given API 25`] = `
 }
 `;
 
-snapshot[`Given API 26`] = `
+snapshot[`Given API 27`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js -v",
@@ -1206,7 +1216,7 @@ snapshot[`Given API 26`] = `
 }
 `;
 
-snapshot[`Given API 27`] = `
+snapshot[`Given API 28`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js -e test -v",
