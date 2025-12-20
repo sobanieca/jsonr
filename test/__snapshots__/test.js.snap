@@ -387,6 +387,26 @@ snapshot[`Given API 19`] = `
 snapshot[`Given API 20`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test get.http --dry",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "traceId: main
+" +
+    "
+" +
+    "Dry mode: Request not sent
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 21`] = `
+{
+  code: 0,
   jsonrCommand: "jsonr help",
   output: "
 " +
@@ -1068,7 +1088,7 @@ snapshot[`Given API 20`] = `
 }
 `;
 
-snapshot[`Given API 21`] = `
+snapshot[`Given API 22`] = `
 {
   code: 1,
   jsonrCommand: "jsonr -e nonExistentEnv get.http",
@@ -1080,7 +1100,7 @@ snapshot[`Given API 21`] = `
 }
 `;
 
-snapshot[`Given API 22`] = `
+snapshot[`Given API 23`] = `
 {
   code: 0,
   jsonrCommand: "jsonr config",
@@ -1106,6 +1126,8 @@ snapshot[`Given API 22`] = `
 " +
     "  js: false,
 " +
+    "  dry: false,
+" +
     '  headers: { traceId: "api1" }
 ' +
     "}
@@ -1114,7 +1136,7 @@ snapshot[`Given API 22`] = `
 }
 `;
 
-snapshot[`Given API 23`] = `
+snapshot[`Given API 24`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run --init http://localhost:3000/sample",
@@ -1124,7 +1146,7 @@ snapshot[`Given API 23`] = `
 }
 `;
 
-snapshot[`Given API 24`] = `
+snapshot[`Given API 25`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js",
@@ -1146,7 +1168,7 @@ snapshot[`Given API 24`] = `
 }
 `;
 
-snapshot[`Given API 25`] = `
+snapshot[`Given API 26`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js -v",
@@ -1184,7 +1206,7 @@ snapshot[`Given API 25`] = `
 }
 `;
 
-snapshot[`Given API 26`] = `
+snapshot[`Given API 27`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js -e test -v",

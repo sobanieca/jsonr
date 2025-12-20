@@ -10,6 +10,7 @@ const rawArgs = deps.parse(Deno.args, {
     "raw",
     "follow-redirects",
     "js",
+    "dry",
   ],
   string: [
     "body",

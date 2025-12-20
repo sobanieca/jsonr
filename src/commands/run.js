@@ -17,7 +17,8 @@ const response = await jsonr('${urlOrFile}', {
   followRedirects: false,
   output: "./response.json",
   omitDefaultContentTypeHeader: false,
-  js: false
+  js: false,
+  dry: false
 });
 
 console.log("Status:", response.status);
