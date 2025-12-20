@@ -267,6 +267,12 @@ path to .http file name or url
 
   Print the request that would be sent without actually sending it. Automatically enables verbose mode to show full request details including headers and body. Useful for verifying request configuration before sending.
 
+--ignore-input-validation
+
+  Skip validation for missing input variables.
+
+  By default, jsonr validates that all @@variable@@ placeholders in .http files have corresponding values provided via -i flag or config files. When this flag is enabled, validation is skipped and unreplaced @@variable@@ placeholders will be sent as literal text in the request.
+
 -r, --raw
 
   Request raw mode.

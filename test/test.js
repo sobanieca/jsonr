@@ -37,7 +37,14 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
   await test("jsonr config", "test/requests/api1");
   await test("jsonr get-missing-vars.http", "test/requests/api2");
-  await test("jsonr get-missing-vars.http -i 'query: test'", "test/requests/api2");
+  await test(
+    "jsonr get-missing-vars.http -i 'query: test'",
+    "test/requests/api2",
+  );
+  await test(
+    "jsonr get-missing-vars.http --ignore-input-validation",
+    "test/requests/api2",
+  );
 
   await test("jsonr run --init http://localhost:3000/sample");
   try {
