@@ -51,33 +51,10 @@ jobs:
 
       - name: Compile binaries
         run: |
-          echo "Disk space before compilation:"
-          df -h
-
-          echo "Compiling Linux x64..."
           deno compile --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE --target x86_64-unknown-linux-gnu -o jsonr-linux-x64 main.js
-
-          echo "Compiling Linux ARM64..."
           deno compile --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE --target aarch64-unknown-linux-gnu -o jsonr-linux-arm64 main.js
-
-          echo "Cleaning up cache before macOS compilation..."
-          rm -rf ~/.cache/deno/tmp
-          df -h
-
-          echo "Compiling macOS x64..."
           deno compile --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE --target x86_64-apple-darwin -o jsonr-macos-x64 main.js
-
-          echo "Cleaning up cache before final compilation..."
-          rm -rf ~/.cache/deno/tmp
-
-          echo "Compiling macOS ARM64..."
           deno compile --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE --target aarch64-apple-darwin -o jsonr-macos-arm64 main.js
-
-          echo "Disk space after compilation:"
-          df -h
-
-          echo "Verifying binaries exist:"
-          ls -lh jsonr-*
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
