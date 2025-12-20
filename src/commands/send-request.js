@@ -135,6 +135,11 @@ export const sendRequest = async (args) => {
     url: "",
   };
 
+  if (args.dry) {
+    logger.debug("Dry mode enabled - request will be printed but not sent");
+    args.verbose = true;
+  }
+
   if (args.omitDefaultContentTypeHeader) {
     logger.debug(
       "Parameter --omit-default-content-type-header provided - removing default Content-Type header",
@@ -149,6 +154,8 @@ export const sendRequest = async (args) => {
   }
 
   const urlOrFilePath = args["_"][0];
+  const looksLikeFile = urlOrFilePath.endsWith(".http");
+
   if (
     urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")
   ) {
@@ -175,6 +182,15 @@ export const sendRequest = async (args) => {
         request.headers = [...request.headers, ...fileRequest.headers];
       }
     } catch (err) {
+      if (looksLikeFile && err instanceof Deno.errors.NotFound) {
+        logger.error(`File not found: ${urlOrFilePath}`);
+        Deno.exit(1);
+      }
+
+      if (looksLikeFile) {
+        throw err;
+      }
+
       logger.debug(
         `Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`,
       );
@@ -233,6 +249,11 @@ export const sendRequest = async (args) => {
   requestLog("");
   if (request.body) {
     requestLog(request.body);
+  }
+
+  if (args.dry) {
+    logger.info("Dry mode: Request not sent");
+    return null;
   }
 
   const timestamp = new Date();

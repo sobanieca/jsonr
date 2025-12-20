@@ -261,6 +261,12 @@ path to .http file name or url
 
   Provide more details in output (output request and response headers). It may be useful for reporting issues with endpoints
 
+--dry
+
+  Dry run mode.
+
+  Print the request that would be sent without actually sending it. Automatically enables verbose mode to show full request details including headers and body. Useful for verifying request configuration before sending.
+
 -r, --raw
 
   Request raw mode.
