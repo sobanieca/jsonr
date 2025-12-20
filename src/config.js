@@ -60,12 +60,12 @@ const loadSecretsFile = async (secretsPath) => {
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
       logger.error(
-        `Error: Secrets file not found at ${secretsPath}. Please check the path in your config file.`,
+        `ERROR: Secrets file not found at ${secretsPath}. Please check the path in your config file.`,
       );
       Deno.exit(1);
     }
     logger.error(
-      `Error: Failed to read secrets file at ${secretsPath}: ${err.message}`,
+      `ERROR: Failed to read secrets file at ${secretsPath}: ${err.message}`,
     );
     Deno.exit(1);
   }
@@ -283,7 +283,7 @@ export const loadAndApplyConfig = async (args) => {
 
       if (!envConfig) {
         logger.error(
-          `Error: Environment '${envName}' not found in any jsonr-config.json files.`,
+          `ERROR: Environment '${envName}' not found in any jsonr-config.json files.`,
         );
         logger.error(`Run 'jsonr --help' for details on configuration files.`);
         Deno.exit(1);

@@ -11,6 +11,7 @@ const rawArgs = deps.parse(Deno.args, {
     "follow-redirects",
     "js",
     "dry",
+    "ignore-input-validation",
   ],
   string: [
     "body",

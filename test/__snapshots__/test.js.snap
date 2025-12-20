@@ -408,7 +408,7 @@ snapshot[`Given API 21`] = `
 {
   code: 1,
   jsonrCommand: "jsonr nonexistent.http",
-  output: "File not found: nonexistent.http
+  output: "ERROR: File not found: nonexistent.http
 ",
   outputError: "",
 }
@@ -956,6 +956,18 @@ snapshot[`Given API 22`] = `
 " +
     "
 " +
+    "--ignore-input-validation
+" +
+    "
+" +
+    "  Skip validation for missing input variables.
+" +
+    "
+" +
+    "  By default, jsonr validates that all @@variable@@ placeholders in .http files have corresponding values provided via -i flag or config files. When this flag is enabled, validation is skipped and unreplaced @@variable@@ placeholders will be sent as literal text in the request.
+" +
+    "
+" +
     "-r, --raw
 " +
     "
@@ -1102,7 +1114,7 @@ snapshot[`Given API 23`] = `
 {
   code: 1,
   jsonrCommand: "jsonr -e nonExistentEnv get.http",
-  output: "Error: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
+  output: "ERROR: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
 " +
     "Run 'jsonr --help' for details on configuration files.
 ",
@@ -1138,6 +1150,8 @@ snapshot[`Given API 24`] = `
 " +
     "  dry: false,
 " +
+    "  ignoreInputValidation: false,
+" +
     '  headers: { traceId: "api1" }
 ' +
     "}
@@ -1148,6 +1162,38 @@ snapshot[`Given API 24`] = `
 
 snapshot[`Given API 25`] = `
 {
+  code: 1,
+  jsonrCommand: "jsonr get-missing-vars.http",
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl, query. Provide them via -i flag or jsonr-config.json
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 26`] = `
+{
+  code: 1,
+  jsonrCommand: "jsonr get-missing-vars.http -i 'query: test'",
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl. Provide them via -i flag or jsonr-config.json
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 27`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr get-missing-vars.http --ignore-input-validation",
+  output: "GET @@nonExistingBaseUrl@@/sample?query=@@query@@...
+" +
+    "Invalid URL: 'http://@@nonExistingBaseUrl@@/sample?query=@@query@@'
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 28`] = `
+{
   code: 0,
   jsonrCommand: "jsonr run --init http://localhost:3000/sample",
   output: "Created jsonr-script.js with jsonr usage template
@@ -1156,7 +1202,7 @@ snapshot[`Given API 25`] = `
 }
 `;
 
-snapshot[`Given API 26`] = `
+snapshot[`Given API 29`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js",
@@ -1178,7 +1224,7 @@ snapshot[`Given API 26`] = `
 }
 `;
 
-snapshot[`Given API 27`] = `
+snapshot[`Given API 30`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js -v",
@@ -1216,7 +1262,7 @@ snapshot[`Given API 27`] = `
 }
 `;
 
-snapshot[`Given API 28`] = `
+snapshot[`Given API 31`] = `
 {
   code: 0,
   jsonrCommand: "jsonr run jsonr-script.js -e test -v",

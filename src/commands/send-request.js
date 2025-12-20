@@ -6,7 +6,12 @@ const getHeaderValues = (header) => {
   return { key: headerKey?.trim(), value: headerValue?.trim() };
 };
 
-const parseHttpFile = async (filePath, variables, rawMode) => {
+const parseHttpFile = async (
+  filePath,
+  variables,
+  rawMode,
+  ignoreInputValidation,
+) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
     let fileContent = await Deno.readTextFile(filePath);
@@ -16,6 +21,22 @@ const parseHttpFile = async (filePath, variables, rawMode) => {
       );
       fileContent = fileContent.replaceAll(`@@${key}@@`, value);
     }
+
+    if (!ignoreInputValidation) {
+      const unreplacedVariables = [...fileContent.matchAll(/@@([^@]+)@@/g)];
+      if (unreplacedVariables.length > 0) {
+        const missingVariableNames = [
+          ...new Set(unreplacedVariables.map((match) => match[1])),
+        ];
+        logger.error(
+          `ERROR: Missing required input variable(s): ${
+            missingVariableNames.join(", ")
+          }. Provide them via -i flag or jsonr-config.json`,
+        );
+        Deno.exit(1);
+      }
+    }
+
     fileContent = removeComments(fileContent);
     let [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
 
@@ -172,6 +193,7 @@ export const sendRequest = async (args) => {
         urlOrFilePath,
         variables,
         args.raw,
+        args.ignoreInputValidation,
       );
       request.method = fileRequest.method;
       request.url = fileRequest.url;
@@ -183,7 +205,7 @@ export const sendRequest = async (args) => {
       }
     } catch (err) {
       if (looksLikeFile && err instanceof Deno.errors.NotFound) {
-        logger.error(`File not found: ${urlOrFilePath}`);
+        logger.error(`ERROR: File not found: ${urlOrFilePath}`);
         Deno.exit(1);
       }
 

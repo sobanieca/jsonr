@@ -31,7 +31,7 @@ export default {
         logger.info("jsonr has been updated successfully!");
       } else {
         logger.error("");
-        logger.error("Failed to update jsonr");
+        logger.error("ERROR: Failed to update jsonr");
         Deno.exit(1);
       }
     } else {
