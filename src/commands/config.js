@@ -39,7 +39,7 @@ const createConfig = async () => {
     try {
       await Deno.lstat(configFileName);
       logger.error(
-        `Error: ${configFileName} already exists in the current directory. Delete it first if you want to regenerate it.`,
+        `ERROR: ${configFileName} already exists in the current directory. Delete it first if you want to regenerate it.`,
       );
       Deno.exit(1);
     } catch (err) {
@@ -54,7 +54,7 @@ const createConfig = async () => {
     logger.info("");
     logger.info("Edit this file to customize your environments and defaults.");
   } catch (err) {
-    logger.error(`Failed to create config file: ${err.message}`);
+    logger.error(`ERROR: Failed to create config file: ${err.message}`);
     logger.debug(err);
     Deno.exit(1);
   }

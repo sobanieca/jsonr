@@ -36,6 +36,8 @@ Deno.test("Given API", async (t) => {
   await test("jsonr help");
   await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
   await test("jsonr config", "test/requests/api1");
+  await test("jsonr missing-single-var.http", "test/requests/api2");
+  await test("jsonr missing-multiple-vars.http", "test/requests/api2");
 
   await test("jsonr run --init http://localhost:3000/sample");
   try {

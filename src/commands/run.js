@@ -37,7 +37,7 @@ const executeInit = async (args) => {
 
   try {
     await Deno.stat(filename);
-    logger.error(`Error: ${filename} already exists`);
+    logger.error(`ERROR: ${filename} already exists`);
     Deno.exit(1);
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) {
