@@ -2,6 +2,7 @@
 
 - Added `--dry` flag to print request without sending it (automatically enables
   verbose mode)
+- Fixed error when non existing file path provided
 
 # 4.0.1
 
