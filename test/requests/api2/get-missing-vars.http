@@ -1,0 +1,1 @@
+GET @@nonExistingBaseUrl@@/sample?query=@@query@@

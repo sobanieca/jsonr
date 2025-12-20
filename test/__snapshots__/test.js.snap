@@ -1149,8 +1149,8 @@ snapshot[`Given API 24`] = `
 snapshot[`Given API 25`] = `
 {
   code: 1,
-  jsonrCommand: "jsonr missing-single-var.http",
-  output: "ERROR: Missing required input variable(s): missingVar. Provide them via -i flag or jsonr-config.json
+  jsonrCommand: "jsonr get-missing-vars.http",
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl, query. Provide them via -i flag or jsonr-config.json
 ",
   outputError: "",
 }
@@ -1159,8 +1159,8 @@ snapshot[`Given API 25`] = `
 snapshot[`Given API 26`] = `
 {
   code: 1,
-  jsonrCommand: "jsonr missing-multiple-vars.http",
-  output: "ERROR: Missing required input variable(s): missingUrl, missingPath. Provide them via -i flag or jsonr-config.json
+  jsonrCommand: "jsonr get-missing-vars.http -i 'query: test'",
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl. Provide them via -i flag or jsonr-config.json
 ",
   outputError: "",
 }

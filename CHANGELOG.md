@@ -1,3 +1,7 @@
+# 4.2.0
+
+- Added validation for missing input variables if they are defined in http file.
+
 # 4.1.0
 
 - Added `--dry` flag to print request without sending it (automatically enables
