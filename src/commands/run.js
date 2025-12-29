@@ -83,13 +83,19 @@ const executeScript = async (args) => {
       ? scriptPath
       : `${Deno.cwd()}/${scriptPath}`;
 
+    const pendingPromises = [];
+
     // @ts-ignore: Expose jsonr wrapper to the script
     globalThis.jsonr = (urlOrFile, options = {}) => {
-      return sendRequest({ ...args, _: [urlOrFile], ...options });
+      const promise = sendRequest({ ...args, _: [urlOrFile], ...options });
+      pendingPromises.push(promise);
+      return promise;
     };
 
     const fileUrl = new URL(`file://${absolutePath}`).href;
     await import(fileUrl);
+
+    await Promise.all(pendingPromises);
 
     // @ts-ignore: Clean up jsonr from global scope
     delete globalThis.jsonr;
