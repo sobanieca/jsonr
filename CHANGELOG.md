@@ -1,3 +1,8 @@
+# 4.2.1
+
+- Fixed handling `jsonr` instructions in `jsonr run` command to prevent early
+  return.
+
 # 4.2.0
 
 - Added validation for missing input variables if they are defined in http file.
