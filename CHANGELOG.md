@@ -1,3 +1,7 @@
+# 4.2.3
+
+- Fixed variable substitution (`@@var@@`) in URLs when using `jsonr run`.
+
 # 4.2.2
 
 - Fixed tilde (`~`) expansion in secrets file path.
