@@ -174,8 +174,13 @@ export const sendRequest = async (args) => {
     );
   }
 
-  const urlOrFilePath = args["_"][0];
+  let urlOrFilePath = args["_"][0];
   const looksLikeFile = urlOrFilePath.endsWith(".http");
+
+  const variables = getVariables(args);
+  for (const [key, value] of variables) {
+    urlOrFilePath = urlOrFilePath.replaceAll(`@@${key}@@`, value);
+  }
 
   if (
     urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")
@@ -188,7 +193,6 @@ export const sendRequest = async (args) => {
     try {
       await Deno.lstat(urlOrFilePath);
       logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
-      const variables = getVariables(args);
       const fileRequest = await parseHttpFile(
         urlOrFilePath,
         variables,

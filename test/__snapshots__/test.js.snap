@@ -1301,3 +1301,25 @@ snapshot[`Given API 31`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 32`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script-with-url-var.js -e test",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-get" }
+' +
+    "Status: 200
+",
+  outputError: "",
+}
+`;
