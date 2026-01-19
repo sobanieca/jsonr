@@ -1,3 +1,7 @@
+# 4.2.2
+
+- Fixed tilde (`~`) expansion in secrets file path.
+
 # 4.2.1
 
 - Fixed handling `jsonr` instructions in `jsonr run` command to prevent early

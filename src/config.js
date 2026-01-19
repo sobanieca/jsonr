@@ -43,11 +43,22 @@ const readConfigFile = async (filePath) => {
   }
 };
 
+const expandTilde = (filePath) => {
+  if (filePath && filePath.startsWith("~")) {
+    const homeDir = Deno.env.get("HOME") || Deno.env.get("USERPROFILE");
+    if (homeDir) {
+      return filePath.replace(/^~/, homeDir);
+    }
+  }
+  return filePath;
+};
+
 const loadSecretsFile = async (secretsPath) => {
   if (!secretsPath) {
     return {};
   }
 
+  secretsPath = expandTilde(secretsPath);
   logger.debug(`Loading secrets from ${secretsPath}`);
 
   try {
