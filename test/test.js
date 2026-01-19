@@ -60,6 +60,7 @@ Deno.test("Given API", async (t) => {
     "jsonr run jsonr-script-with-url-var.js -e test",
     "test/requests/api1",
   );
+  await test("jsonr jsonr-script.js -e test", "test/requests/api1");
 
   apiProcess.kill();
   await apiProcess.output();

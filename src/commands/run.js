@@ -61,7 +61,7 @@ const executeInit = async (args) => {
 };
 
 const executeScript = async (args) => {
-  const scriptPath = args._[1];
+  const scriptPath = args._[0] === "run" ? args._[1] : args._[0];
 
   if (!scriptPath) {
     throw new Error("Script path is required. Usage: jsonr run script.js");
@@ -108,6 +108,18 @@ const executeScript = async (args) => {
   }
 };
 
+const isExistingJsFile = (filepath) => {
+  if (!filepath || !filepath.endsWith(".js")) {
+    return false;
+  }
+  try {
+    Deno.statSync(filepath);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export default {
   execute: async (args) => {
     if (args.init === true) {
@@ -116,5 +128,5 @@ export default {
       await executeScript(args);
     }
   },
-  match: (args) => args._[0] === "run",
+  match: (args) => args._[0] === "run" || isExistingJsFile(args._[0]),
 };

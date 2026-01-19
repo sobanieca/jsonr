@@ -1,3 +1,8 @@
+# 4.3.0
+
+- Added support for running scripts directly with `jsonr script.js` without
+  requiring the `run` subcommand.
+
 # 4.2.3
 
 - Fixed variable substitution (`@@var@@`) in URLs when using `jsonr run`.
