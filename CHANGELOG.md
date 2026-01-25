@@ -1,3 +1,7 @@
+# 4.3.1
+
+- Updated readme
+
 # 4.3.0
 
 - Added support for running scripts directly with `jsonr script.js` without

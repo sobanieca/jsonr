@@ -10,6 +10,7 @@
 - :clipboard: Working with modern JSON HTTP APIs?
 - :dash: Want to write quick smoke tests for your API?
 - :link: Need a scripting tool to chain requests together?
+- :lock: Worried about AI agents leaking your API secrets?
 
 `jsonr` is a simple CLI tool for interacting with json http api's and writing
 simple smoke tests. It's available from your terminal anytime when you need it
