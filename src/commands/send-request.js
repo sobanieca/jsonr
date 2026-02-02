@@ -31,7 +31,7 @@ const parseHttpFile = async (
         logger.error(
           `ERROR: Missing required input variable(s): ${
             missingVariableNames.join(", ")
-          }. Provide them via -i flag or jsonr-config.json`,
+          }. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?`,
         );
         Deno.exit(1);
       }

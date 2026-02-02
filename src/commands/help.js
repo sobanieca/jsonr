@@ -21,6 +21,31 @@ Commands:
                           responses programmatically. When you provide an optional URL or .http file path,
                           the generated script will include it as a starting example.
 
+              API: const response = await jsonr(urlOrHttpFile, options)
+
+              Request options (all optional):
+                headers                     - Object with header key-value pairs
+                environment                 - Environment name from jsonr-config.json
+                inputVariables              - Object with variables for @@variable@@ replacement
+                status                      - Expected response status code (exits with error if mismatch)
+                text                        - Expected text in response body (exits with error if missing)
+                method                      - HTTP method (GET, POST, PUT, DELETE, etc.)
+                body                        - Request body string
+                verbose                     - Enable verbose output (boolean)
+                raw                         - Preserve whitespace in body (boolean)
+                followRedirects             - Follow HTTP redirects (boolean)
+                output                      - File path to save response
+                omitDefaultContentTypeHeader - Skip default Content-Type header (boolean)
+                js                          - Treat body as JS object literal (boolean)
+                dry                         - Print request without sending (boolean)
+
+              Response object properties:
+                status                      - HTTP status code (number)
+                statusText                  - HTTP status text (string)
+                headers                     - Response headers (Headers object, use .entries() to iterate)
+                body                        - Response body (parsed JSON object or string)
+                elapsed                     - Request duration in milliseconds (number)
+
   config      Manage jsonr configuration.
               Usage: jsonr config [--init]
 
