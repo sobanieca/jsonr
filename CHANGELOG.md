@@ -1,3 +1,11 @@
+# 4.3.2
+
+- Fixed secret variable substitution (`@@var@@`) in headers defined in config
+  defaults or environments
+- Improved error message for missing input variables to suggest using `-e` flag
+- Added `jsonr()` API documentation to help text (request options and response
+  properties)
+
 # 4.3.1
 
 - Updated readme
