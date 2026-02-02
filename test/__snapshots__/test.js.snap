@@ -236,6 +236,8 @@ snapshot[`Given API 13`] = `
 " +
     "traceId: api1
 " +
+    "x-tenant: *****
+" +
     "
 " +
     "Response:
@@ -461,6 +463,56 @@ snapshot[`Given API 22`] = `
     "                          responses programmatically. When you provide an optional URL or .http file path,
 " +
     "                          the generated script will include it as a starting example.
+" +
+    "
+" +
+    "              API: const response = await jsonr(urlOrHttpFile, options)
+" +
+    "
+" +
+    "              Request options (all optional):
+" +
+    "                headers                     - Object with header key-value pairs
+" +
+    "                environment                 - Environment name from jsonr-config.json
+" +
+    "                inputVariables              - Object with variables for @@variable@@ replacement
+" +
+    "                status                      - Expected response status code (exits with error if mismatch)
+" +
+    "                text                        - Expected text in response body (exits with error if missing)
+" +
+    "                method                      - HTTP method (GET, POST, PUT, DELETE, etc.)
+" +
+    "                body                        - Request body string
+" +
+    "                verbose                     - Enable verbose output (boolean)
+" +
+    "                raw                         - Preserve whitespace in body (boolean)
+" +
+    "                followRedirects             - Follow HTTP redirects (boolean)
+" +
+    "                output                      - File path to save response
+" +
+    "                omitDefaultContentTypeHeader - Skip default Content-Type header (boolean)
+" +
+    "                js                          - Treat body as JS object literal (boolean)
+" +
+    "                dry                         - Print request without sending (boolean)
+" +
+    "
+" +
+    "              Response object properties:
+" +
+    "                status                      - HTTP status code (number)
+" +
+    "                statusText                  - HTTP status text (string)
+" +
+    "                headers                     - Response headers (Headers object, use .entries() to iterate)
+" +
+    "                body                        - Response body (parsed JSON object or string)
+" +
+    "                elapsed                     - Request duration in milliseconds (number)
 " +
     "
 " +
@@ -1152,7 +1204,7 @@ snapshot[`Given API 24`] = `
 " +
     "  ignoreInputValidation: false,
 " +
-    '  headers: { traceId: "api1" }
+    '  headers: { traceId: "api1", "x-tenant": "@@tenant@@" }
 ' +
     "}
 ",
@@ -1164,7 +1216,7 @@ snapshot[`Given API 25`] = `
 {
   code: 1,
   jsonrCommand: "jsonr get-missing-vars.http",
-  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl, query. Provide them via -i flag or jsonr-config.json
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl, query. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
 ",
   outputError: "",
 }
@@ -1174,7 +1226,7 @@ snapshot[`Given API 26`] = `
 {
   code: 1,
   jsonrCommand: "jsonr get-missing-vars.http -i 'query: test'",
-  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl. Provide them via -i flag or jsonr-config.json
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
 ",
   outputError: "",
 }
@@ -1276,6 +1328,8 @@ snapshot[`Given API 31`] = `
 " +
     "traceId: api1
 " +
+    "x-tenant: *****
+" +
     "
 " +
     "Response:
@@ -1341,6 +1395,66 @@ snapshot[`Given API 33`] = `
     'Response: { id: "sample-post" }
 ' +
     "Status: 200
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 34`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script-with-object-body.js",
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "test-object", count: 42 }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-put", name: "test-object", count: 42 }
+' +
+    "Status: 200
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 35`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test -v get-auth.http",
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "Authorization: *****
+" +
+    "traceId: api1
+" +
+    "x-tenant: *****
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
 ",
   outputError: "",
 }

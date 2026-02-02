@@ -9,7 +9,8 @@
   },
   "defaults": {
     "headers": {
-      "traceId": "api1"
+      "traceId": "api1",
+      "x-tenant": "@@tenant@@"
     }
   }
 }

@@ -31,7 +31,7 @@ const parseHttpFile = async (
         logger.error(
           `ERROR: Missing required input variable(s): ${
             missingVariableNames.join(", ")
-          }. Provide them via -i flag or jsonr-config.json`,
+          }. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?`,
         );
         Deno.exit(1);
       }
@@ -232,8 +232,15 @@ export const sendRequest = async (args) => {
   }
 
   if (args.body) {
-    logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.body}`);
-    request.body = args.body;
+    if (typeof args.body === "object") {
+      request.body = JSON.stringify(args.body);
+      logger.debug(
+        `Parameter [b]ody provided - HTTP body set to ${request.body} (stringified from object)`,
+      );
+    } else {
+      logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.body}`);
+      request.body = args.body;
+    }
   }
 
   if (args.js && request.body) {
@@ -252,8 +259,15 @@ export const sendRequest = async (args) => {
 
   if (args.headers && typeof args.headers === "object") {
     for (const [key, value] of Object.entries(args.headers)) {
-      logger.debug(`Adding ${key}: ${value} header to request`);
-      request.headers.push({ key, value });
+      let substitutedValue = value;
+      for (const [varKey, varValue] of variables) {
+        substitutedValue = substitutedValue.replaceAll(
+          `@@${varKey}@@`,
+          varValue,
+        );
+      }
+      logger.debug(`Adding ${key}: ${substitutedValue} header to request`);
+      request.headers.push({ key, value: substitutedValue });
     }
   }
 
