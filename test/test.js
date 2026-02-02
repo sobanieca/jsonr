@@ -61,6 +61,10 @@ Deno.test("Given API", async (t) => {
     "test/requests/api1",
   );
   await test("jsonr jsonr-script.js -e test", "test/requests/api1");
+  await test(
+    "jsonr run jsonr-script-with-object-body.js",
+    "test/requests/api1",
+  );
 
   apiProcess.kill();
   await apiProcess.output();

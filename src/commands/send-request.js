@@ -232,8 +232,15 @@ export const sendRequest = async (args) => {
   }
 
   if (args.body) {
-    logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.body}`);
-    request.body = args.body;
+    if (typeof args.body === "object") {
+      request.body = JSON.stringify(args.body);
+      logger.debug(
+        `Parameter [b]ody provided - HTTP body set to ${request.body} (stringified from object)`,
+      );
+    } else {
+      logger.debug(`Parameter [b]ody provided - HTTP body set to ${args.body}`);
+      request.body = args.body;
+    }
   }
 
   if (args.js && request.body) {

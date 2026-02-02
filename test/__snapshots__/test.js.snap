@@ -1345,3 +1345,25 @@ snapshot[`Given API 33`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 34`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script-with-object-body.js",
+  output: "PUT http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-put", name: "test-object", count: 42 }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "sample-put", name: "test-object", count: 42 }
+' +
+    "Status: 200
+",
+  outputError: "",
+}
+`;
