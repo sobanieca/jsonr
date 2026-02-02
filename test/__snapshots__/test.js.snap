@@ -236,6 +236,8 @@ snapshot[`Given API 13`] = `
 " +
     "traceId: api1
 " +
+    "x-tenant: *****
+" +
     "
 " +
     "Response:
@@ -1152,7 +1154,7 @@ snapshot[`Given API 24`] = `
 " +
     "  ignoreInputValidation: false,
 " +
-    '  headers: { traceId: "api1" }
+    '  headers: { traceId: "api1", "x-tenant": "@@tenant@@" }
 ' +
     "}
 ",
@@ -1276,6 +1278,8 @@ snapshot[`Given API 31`] = `
 " +
     "traceId: api1
 " +
+    "x-tenant: *****
+" +
     "
 " +
     "Response:
@@ -1363,6 +1367,44 @@ snapshot[`Given API 34`] = `
     'Response: { id: "sample-put", name: "test-object", count: 42 }
 ' +
     "Status: 200
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 35`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test -v get-auth.http",
+  output: "GET http://localhost:3000/auth-required...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "Authorization: *****
+" +
+    "traceId: api1
+" +
+    "x-tenant: *****
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
 ",
   outputError: "",
 }

@@ -259,8 +259,15 @@ export const sendRequest = async (args) => {
 
   if (args.headers && typeof args.headers === "object") {
     for (const [key, value] of Object.entries(args.headers)) {
-      logger.debug(`Adding ${key}: ${value} header to request`);
-      request.headers.push({ key, value });
+      let substitutedValue = value;
+      for (const [varKey, varValue] of variables) {
+        substitutedValue = substitutedValue.replaceAll(
+          `@@${varKey}@@`,
+          varValue,
+        );
+      }
+      logger.debug(`Adding ${key}: ${substitutedValue} header to request`);
+      request.headers.push({ key, value: substitutedValue });
     }
   }
 
