@@ -1462,9 +1462,21 @@ snapshot[`Given API 35`] = `
 
 snapshot[`Given API 36`] = `
 {
-  code: 1,
+  code: 0,
   jsonrCommand: "jsonr run jsonr-script-merge-input-vars.js -e test",
-  output: "ERROR: Missing required input variable(s): baseUrl. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
+  output: "GET http://localhost:3000/users/42...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "42" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "42" }
+' +
+    "Status: 200
 ",
   outputError: "",
 }
@@ -1479,6 +1491,10 @@ snapshot[`Given API 37`] = `
     "Request:
 " +
     "Content-Type: application/json
+" +
+    "traceId: api1
+" +
+    "x-tenant: *****
 " +
     "x-custom: script-value
 " +
@@ -1506,9 +1522,13 @@ snapshot[`Given API 37`] = `
 ' +
     '  host: "localhost:3000",
 ' +
+    '  traceid: "api1",
+' +
     '  "user-agent": "Deno/2.6.4",
 ' +
-    '  "x-custom": "script-value"
+    '  "x-custom": "script-value",
+' +
+    '  "x-tenant": "*****"
 ' +
     "}
 " +
@@ -1526,9 +1546,13 @@ snapshot[`Given API 37`] = `
 ' +
     '  host: "localhost:3000",
 ' +
+    '  traceid: "api1",
+' +
     '  "user-agent": "Deno/2.6.4",
 ' +
-    '  "x-custom": "script-value"
+    '  "x-custom": "script-value",
+' +
+    '  "x-tenant": "secret-tenant-value"
 ' +
     "}
 " +
