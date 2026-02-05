@@ -3,6 +3,7 @@
 - Fixed `inputVariables` and `headers` merging in `jsonr run` scripts - now
   script-provided values are merged with environment config instead of replacing
   them
+- Fixed `headers` merging between defaults and environment config
 
 # 4.3.2
 

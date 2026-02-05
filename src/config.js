@@ -314,6 +314,12 @@ export const loadAndApplyConfig = async (args) => {
           ...envConfig.inputVariables,
         };
       }
+      if (defaultConfig.headers || envConfig.headers) {
+        mergedConfig.headers = {
+          ...defaultConfig.headers,
+          ...envConfig.headers,
+        };
+      }
       logger.debug("Final merged config (defaults + environment):");
       logger.debug(mergedConfig);
 

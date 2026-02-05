@@ -238,6 +238,8 @@ snapshot[`Given API 13`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "
 " +
     "Response:
@@ -1330,6 +1332,8 @@ snapshot[`Given API 31`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "
 " +
     "Response:
@@ -1438,6 +1442,8 @@ snapshot[`Given API 35`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "
 " +
     "Response:
@@ -1496,6 +1502,8 @@ snapshot[`Given API 37`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "x-custom: script-value
 " +
     "
@@ -1528,6 +1536,8 @@ snapshot[`Given API 37`] = `
 ' +
     '  "x-custom": "script-value",
 ' +
+    '  "x-env-header": "from-environment",
+' +
     '  "x-tenant": "*****"
 ' +
     "}
@@ -1551,6 +1561,8 @@ snapshot[`Given API 37`] = `
     '  "user-agent": "Deno/2.6.4",
 ' +
     '  "x-custom": "script-value",
+' +
+    '  "x-env-header": "from-environment",
 ' +
     '  "x-tenant": "secret-tenant-value"
 ' +

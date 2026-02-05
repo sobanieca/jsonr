@@ -4,6 +4,9 @@
       "inputVariables": {
         "baseUrl": "http://localhost:3000"
       },
+      "headers": {
+        "x-env-header": "from-environment"
+      },
       "secrets": "environments/test-secrets.json"
     }
   },
