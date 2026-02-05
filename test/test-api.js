@@ -43,8 +43,17 @@ app.get("/users/:id", (c) => {
 
 app.get("/echo-headers", (c) => {
   const headers = {};
+  const excludeHeaders = [
+    "accept",
+    "accept-encoding",
+    "accept-language",
+    "host",
+    "user-agent",
+  ];
   for (const [key, value] of c.req.raw.headers.entries()) {
-    headers[key] = value;
+    if (!excludeHeaders.includes(key)) {
+      headers[key] = value;
+    }
   }
   return c.json(headers);
 });

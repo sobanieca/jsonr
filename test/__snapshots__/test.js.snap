@@ -1520,19 +1520,9 @@ snapshot[`Given API 37`] = `
 " +
     "{
 " +
-    '  accept: "*/*",
-' +
-    '  "accept-encoding": "gzip,br",
-' +
-    '  "accept-language": "*",
-' +
     '  "content-type": "application/json",
 ' +
-    '  host: "localhost:3000",
-' +
     '  traceid: "api1",
-' +
-    '  "user-agent": "Deno/2.6.4",
 ' +
     '  "x-custom": "script-value",
 ' +
@@ -1546,19 +1536,9 @@ snapshot[`Given API 37`] = `
 " +
     "Response: {
 " +
-    '  accept: "*/*",
-' +
-    '  "accept-encoding": "gzip,br",
-' +
-    '  "accept-language": "*",
-' +
     '  "content-type": "application/json",
 ' +
-    '  host: "localhost:3000",
-' +
     '  traceid: "api1",
-' +
-    '  "user-agent": "Deno/2.6.4",
 ' +
     '  "x-custom": "script-value",
 ' +
