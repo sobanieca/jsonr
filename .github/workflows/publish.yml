@@ -31,7 +31,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - run: npx jsr publish
+      - run: npx jsr publish --no-check
 
   release:
     needs: check
