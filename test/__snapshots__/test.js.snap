@@ -1459,3 +1459,81 @@ snapshot[`Given API 35`] = `
   outputError: "",
 }
 `;
+
+snapshot[`Given API 36`] = `
+{
+  code: 1,
+  jsonrCommand: "jsonr run jsonr-script-merge-input-vars.js -e test",
+  output: "ERROR: Missing required input variable(s): baseUrl. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 37`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script-merge-headers.js -e test -v",
+  output: "GET http://localhost:3000/echo-headers...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "x-custom: script-value
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    "{
+" +
+    '  accept: "*/*",
+' +
+    '  "accept-encoding": "gzip,br",
+' +
+    '  "accept-language": "*",
+' +
+    '  "content-type": "application/json",
+' +
+    '  host: "localhost:3000",
+' +
+    '  "user-agent": "Deno/2.6.4",
+' +
+    '  "x-custom": "script-value"
+' +
+    "}
+" +
+    "200 - OK obtained in *ms
+" +
+    "Response: {
+" +
+    '  accept: "*/*",
+' +
+    '  "accept-encoding": "gzip,br",
+' +
+    '  "accept-language": "*",
+' +
+    '  "content-type": "application/json",
+' +
+    '  host: "localhost:3000",
+' +
+    '  "user-agent": "Deno/2.6.4",
+' +
+    '  "x-custom": "script-value"
+' +
+    "}
+" +
+    "Status: 200
+",
+  outputError: "",
+}
+`;

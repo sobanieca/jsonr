@@ -69,6 +69,14 @@ Deno.test("Given API", async (t) => {
     "jsonr -e test -v get-auth.http",
     "test/requests/api1",
   );
+  await test(
+    "jsonr run jsonr-script-merge-input-vars.js -e test",
+    "test/requests/api1",
+  );
+  await test(
+    "jsonr run jsonr-script-merge-headers.js -e test -v",
+    "test/requests/api1",
+  );
 
   apiProcess.kill();
   await apiProcess.output();

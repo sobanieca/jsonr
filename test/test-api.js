@@ -37,6 +37,18 @@ app.get("/redirect-target", (c) => {
   return c.json({ msg: "redirect-target" });
 });
 
+app.get("/users/:id", (c) => {
+  return c.json({ id: c.req.param("id") });
+});
+
+app.get("/echo-headers", (c) => {
+  const headers = {};
+  for (const [key, value] of c.req.raw.headers.entries()) {
+    headers[key] = value;
+  }
+  return c.json(headers);
+});
+
 app.get("/auth-required", (c) => {
   if (c.req.header("Authorization") == "123") {
     return c.json({ id: "sample-post" });
