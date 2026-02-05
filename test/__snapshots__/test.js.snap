@@ -238,6 +238,8 @@ snapshot[`Given API 13`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "
 " +
     "Response:
@@ -1330,6 +1332,8 @@ snapshot[`Given API 31`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "
 " +
     "Response:
@@ -1438,6 +1442,8 @@ snapshot[`Given API 35`] = `
 " +
     "x-tenant: *****
 " +
+    "x-env-header: from-environment
+" +
     "
 " +
     "Response:
@@ -1455,6 +1461,94 @@ snapshot[`Given API 35`] = `
     '{ id: "sample-post" }
 ' +
     "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 36`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script-merge-input-vars.js -e test",
+  output: "GET http://localhost:3000/users/42...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "42" }
+' +
+    "200 - OK obtained in *ms
+" +
+    'Response: { id: "42" }
+' +
+    "Status: 200
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 37`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr run jsonr-script-merge-headers.js -e test -v",
+  output: "GET http://localhost:3000/echo-headers...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "traceId: api1
+" +
+    "x-tenant: *****
+" +
+    "x-env-header: from-environment
+" +
+    "x-custom: script-value
+" +
+    "
+" +
+    "Response:
+" +
+    "
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    "vary: Accept-Encoding
+" +
+    "{
+" +
+    '  "content-type": "application/json",
+' +
+    '  traceid: "api1",
+' +
+    '  "x-custom": "script-value",
+' +
+    '  "x-env-header": "from-environment",
+' +
+    '  "x-tenant": "*****"
+' +
+    "}
+" +
+    "200 - OK obtained in *ms
+" +
+    "Response: {
+" +
+    '  "content-type": "application/json",
+' +
+    '  traceid: "api1",
+' +
+    '  "x-custom": "script-value",
+' +
+    '  "x-env-header": "from-environment",
+' +
+    '  "x-tenant": "secret-tenant-value"
+' +
+    "}
+" +
+    "Status: 200
 ",
   outputError: "",
 }

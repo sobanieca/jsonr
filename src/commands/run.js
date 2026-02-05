@@ -87,7 +87,17 @@ const executeScript = async (args) => {
 
     // @ts-ignore: Expose jsonr wrapper to the script
     globalThis.jsonr = (urlOrFile, options = {}) => {
-      const promise = sendRequest({ ...args, _: [urlOrFile], ...options });
+      const mergedArgs = { ...args, _: [urlOrFile], ...options };
+      if (args.inputVariables || options.inputVariables) {
+        mergedArgs.inputVariables = {
+          ...args.inputVariables,
+          ...options.inputVariables,
+        };
+      }
+      if (args.headers || options.headers) {
+        mergedArgs.headers = { ...args.headers, ...options.headers };
+      }
+      const promise = sendRequest(mergedArgs);
       pendingPromises.push(promise);
       return promise;
     };
