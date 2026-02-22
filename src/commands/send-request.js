@@ -82,7 +82,7 @@ const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
 const convertJsObjectToJson = (jsCode) => {
   let result = jsCode.trim();
 
-  const isInsideString = (str, index) => {
+  const getStringContext = (str, index) => {
     let inString = false;
     let stringChar = null;
     let escaped = false;
@@ -105,12 +105,13 @@ const convertJsObjectToJson = (jsCode) => {
       }
     }
 
-    return inString;
+    return { inString, stringChar };
   };
 
   result = result.split("").map((char, index) => {
-    if (isInsideString(result, index)) {
-      if (char === "'") {
+    if (char === "'") {
+      const ctx = getStringContext(result, index);
+      if (!ctx.inString || ctx.stringChar === "'") {
         return '"';
       }
     }
@@ -123,7 +124,7 @@ const convertJsObjectToJson = (jsCode) => {
     /([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)(\s*:)/g,
     (match, prefix, key, suffix) => {
       const position = result.indexOf(match);
-      if (!isInsideString(result, position)) {
+      if (!getStringContext(result, position).inString) {
         return `${prefix}"${key}"${suffix}`;
       }
       return match;

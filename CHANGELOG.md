@@ -1,3 +1,8 @@
+# 4.3.4
+
+- Fixed `--js` flag not converting single-quoted string values in body to valid
+  JSON (e.g. `{ name: 'test' }`)
+
 # 4.3.3
 
 - Fixed `inputVariables` and `headers` merging in `jsonr run` scripts - now

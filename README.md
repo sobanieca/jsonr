@@ -152,6 +152,13 @@ jsonr run jsonr-script.js
 The `jsonr` function is automatically available in scripts run with
 `jsonr run` - no import needed!
 
+## Note on .http File Format
+
+There is no formal specification for `.http` files that defines how variables or
+comments should be handled. Because of that, `jsonr` uses its own conventions:
+`@@variableName@@` for variable substitution and `#` (or `//`) for comments.
+This may change in the future if a widely adopted specification emerges.
+
 ## Learn More
 
 For complete documentation of all available options and detailed usage

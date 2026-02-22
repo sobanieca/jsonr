@@ -31,6 +31,9 @@ Deno.test("Given API", async (t) => {
   await test(
     "jsonr --js -m POST -b '{ name: \"test\", count: 8 }' localhost:3000/sample",
   );
+  await test(
+    "jsonr --js -m PUT -b \"{ name: 'test' }\" localhost:3000/sample",
+  );
   await test("jsonr -e test get.http --dry", "test/requests/api2");
   await test("jsonr nonexistent.http");
   await test("jsonr help");
