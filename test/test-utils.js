@@ -28,6 +28,7 @@ export const run = async (cmd, cwd) => {
 
   output = removeVaryingOutput(removeAnsi(output));
   outputError = removeAnsi(outputError);
+  outputError = outputError.replace(/Download https?:\/\/[^\n]*\n?/g, "");
 
   return {
     code,

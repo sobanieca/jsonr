@@ -81,6 +81,8 @@ Deno.test("Given API", async (t) => {
     "test/requests/api1",
   );
 
+  await test("cat get.http | jsonr -e test", "test/requests/api2");
+
   apiProcess.kill();
   await apiProcess.output();
 });
