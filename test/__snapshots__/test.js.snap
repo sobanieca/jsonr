@@ -454,6 +454,8 @@ snapshot[`Given API 23`] = `
 " +
     "  jsonr [command] [options]
 " +
+    "  cat request.http | jsonr [options]
+" +
     "
 " +
     "Commands:
@@ -840,6 +842,18 @@ snapshot[`Given API 23`] = `
 " +
     "  Http files can include comments. In order to provide comment start a new line with '#' or '//'.
 " +
+    "
+" +
+    "  You can also pipe .http file content via stdin instead of providing a file path:
+" +
+    "
+" +
+    "  cat ./sample.http | jsonr
+" +
+    "  cat ./sample.http | jsonr -e prod -s 200
+" +
+    '  echo "GET http://myapi.com/values" | jsonr
+' +
     "
 " +
     "-i, --input-variable
@@ -1567,6 +1581,24 @@ snapshot[`Given API 38`] = `
     "}
 " +
     "Status: 200
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 39`] = `
+{
+  code: 0,
+  jsonrCommand: "cat get.http | jsonr -e test",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
 ",
   outputError: "",
 }

@@ -1,3 +1,8 @@
+# 4.4.0
+
+- Added stdin pipe support - you can now pipe .http file content directly to
+  jsonr (e.g. `cat request.http | jsonr -e prod`)
+
 # 4.3.4
 
 - Fixed `--js` flag not converting single-quoted string values in body to valid

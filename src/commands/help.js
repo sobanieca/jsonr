@@ -5,6 +5,7 @@ Usage:
 
   jsonr [url or .http file] [options]
   jsonr [command] [options]
+  cat request.http | jsonr [options]
 
 Commands:
 
@@ -198,6 +199,12 @@ path to .http file name or url
   If, for any reason, you don't want to create http file you can provide valid url value and use other parameters to provide more details for the request.
   If you use http file, keep in mind that you can still use parameters to override some of the requests properties defined in http file.
   Http files can include comments. In order to provide comment start a new line with '#' or '//'.
+
+  You can also pipe .http file content via stdin instead of providing a file path:
+
+  cat ./sample.http | jsonr
+  cat ./sample.http | jsonr -e prod -s 200
+  echo "GET http://myapi.com/values" | jsonr
 
 -i, --input-variable
 

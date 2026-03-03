@@ -6,6 +6,67 @@ const getHeaderValues = (header) => {
   return { key: headerKey?.trim(), value: headerValue?.trim() };
 };
 
+const parseHttpContent = (
+  content,
+  variables,
+  rawMode,
+  ignoreInputValidation,
+) => {
+  let fileContent = content;
+  for (const [key, value] of variables) {
+    logger.debug(`Replacing @@${key}@@ with ${value}`);
+    fileContent = fileContent.replaceAll(`@@${key}@@`, value);
+  }
+
+  if (!ignoreInputValidation) {
+    const unreplacedVariables = [...fileContent.matchAll(/@@([^@]+)@@/g)];
+    if (unreplacedVariables.length > 0) {
+      const missingVariableNames = [
+        ...new Set(unreplacedVariables.map((match) => match[1])),
+      ];
+      logger.error(
+        `ERROR: Missing required input variable(s): ${
+          missingVariableNames.join(", ")
+        }. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?`,
+      );
+      Deno.exit(1);
+    }
+  }
+
+  fileContent = removeComments(fileContent);
+  let [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
+
+  const request = {};
+
+  const [mainLine, ...headers] = mainPart.split(/\r?\n/);
+
+  const [method, url] = mainLine.split(" ").map((x) => x.trim());
+
+  logger.debug(`Read following method: ${method} and url: ${url}`);
+  request.method = method;
+  request.url = url;
+  request.headers = [];
+
+  if (headers && headers.length > 0) {
+    for (const header of headers) {
+      if (header) {
+        const headerValues = getHeaderValues(header);
+        request.headers.push(headerValues);
+      }
+    }
+  }
+
+  if (bodyPart) {
+    logger.debug(`Read following request body: ${bodyPart}`);
+    if (!rawMode) {
+      bodyPart = bodyPart.replace(/\r?\n|\t/g, "");
+    }
+    request.body = bodyPart;
+  }
+
+  return request;
+};
+
 const parseHttpFile = async (
   filePath,
   variables,
@@ -14,67 +75,26 @@ const parseHttpFile = async (
 ) => {
   logger.debug(`Attempting to read request data from file: ${filePath}`);
   try {
-    let fileContent = await Deno.readTextFile(filePath);
-    for (const [key, value] of variables) {
-      logger.debug(
-        `Replacing @@${key}@@ with ${value} for content of ${filePath}`,
-      );
-      fileContent = fileContent.replaceAll(`@@${key}@@`, value);
-    }
-
-    if (!ignoreInputValidation) {
-      const unreplacedVariables = [...fileContent.matchAll(/@@([^@]+)@@/g)];
-      if (unreplacedVariables.length > 0) {
-        const missingVariableNames = [
-          ...new Set(unreplacedVariables.map((match) => match[1])),
-        ];
-        logger.error(
-          `ERROR: Missing required input variable(s): ${
-            missingVariableNames.join(", ")
-          }. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?`,
-        );
-        Deno.exit(1);
-      }
-    }
-
-    fileContent = removeComments(fileContent);
-    let [mainPart, bodyPart] = fileContent.split(/\r?\n\r?\n/);
-
-    const request = {};
-
-    const [mainLine, ...headers] = mainPart.split(/\r?\n/);
-
-    const [method, url] = mainLine.split(" ").map((x) => x.trim());
-
-    logger.debug(`Read following method: ${method} and url: ${url}`);
-    request.method = method;
-    request.url = url;
-    request.headers = [];
-
-    if (headers && headers.length > 0) {
-      for (const header of headers) {
-        if (header) {
-          const headerValues = getHeaderValues(header);
-          request.headers.push(headerValues);
-        }
-      }
-    }
-
-    if (bodyPart) {
-      logger.debug(`Read following request body: ${bodyPart}`);
-      if (!rawMode) {
-        bodyPart = bodyPart.replace(/\r?\n|\t/g, "");
-      }
-      request.body = bodyPart;
-    }
-
-    return request;
+    const fileContent = await Deno.readTextFile(filePath);
+    return parseHttpContent(
+      fileContent,
+      variables,
+      rawMode,
+      ignoreInputValidation,
+    );
   } catch (err) {
     logger.debug(`Error when parsing file: ${err}`);
     throw new Error(
       "Unexpected error occurred when trying to parse http file. Ensure that the file is compatible with RFC2616 standard",
     );
   }
+};
+
+const readStdin = async () => {
+  if (Deno.stdin.isTerminal()) return null;
+  const bytes = await new Response(Deno.stdin.readable).arrayBuffer();
+  const text = new TextDecoder().decode(bytes);
+  return text.trim() ? text : null;
 };
 
 const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
@@ -169,60 +189,88 @@ export const sendRequest = async (args) => {
     request.headers = [];
   }
 
-  if (args["_"].length != 1) {
-    throw new Error(
-      "Invalid parameters provided. Provide exactly one url or .http file path.",
-    );
-  }
-
-  let urlOrFilePath = args["_"][0];
-  const looksLikeFile = urlOrFilePath.endsWith(".http");
-
   const variables = getVariables(args);
-  for (const [key, value] of variables) {
-    urlOrFilePath = urlOrFilePath.replaceAll(`@@${key}@@`, value);
-  }
 
-  if (
-    urlOrFilePath.startsWith("http://") || urlOrFilePath.startsWith("https://")
-  ) {
-    logger.debug(
-      "http(s):// at the beginning of the file/url parameter detected. Assuming url.",
-    );
-    request.url = urlOrFilePath;
-  } else {
-    try {
-      await Deno.lstat(urlOrFilePath);
-      logger.debug(`File ${urlOrFilePath} found. Parsing http file content.`);
-      const fileRequest = await parseHttpFile(
-        urlOrFilePath,
-        variables,
-        args.raw,
-        args.ignoreInputValidation,
+  if (args["_"].length === 0) {
+    const stdinContent = await readStdin();
+    if (!stdinContent) {
+      throw new Error(
+        "Invalid parameters provided. Provide exactly one url or .http file path, or pipe .http content via stdin.",
       );
-      request.method = fileRequest.method;
-      request.url = fileRequest.url;
-      request.body = fileRequest.body;
-      if (fileRequest.headers.some((x) => x.key == "Content-Type")) {
-        request.headers = fileRequest.headers;
-      } else {
-        request.headers = [...request.headers, ...fileRequest.headers];
-      }
-    } catch (err) {
-      if (looksLikeFile && err instanceof Deno.errors.NotFound) {
-        logger.error(`ERROR: File not found: ${urlOrFilePath}`);
-        Deno.exit(1);
-      }
+    }
+    logger.debug(
+      "No positional arguments provided. Reading request from stdin.",
+    );
+    const stdinRequest = parseHttpContent(
+      stdinContent,
+      variables,
+      args.raw,
+      args.ignoreInputValidation,
+    );
+    request.method = stdinRequest.method;
+    request.url = stdinRequest.url;
+    request.body = stdinRequest.body;
+    if (stdinRequest.headers.some((x) => x.key == "Content-Type")) {
+      request.headers = stdinRequest.headers;
+    } else {
+      request.headers = [...request.headers, ...stdinRequest.headers];
+    }
+  } else if (args["_"].length === 1) {
+    let urlOrFilePath = args["_"][0];
+    const looksLikeFile = urlOrFilePath.endsWith(".http");
 
-      if (looksLikeFile) {
-        throw err;
-      }
+    for (const [key, value] of variables) {
+      urlOrFilePath = urlOrFilePath.replaceAll(`@@${key}@@`, value);
+    }
 
+    if (
+      urlOrFilePath.startsWith("http://") ||
+      urlOrFilePath.startsWith("https://")
+    ) {
       logger.debug(
-        `Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`,
+        "http(s):// at the beginning of the file/url parameter detected. Assuming url.",
       );
       request.url = urlOrFilePath;
+    } else {
+      try {
+        await Deno.lstat(urlOrFilePath);
+        logger.debug(
+          `File ${urlOrFilePath} found. Parsing http file content.`,
+        );
+        const fileRequest = await parseHttpFile(
+          urlOrFilePath,
+          variables,
+          args.raw,
+          args.ignoreInputValidation,
+        );
+        request.method = fileRequest.method;
+        request.url = fileRequest.url;
+        request.body = fileRequest.body;
+        if (fileRequest.headers.some((x) => x.key == "Content-Type")) {
+          request.headers = fileRequest.headers;
+        } else {
+          request.headers = [...request.headers, ...fileRequest.headers];
+        }
+      } catch (err) {
+        if (looksLikeFile && err instanceof Deno.errors.NotFound) {
+          logger.error(`ERROR: File not found: ${urlOrFilePath}`);
+          Deno.exit(1);
+        }
+
+        if (looksLikeFile) {
+          throw err;
+        }
+
+        logger.debug(
+          `Failed to lstat file/url parameter - ${urlOrFilePath}. Assuming url. Error: ${err}`,
+        );
+        request.url = urlOrFilePath;
+      }
     }
+  } else {
+    throw new Error(
+      "Invalid parameters provided. Provide exactly one url or .http file path, or pipe .http content via stdin.",
+    );
   }
 
   if (args.method) {
