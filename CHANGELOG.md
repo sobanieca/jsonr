@@ -1,3 +1,8 @@
+# 4.5.0
+
+- Added support for handlebars-style variable syntax (`{{variable}}` and
+  `{{ variable }}`) alongside existing `@@variable@@` syntax
+
 # 4.4.0
 
 - Added stdin pipe support - you can now pipe .http file content directly to

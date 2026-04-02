@@ -498,7 +498,7 @@ snapshot[`Given API 23`] = `
 " +
     "                environment                 - Environment name from jsonr-config.json
 " +
-    "                inputVariables              - Object with variables for @@variable@@ replacement
+    "                inputVariables              - Object with variables for @@variable@@ / {{variable}} replacement
 " +
     "                status                      - Expected response status code (exits with error if mismatch)
 " +
@@ -664,13 +664,23 @@ snapshot[`Given API 23`] = `
 " +
     "
 " +
-    "Example .http file:
+    "Example .http file (using @@variable@@ syntax):
 " +
     "
 " +
     "GET @@apiUrl@@/users
 " +
     "Authorization: Bearer @@apiKey@@
+" +
+    "
+" +
+    "Example .http file (using {{variable}} syntax):
+" +
+    "
+" +
+    "GET {{apiUrl}}/users
+" +
+    "Authorization: Bearer {{ apiKey }}
 " +
     "
 " +
@@ -704,7 +714,7 @@ snapshot[`Given API 23`] = `
 " +
     '- Reference the secrets file path in your config with the "secrets" property
 ' +
-    "- Variables from secrets are merged with inputVariables and can be used with @@variable@@ syntax
+    "- Variables from secrets are merged with inputVariables and can be used with @@variable@@ or {{variable}} syntax
 " +
     "
 " +
@@ -718,7 +728,7 @@ snapshot[`Given API 23`] = `
 " +
     "
 " +
-    "  inputVariables        Input variables for @@variable@@ replacement
+    "  inputVariables        Input variables for @@variable@@ / {{variable}} replacement
 " +
     "  secrets               Path to secrets file (merged with inputVariables)
 " +
@@ -864,7 +874,7 @@ snapshot[`Given API 23`] = `
 " +
     "
 " +
-    "  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file.
+    "  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ or {{variable-name}} inside .http file.
 " +
     "  This will allow to either provide it's value via -i flag, or via environment file option (read further)
 " +
@@ -883,6 +893,24 @@ snapshot[`Given API 23`] = `
     "  {
 " +
     '    "username": "@@variable@@"
+' +
+    "  }
+" +
+    "
+" +
+    "  Or using handlebars syntax (spaces inside braces are optional):
+" +
+    "
+" +
+    "  POST http://my-api.com
+" +
+    "  Authorization: Bearer 123
+" +
+    "
+" +
+    "  {
+" +
+    '    "username": "{{ variable }}"
 ' +
     "  }
 " +
@@ -1050,7 +1078,7 @@ snapshot[`Given API 23`] = `
 " +
     "
 " +
-    "  By default, jsonr validates that all @@variable@@ placeholders in .http files have corresponding values provided via -i flag or config files. When this flag is enabled, validation is skipped and unreplaced @@variable@@ placeholders will be sent as literal text in the request.
+    "  By default, jsonr validates that all @@variable@@ and {{variable}} placeholders in .http files have corresponding values provided via -i flag or config files. When this flag is enabled, validation is skipped and unreplaced placeholders will be sent as literal text in the request.
 " +
     "
 " +
@@ -1587,6 +1615,80 @@ snapshot[`Given API 38`] = `
 `;
 
 snapshot[`Given API 39`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test get-handlebars.http",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 40`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test get-handlebars-spaces.http",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 41`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test post-handlebars.http",
+  output: "POST http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-post" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 42`] = `
+{
+  code: 1,
+  jsonrCommand: "jsonr get-missing-vars-handlebars.http",
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl, query. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 43`] = `
+{
+  code: 1,
+  jsonrCommand: "jsonr get-missing-vars-handlebars.http -i 'query: test'",
+  output: "ERROR: Missing required input variable(s): nonExistingBaseUrl. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 44`] = `
 {
   code: 0,
   jsonrCommand: "cat get.http | jsonr -e test",

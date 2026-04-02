@@ -81,6 +81,27 @@ Deno.test("Given API", async (t) => {
     "test/requests/api1",
   );
 
+  await test(
+    "jsonr -e test get-handlebars.http",
+    "test/requests/api2",
+  );
+  await test(
+    "jsonr -e test get-handlebars-spaces.http",
+    "test/requests/api2",
+  );
+  await test(
+    "jsonr -e test post-handlebars.http",
+    "test/requests/api2",
+  );
+  await test(
+    "jsonr get-missing-vars-handlebars.http",
+    "test/requests/api2",
+  );
+  await test(
+    "jsonr get-missing-vars-handlebars.http -i 'query: test'",
+    "test/requests/api2",
+  );
+
   await test("cat get.http | jsonr -e test", "test/requests/api2");
 
   apiProcess.kill();

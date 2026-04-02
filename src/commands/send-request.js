@@ -6,24 +6,39 @@ const getHeaderValues = (header) => {
   return { key: headerKey?.trim(), value: headerValue?.trim() };
 };
 
+const replaceVariables = (text, variables) => {
+  let result = text;
+  for (const [key, value] of variables) {
+    logger.debug(`Replacing @@${key}@@ / {{${key}}} with ${value}`);
+    result = result.replaceAll(`@@${key}@@`, value);
+    result = result.replace(
+      new RegExp(
+        `\\{\\{\\s*${key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\}\\}`,
+        "g",
+      ),
+      value,
+    );
+  }
+  return result;
+};
+
+const findUnreplacedVariables = (text) => {
+  const atVars = [...text.matchAll(/@@([^@]+)@@/g)].map((m) => m[1]);
+  const hbVars = [...text.matchAll(/\{\{\s*([^}]+?)\s*\}\}/g)].map((m) => m[1]);
+  return [...new Set([...atVars, ...hbVars])];
+};
+
 const parseHttpContent = (
   content,
   variables,
   rawMode,
   ignoreInputValidation,
 ) => {
-  let fileContent = content;
-  for (const [key, value] of variables) {
-    logger.debug(`Replacing @@${key}@@ with ${value}`);
-    fileContent = fileContent.replaceAll(`@@${key}@@`, value);
-  }
+  let fileContent = replaceVariables(content, variables);
 
   if (!ignoreInputValidation) {
-    const unreplacedVariables = [...fileContent.matchAll(/@@([^@]+)@@/g)];
-    if (unreplacedVariables.length > 0) {
-      const missingVariableNames = [
-        ...new Set(unreplacedVariables.map((match) => match[1])),
-      ];
+    const missingVariableNames = findUnreplacedVariables(fileContent);
+    if (missingVariableNames.length > 0) {
       logger.error(
         `ERROR: Missing required input variable(s): ${
           missingVariableNames.join(", ")
@@ -219,9 +234,7 @@ export const sendRequest = async (args) => {
     let urlOrFilePath = args["_"][0];
     const looksLikeFile = urlOrFilePath.endsWith(".http");
 
-    for (const [key, value] of variables) {
-      urlOrFilePath = urlOrFilePath.replaceAll(`@@${key}@@`, value);
-    }
+    urlOrFilePath = replaceVariables(urlOrFilePath, variables);
 
     if (
       urlOrFilePath.startsWith("http://") ||
@@ -308,13 +321,7 @@ export const sendRequest = async (args) => {
 
   if (args.headers && typeof args.headers === "object") {
     for (const [key, value] of Object.entries(args.headers)) {
-      let substitutedValue = value;
-      for (const [varKey, varValue] of variables) {
-        substitutedValue = substitutedValue.replaceAll(
-          `@@${varKey}@@`,
-          varValue,
-        );
-      }
+      const substitutedValue = replaceVariables(value, variables);
       logger.debug(`Adding ${key}: ${substitutedValue} header to request`);
       request.headers.push({ key, value: substitutedValue });
     }

@@ -27,7 +27,7 @@ Commands:
               Request options (all optional):
                 headers                     - Object with header key-value pairs
                 environment                 - Environment name from jsonr-config.json
-                inputVariables              - Object with variables for @@variable@@ replacement
+                inputVariables              - Object with variables for @@variable@@ / {{variable}} replacement
                 status                      - Expected response status code (exits with error if mismatch)
                 text                        - Expected text in response body (exits with error if missing)
                 method                      - HTTP method (GET, POST, PUT, DELETE, etc.)
@@ -110,10 +110,15 @@ EXAMPLE jsonr-config.json:
   }
 }
 
-Example .http file:
+Example .http file (using @@variable@@ syntax):
 
 GET @@apiUrl@@/users
 Authorization: Bearer @@apiKey@@
+
+Example .http file (using {{variable}} syntax):
+
+GET {{apiUrl}}/users
+Authorization: Bearer {{ apiKey }}
 
 Example secrets file (~/.secret/prod-secrets.json):
 
@@ -130,14 +135,14 @@ Using environments:
 Secrets files:
 - Store sensitive variables (API keys, tokens) in a separate JSON file outside your repo
 - Reference the secrets file path in your config with the "secrets" property
-- Variables from secrets are merged with inputVariables and can be used with @@variable@@ syntax
+- Variables from secrets are merged with inputVariables and can be used with @@variable@@ or {{variable}} syntax
 
 Use 'jsonr config --init' to generate a complete sample configuration with all available options.
 Use 'jsonr config' to view your current merged configuration.
 
 Supported configuration keys (use camelCase for property names):
 
-  inputVariables        Input variables for @@variable@@ replacement
+  inputVariables        Input variables for @@variable@@ / {{variable}} replacement
   secrets               Path to secrets file (merged with inputVariables)
   headers               Default headers to include in all requests (object format)
                         Example: { "Authorization": "Bearer xyz", "X-Custom": "value" }
@@ -210,7 +215,7 @@ path to .http file name or url
 
   Provide value for input variables.
 
-  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ inside .http file.
+  Input variables allow you to specify variables for url, headers or request body parts. Simply put @@variable-name@@ or {{variable-name}} inside .http file.
   This will allow to either provide it's value via -i flag, or via environment file option (read further)
 
   EXAMPLE of sample.http file content with variables:
@@ -220,6 +225,15 @@ path to .http file name or url
 
   {
     "username": "@@variable@@"
+  }
+
+  Or using handlebars syntax (spaces inside braces are optional):
+
+  POST http://my-api.com
+  Authorization: Bearer 123
+
+  {
+    "username": "{{ variable }}"
   }
 
   Input variables work as a simple text replacement (case sensitive).
@@ -303,7 +317,7 @@ path to .http file name or url
 
   Skip validation for missing input variables.
 
-  By default, jsonr validates that all @@variable@@ placeholders in .http files have corresponding values provided via -i flag or config files. When this flag is enabled, validation is skipped and unreplaced @@variable@@ placeholders will be sent as literal text in the request.
+  By default, jsonr validates that all @@variable@@ and {{variable}} placeholders in .http files have corresponding values provided via -i flag or config files. When this flag is enabled, validation is skipped and unreplaced placeholders will be sent as literal text in the request.
 
 -r, --raw
 
