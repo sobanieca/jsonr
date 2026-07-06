@@ -1,0 +1,2 @@
+// leading comment on the very first line
+GET @@baseUrl@@/sample

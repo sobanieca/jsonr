@@ -252,8 +252,6 @@ snapshot[`Given API 13`] = `
 " +
     "date: *
 " +
-    "vary: Accept-Encoding
-" +
     '{ id: "sample-post" }
 ' +
     "200 - OK obtained in *ms
@@ -287,8 +285,6 @@ snapshot[`Given API 14`] = `
     "content-type: application/json
 " +
     "date: *
-" +
-    "vary: Accept-Encoding
 " +
     '{ id: "sample-get" }
 ' +
@@ -1362,8 +1358,6 @@ snapshot[`Given API 31`] = `
 " +
     "date: *
 " +
-    "vary: Accept-Encoding
-" +
     '{ id: "sample-get" }
 ' +
     "200 - OK obtained in *ms
@@ -1405,8 +1399,6 @@ snapshot[`Given API 32`] = `
     "content-type: application/json
 " +
     "date: *
-" +
-    "vary: Accept-Encoding
 " +
     '{ id: "sample-post" }
 ' +
@@ -1516,8 +1508,6 @@ snapshot[`Given API 36`] = `
 " +
     "date: *
 " +
-    "vary: Accept-Encoding
-" +
     '{ id: "sample-post" }
 ' +
     "200 - OK obtained in *ms
@@ -1572,11 +1562,11 @@ snapshot[`Given API 38`] = `
 " +
     "
 " +
+    "content-length: *
+" +
     "content-type: application/json
 " +
     "date: *
-" +
-    "vary: Accept-Encoding
 " +
     "{
 " +
@@ -1689,6 +1679,24 @@ snapshot[`Given API 43`] = `
 `;
 
 snapshot[`Given API 44`] = `
+{
+  code: 0,
+  jsonrCommand: "jsonr -e test get-comment-first-line.http",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 45`] = `
 {
   code: 0,
   jsonrCommand: "cat get.http | jsonr -e test",

@@ -152,12 +152,22 @@ jsonr run jsonr-script.js
 The `jsonr` function is automatically available in scripts run with
 `jsonr run` - no import needed!
 
-## Note on .http File Format
+### Input variables syntax
 
-There is no formal specification for `.http` files that defines how variables or
-comments should be handled. Because of that, `jsonr` uses its own conventions:
-`@@variableName@@` for variable substitution and `#` (or `//`) for comments.
-This may change in the future if a widely adopted specification emerges.
+Input variables can be referenced using either of two interchangeable syntaxes:
+
+- `@@variableName@@`
+- `{{variableName}}` (handlebars style, whitespace inside the braces is allowed,
+  e.g. `{{ variableName }}`)
+
+Both forms are resolved from the same sources (`-i` flag, config
+`inputVariables`, and secrets files), so you can mix and match them freely:
+
+```
+# GET request using handlebars-style variables
+GET {{baseUrl}}/users
+Authorization: Bearer {{ apiKey }}
+```
 
 ## Learn More
 

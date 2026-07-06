@@ -102,6 +102,11 @@ Deno.test("Given API", async (t) => {
     "test/requests/api2",
   );
 
+  await test(
+    "jsonr -e test get-comment-first-line.http",
+    "test/requests/api2",
+  );
+
   await test("cat get.http | jsonr -e test", "test/requests/api2");
 
   apiProcess.kill();

@@ -112,7 +112,8 @@ const readStdin = async () => {
   return text.trim() ? text : null;
 };
 
-const removeComments = (input) => input.replace(/(\r?\n|^)(#|\/\/).*$/gm, "");
+const removeComments = (input) =>
+  input.replace(/^[ \t]*(#|\/\/).*(\r?\n)?/gm, "");
 
 const convertJsObjectToJson = (jsCode) => {
   let result = jsCode.trim();

@@ -1,3 +1,8 @@
+# 4.5.1
+
+- Fixed `.http` files failing to parse when a comment (`#` or `//`) is on the
+  very first line
+
 # 4.5.0
 
 - Added support for handlebars-style variable syntax (`{{variable}}` and
