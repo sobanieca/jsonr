@@ -1,3 +1,11 @@
+# 4.5.2
+
+- Fixed the `environment` option being silently ignored in `jsonr run` scripts -
+  passing `environment` to `jsonr()` now resolves the named environment from
+  `jsonr-config.json` (inputVariables, headers and secrets) just like the CLI
+  `-e` flag, and errors on an unknown environment name
+- Invalid environment errors now list the available environments
+
 # 4.5.1
 
 - Fixed `.http` files failing to parse when a comment (`#` or `//`) is on the

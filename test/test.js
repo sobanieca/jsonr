@@ -80,6 +80,10 @@ Deno.test("Given API", async (t) => {
     "jsonr run jsonr-script-merge-headers.js -e test -v",
     "test/requests/api1",
   );
+  await test(
+    "jsonr run jsonr-script-env-option.js -v",
+    "test/requests/api1",
+  );
 
   await test(
     "jsonr -e test get-handlebars.http",

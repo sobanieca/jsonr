@@ -1226,6 +1226,8 @@ snapshot[`Given API 24`] = `
   jsonrCommand: "jsonr -e nonExistentEnv get.http",
   output: "ERROR: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
 " +
+    "Available environments: test
+" +
     "Run 'jsonr --help' for details on configuration files.
 ",
   outputError: "",
@@ -1607,16 +1609,38 @@ snapshot[`Given API 38`] = `
 snapshot[`Given API 39`] = `
 {
   code: 0,
-  jsonrCommand: "jsonr -e test get-handlebars.http",
-  output: "GET http://localhost:3000/sample...
+  jsonrCommand: "jsonr run jsonr-script-env-option.js -v",
+  output: "GET http://localhost:3000/users/42...
+" +
+    "Request:
+" +
+    "Content-Type: application/json
+" +
+    "traceId: api1
+" +
+    "x-tenant: *****
+" +
+    "x-env-header: from-environment
+" +
+    "
 " +
     "Response:
 " +
     "
 " +
-    '{ id: "sample-get" }
+    "content-length: *
+" +
+    "content-type: application/json
+" +
+    "date: *
+" +
+    '{ id: "42" }
 ' +
     "200 - OK obtained in *ms
+" +
+    'Response: { id: "42" }
+' +
+    "Status: 200
 ",
   outputError: "",
 }
@@ -1625,7 +1649,7 @@ snapshot[`Given API 39`] = `
 snapshot[`Given API 40`] = `
 {
   code: 0,
-  jsonrCommand: "jsonr -e test get-handlebars-spaces.http",
+  jsonrCommand: "jsonr -e test get-handlebars.http",
   output: "GET http://localhost:3000/sample...
 " +
     "Response:
@@ -1643,6 +1667,24 @@ snapshot[`Given API 40`] = `
 snapshot[`Given API 41`] = `
 {
   code: 0,
+  jsonrCommand: "jsonr -e test get-handlebars-spaces.http",
+  output: "GET http://localhost:3000/sample...
+" +
+    "Response:
+" +
+    "
+" +
+    '{ id: "sample-get" }
+' +
+    "200 - OK obtained in *ms
+",
+  outputError: "",
+}
+`;
+
+snapshot[`Given API 42`] = `
+{
+  code: 0,
   jsonrCommand: "jsonr -e test post-handlebars.http",
   output: "POST http://localhost:3000/sample...
 " +
@@ -1658,7 +1700,7 @@ snapshot[`Given API 41`] = `
 }
 `;
 
-snapshot[`Given API 42`] = `
+snapshot[`Given API 43`] = `
 {
   code: 1,
   jsonrCommand: "jsonr get-missing-vars-handlebars.http",
@@ -1668,7 +1710,7 @@ snapshot[`Given API 42`] = `
 }
 `;
 
-snapshot[`Given API 43`] = `
+snapshot[`Given API 44`] = `
 {
   code: 1,
   jsonrCommand: "jsonr get-missing-vars-handlebars.http -i 'query: test'",
@@ -1678,7 +1720,7 @@ snapshot[`Given API 43`] = `
 }
 `;
 
-snapshot[`Given API 44`] = `
+snapshot[`Given API 45`] = `
 {
   code: 0,
   jsonrCommand: "jsonr -e test get-comment-first-line.http",
@@ -1696,7 +1738,7 @@ snapshot[`Given API 44`] = `
 }
 `;
 
-snapshot[`Given API 45`] = `
+snapshot[`Given API 46`] = `
 {
   code: 0,
   jsonrCommand: "cat get.http | jsonr -e test",

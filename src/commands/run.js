@@ -1,4 +1,5 @@
 import logger from "../logger.js";
+import { loadAndApplyConfig } from "../config.js";
 import { sendRequest } from "./send-request.js";
 
 const generateTemplate = (urlOrFile) =>
@@ -87,17 +88,34 @@ const executeScript = async (args) => {
 
     // @ts-ignore: Expose jsonr wrapper to the script
     globalThis.jsonr = (urlOrFile, options = {}) => {
-      const mergedArgs = { ...args, _: [urlOrFile], ...options };
-      if (args.inputVariables || options.inputVariables) {
-        mergedArgs.inputVariables = {
-          ...args.inputVariables,
-          ...options.inputVariables,
-        };
-      }
-      if (args.headers || options.headers) {
-        mergedArgs.headers = { ...args.headers, ...options.headers };
-      }
-      const promise = sendRequest(mergedArgs);
+      const promise = (async () => {
+        // Resolve the environment named in the script options through the same
+        // config hierarchy the CLI -e flag uses, so its inputVariables, headers
+        // and secrets are applied (and a bogus name is reported as an error).
+        let baseArgs = args;
+        if (
+          typeof options.environment === "string" &&
+          options.environment !== args.environment &&
+          !options.environment.endsWith(".json")
+        ) {
+          baseArgs = await loadAndApplyConfig({
+            ...args,
+            environment: options.environment,
+          });
+        }
+
+        const mergedArgs = { ...baseArgs, _: [urlOrFile], ...options };
+        if (baseArgs.inputVariables || options.inputVariables) {
+          mergedArgs.inputVariables = {
+            ...baseArgs.inputVariables,
+            ...options.inputVariables,
+          };
+        }
+        if (baseArgs.headers || options.headers) {
+          mergedArgs.headers = { ...baseArgs.headers, ...options.headers };
+        }
+        return await sendRequest(mergedArgs);
+      })();
       pendingPromises.push(promise);
       return promise;
     };

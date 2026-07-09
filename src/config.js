@@ -160,6 +160,20 @@ const mergeEnvironmentConfigs = (configs, envName) => {
   return Object.keys(merged).length > 0 ? merged : null;
 };
 
+const collectEnvironmentNames = (configs) => {
+  const names = new Set();
+
+  for (const config of configs) {
+    if (config.environments && typeof config.environments === "object") {
+      for (const name of Object.keys(config.environments)) {
+        names.add(name);
+      }
+    }
+  }
+
+  return [...names];
+};
+
 const mergeDefaultConfigs = (configs) => {
   const merged = {};
 
@@ -296,6 +310,16 @@ export const loadAndApplyConfig = async (args) => {
         logger.error(
           `ERROR: Environment '${envName}' not found in any jsonr-config.json files.`,
         );
+        const availableEnvironments = collectEnvironmentNames(configFiles);
+        if (availableEnvironments.length > 0) {
+          logger.error(
+            `Available environments: ${availableEnvironments.join(", ")}`,
+          );
+        } else {
+          logger.error(
+            `No environments are defined in any jsonr-config.json files.`,
+          );
+        }
         logger.error(`Run 'jsonr --help' for details on configuration files.`);
         Deno.exit(1);
       }
