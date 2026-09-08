@@ -5,10 +5,10 @@ import {
   brightBlue,
   brightRed,
   brightYellow,
-} from "jsr:@std/fmt@1.0.8/colors";
-import { parseArgs } from "jsr:@std/cli@1.0.20/parse-args";
+} from "jsr:@std/fmt@1.0.10/colors";
+import { parseArgs } from "jsr:@std/cli@1.0.32/parse-args";
 import { LogLevels } from "jsr:@std/log@0.224.14";
-import { dirname, join, resolve } from "jsr:@std/path@1.0.8";
+import { dirname, join, resolve } from "jsr:@std/path@1.1.6";
 
 const deps = {
   logging: {

@@ -1,3 +1,9 @@
+# 4.6.0
+
+- Updated dependencies: `@std/fmt` 1.0.10, `@std/cli` 1.0.32, `@std/path` 1.1.6
+- Test suite migrated from `deno.land/std@0.185.0` snapshot module to
+  `jsr:@std/testing`, test API server updated to `@hono/hono` 4.13.7
+
 # 4.5.2
 
 - Fixed the `environment` option being silently ignored in `jsonr run` scripts -

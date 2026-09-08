@@ -1,4 +1,4 @@
-import { assertSnapshot } from "https://deno.land/std@0.185.0/testing/snapshot.ts";
+import { assertSnapshot } from "jsr:@std/testing@1.0.20/snapshot";
 
 export const run = async (cmd, cwd) => {
   const command = new Deno.Command("sh", {
