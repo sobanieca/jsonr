@@ -58,6 +58,16 @@ Commands:
 
               See "Configuration Files" section below for more details.
 
+  skill       Print instructions for AI agents (this help text with an agent preamble).
+              Usage: jsonr skill
+                     jsonr skill --init
+
+              With --init: Creates a project skill so the agent can be invoked with /jsonr
+                          (Claude Code, Cursor) or $jsonr (Codex). The skill is written to
+                          .agents/skills/jsonr/SKILL.md and .claude/skills/jsonr/SKILL.md in
+                          the nearest directory that has AGENTS.md or CLAUDE.md (or the git
+                          root), so it works in monorepos and nested projects.
+
   update      Display instructions for updating jsonr to the latest version.
               Usage: jsonr update [--deno]
 

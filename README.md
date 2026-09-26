@@ -171,6 +171,28 @@ GET {{baseUrl}}/users
 Authorization: Bearer {{ apiKey }}
 ```
 
+## Using with AI agents
+
+`jsonr` is safe to hand to an AI agent: secrets are read from files referenced
+in `jsonr-config.json` and masked in every log line, so the command an agent
+runs (`jsonr create-user.http -e prod`) never contains a credential.
+
+To let the agent learn the tool, have it run `jsonr skill` (the help text with
+an agent preamble). To make it a slash command in your project:
+
+```bash
+jsonr skill --init
+```
+
+This writes `SKILL.md` to `.agents/skills/jsonr/` (Codex, Cursor) and
+`.claude/skills/jsonr/` (Claude Code, Cursor) in the nearest directory that has
+`AGENTS.md` or `CLAUDE.md`, falling back to the git root. It works in monorepos
+and nested projects. Then:
+
+```
+/jsonr send the create-user request against prod and check it returns 201
+```
+
 ## Learn More
 
 For complete documentation of all available options and detailed usage

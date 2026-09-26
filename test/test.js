@@ -1,4 +1,5 @@
-import { createTestRunner } from "./test-utils.js";
+import { assertSnapshot } from "jsr:@std/testing@1.0.20/snapshot";
+import { createTestRunner, run } from "./test-utils.js";
 
 Deno.test("Given API", async (t) => {
   const apiProcess = await startTestApi();
@@ -37,6 +38,7 @@ Deno.test("Given API", async (t) => {
   await test("jsonr -e test get.http --dry", "test/requests/api2");
   await test("jsonr nonexistent.http");
   await test("jsonr help");
+  await test("jsonr skill");
   await test("jsonr -e nonExistentEnv get.http", "test/requests/api2");
   await test("jsonr config", "test/requests/api1");
   await test("jsonr get-missing-vars.http", "test/requests/api2");
@@ -141,3 +143,57 @@ const startTestApi = async () => {
 
   return apiProcess;
 };
+
+Deno.test("jsonr skill --init", async (t) => {
+  const projectRoot = Deno.cwd().replace("/test", "");
+  const jsonr = (cmd, cwd) =>
+    run(cmd.replace("jsonr", `deno run -A ${projectRoot}/main.js`), cwd);
+  const normalize = (text, dir) => text.replaceAll(dir, "<tmp>");
+
+  const repo = await Deno.makeTempDir();
+  await Deno.mkdir(`${repo}/.git`);
+  await Deno.mkdir(`${repo}/packages/app/src`, { recursive: true });
+  await Deno.writeTextFile(`${repo}/packages/app/AGENTS.md`, "# app\n");
+
+  try {
+    await t.step("skill lands next to the nearest AGENTS.md", async () => {
+      const result = await jsonr(
+        "jsonr skill --init",
+        `${repo}/packages/app/src`,
+      );
+      const skill = await Deno.readTextFile(
+        `${repo}/packages/app/.agents/skills/jsonr/SKILL.md`,
+      );
+      const claudeSkill = await Deno.readTextFile(
+        `${repo}/packages/app/.claude/skills/jsonr/SKILL.md`,
+      );
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, repo),
+        sameContent: skill === claudeSkill,
+        skill,
+      });
+    });
+
+    await t.step("skill lands at the git root without AGENTS.md", async () => {
+      const result = await jsonr("jsonr skill --init", `${repo}/packages`);
+      const exists = await Deno.stat(`${repo}/.claude/skills/jsonr/SKILL.md`)
+        .then(() => true, () => false);
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, repo),
+        exists,
+      });
+    });
+
+    await t.step("refuses to overwrite an existing skill", async () => {
+      const result = await jsonr("jsonr skill --init", `${repo}/packages`);
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, repo),
+      });
+    });
+  } finally {
+    await Deno.remove(repo, { recursive: true });
+  }
+});

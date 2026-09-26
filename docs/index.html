@@ -659,6 +659,7 @@ Authorization: Bearer <span class="var secret"><span class="raw">@@apiKey@@</spa
             <li><strong>Secrets live outside the repo</strong> in a JSON file referenced from <code>jsonr-config.json</code>.</li>
             <li><strong>Every log is scrubbed.</strong> Any secret value that shows up in output, including <code>--debug</code>, is replaced with <code>*****</code>.</li>
             <li><strong>The command is safe to paste.</strong> <code>jsonr create-user.http -e prod</code> contains no credential, so it can sit in a prompt, a script or a chat.</li>
+            <li><strong>One command makes it a skill.</strong> <code>jsonr skill --init</code> writes a <code>SKILL.md</code> for Claude Code, Codex and Cursor next to your <code>AGENTS.md</code>, so <code>/jsonr send create-user against prod</code> just works. <code>jsonr skill</code> prints the agent instructions.</li>
           </ul>
         </div>
         <div class="flow" aria-label="How secrets flow">

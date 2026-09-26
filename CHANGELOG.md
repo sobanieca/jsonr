@@ -1,3 +1,10 @@
+# 4.7.0
+
+- Added `skill` command: `jsonr skill` prints instructions for AI agents,
+  `jsonr skill --init` creates a project skill (`/jsonr` in Claude Code and
+  Cursor, `$jsonr` in Codex) in the nearest directory with `AGENTS.md` or
+  `CLAUDE.md`
+
 # 4.6.0
 
 - Updated dependencies: `@std/fmt` 1.0.10, `@std/cli` 1.0.32, `@std/path` 1.1.6
