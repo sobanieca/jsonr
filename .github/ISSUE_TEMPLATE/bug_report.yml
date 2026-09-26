@@ -1,0 +1,35 @@
+name: Bug report
+description: Something in `jsonr` does not work the way the help text says it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. `jsonr` is a small CLI for sending JSON HTTP requests and writing simple smoke tests. Bug reports about that core are the most valuable kind of issue here.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `jsonr version` (or the release you installed).
+      placeholder: "0.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: What did you run?
+      description: The exact command and any relevant files (with secrets removed).
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: OS and how you installed it
+      placeholder: "macOS 15 arm64, install.sh"

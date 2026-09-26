@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jsonr</title>
+    <meta name="description"
+      content="jsonr is a small CLI for JSON HTTP APIs: .http files, environments, secrets kept out of the terminal, smoke tests and scripting.">
+    <link rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e7c6b'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+    <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8f5;
+      --surface: #ffffff;
+      --ink: #171a18;
+      --muted: #5d665f;
+      --line: #dfe5e0;
+      --accent: #0e7c6b;
+      --accent-ink: #0a5d51;
+      --accent-soft: #dcf2ec;
+      --secret: #b45309;
+      --secret-soft: #fbeedb;
+      --code-bg: #eef2ef;
+      --sans: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #0f1311;
+        --surface: #161b18;
+        --ink: #e6ebe7;
+        --muted: #97a29b;
+        --line: #263029;
+        --accent: #3fc6ae;
+        --accent-ink: #8de3d2;
+        --accent-soft: #123b34;
+        --secret: #f0a24b;
+        --secret-soft: #3a2a12;
+        --code-bg: #1d2420;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0f1311;
+      --surface: #161b18;
+      --ink: #e6ebe7;
+      --muted: #97a29b;
+      --line: #263029;
+      --accent: #3fc6ae;
+      --accent-ink: #8de3d2;
+      --accent-soft: #123b34;
+      --secret: #f0a24b;
+      --secret-soft: #3a2a12;
+      --code-bg: #1d2420;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    code,
+    kbd,
+    pre,
+    .mono {
+      font-family: var(--mono);
+    }
+    code.name {
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+    a {
+      color: var(--accent-ink);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    h1,
+    h2,
+    h3 {
+      text-wrap: balance;
+      margin: 0;
+      line-height: 1.15;
+    }
+    p {
+      margin: 0;
+    }
+
+    .wrap {
+      width: min(1040px, 100%);
+      margin: 0 auto;
+      padding-inline: 20px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: 22px;
+    }
+    .top .brand {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .top .brand span {
+      color: var(--accent);
+    }
+    .gh {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--ink);
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+    .gh:hover {
+      text-decoration: none;
+      border-color: var(--accent);
+    }
+    .gh svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .hero {
+      padding-block: 32px 12px;
+      display: grid;
+      gap: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 46px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      max-width: 18ch;
+    }
+    .hero p.lead {
+      font-size: 19px;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+
+    /* demo */
+    .demo {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 760px) {
+      .demo {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .demo .wire {
+        display: none;
+      }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .card .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .card .bar .chip {
+      font-size: 11.5px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--code-bg);
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .card pre {
+      margin: 0;
+      padding: 16px 16px 18px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+      min-height: 210px;
+    }
+    .kw {
+      color: var(--accent-ink);
+      font-weight: 600;
+    }
+    .var {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 0 3px;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      transition: background 0.5s, color 0.5s;
+    }
+    .var.secret {
+      background: var(--secret-soft);
+      color: var(--secret);
+    }
+    .var .val {
+      display: none;
+    }
+    .demo.resolved .var .raw {
+      display: none;
+    }
+    .demo.resolved .var .val {
+      display: inline;
+    }
+
+    .sources {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 0 16px 16px;
+    }
+    .src {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 5px 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.4s, color 0.4s;
+    }
+    .src svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+    .demo.resolved .src {
+      border-color: var(--accent);
+      color: var(--ink);
+      border-style: solid;
+    }
+    .demo.resolved .src.lock {
+      border-color: var(--secret);
+    }
+
+    .wire {
+      position: relative;
+      width: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wire::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent
+        6px 12px);
+    }
+    .wire .pkt {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin: -6px 0 0 -6px;
+      opacity: 0;
+    }
+    .demo.sending .wire .pkt {
+      animation: fly 0.7s ease-in-out forwards;
+    }
+    .demo.received .wire .pkt {
+      animation: back 0.7s ease-in-out forwards;
+    }
+    @keyframes fly {
+      0% {
+        left: 0;
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+      85% {
+        opacity: 1;
+      }
+      100% {
+        left: 100%;
+        opacity: 0;
+      }
+    }
+    @keyframes back {
+      0% {
+        left: 100%;
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+      85% {
+        opacity: 1;
+      }
+      100% {
+        left: 0;
+        opacity: 0;
+      }
+    }
+
+    .term pre {
+      color: var(--ink);
+    }
+    .term .prompt {
+      color: var(--muted);
+    }
+    .term .cmd::after {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      vertical-align: -2px;
+      background: var(--accent);
+      margin-left: 2px;
+      animation: blink 1s steps(1) infinite;
+    }
+    .demo.done .term .cmd::after {
+      display: none;
+    }
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+    .out {
+      display: block;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.35s, transform 0.35s;
+    }
+    .out.show {
+      opacity: 1;
+      transform: none;
+    }
+    .ok {
+      color: var(--accent-ink);
+      font-weight: 600;
+    }
+    .mask {
+      color: var(--secret);
+      font-weight: 600;
+    }
+    .dim {
+      color: var(--muted);
+    }
+
+    .legend {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--muted);
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .legend i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      vertical-align: -1px;
+      margin-right: 6px;
+    }
+
+    /* points */
+    .points {
+      padding-block: 56px 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 28px 32px;
+    }
+    .point h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .point p {
+      color: var(--muted);
+      font-size: 15.5px;
+    }
+    .point code {
+      font-size: 13.5px;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* secrets */
+    .secrets {
+      padding-block: 56px 10px;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+    @media (max-width: 760px) {
+      .secrets {
+        grid-template-columns: 1fr;
+      }
+    }
+    .secrets h2 {
+      font-size: clamp(24px, 3.5vw, 32px);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 12px;
+    }
+    .secrets p {
+      color: var(--muted);
+      max-width: 48ch;
+    }
+    .secrets ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 15.5px;
+    }
+    .secrets li {
+      margin-bottom: 6px;
+    }
+    .secrets li strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .flow {
+      display: grid;
+      gap: 10px;
+    }
+    .flow .row {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+    .flow .row svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .flow .row.locked svg {
+      color: var(--secret);
+    }
+    .flow .row b {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .flow .row code {
+      font-size: 12.5px;
+      color: var(--muted);
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .flow .row .mask {
+      color: var(--secret);
+    }
+
+    /* install */
+    .install {
+      padding-block: 56px 20px;
+    }
+    .install h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .cmd-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 12px 12px 16px;
+    }
+    .cmd-box code {
+      flex: 1;
+      font-size: 14px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .cmd-box button {
+      font: 500 13px var(--sans);
+      color: var(--ink);
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .cmd-box button:hover {
+      border-color: var(--accent);
+    }
+    .install p {
+      font-size: 14.5px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    footer {
+      padding-block: 30px 40px;
+      font-size: 14px;
+      color: var(--muted);
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      margin-top: 30px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .term .cmd::after,
+      .wire .pkt {
+        animation: none !important;
+      }
+      .out {
+        transition: none;
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <a class="brand"
+          href="https://sobanieca.github.io/jsonr/"><span>{}</span> jsonr</a>
+        <a class="gh" href="https://github.com/sobanieca/jsonr" target="_blank"
+          rel="noopener">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+      </header>
+
+      <section class="hero">
+        <h1>Send JSON requests from the terminal in five minutes, not five tabs.</h1>
+        <p
+          class="lead"><code class="name">jsonr</code> reads plain <code>.http</code> files, fills in variables, keeps secrets out of your shell history, and asserts on the response.</p>
+
+        <div class="demo" id="demo">
+          <div class="card file">
+            <div
+              class="bar"><span>create-user.http</span><span class="chip">in git</span></div>
+            <pre><span class="kw">POST</span> <span class="var"><span class="raw">@@baseUrl@@</span><span class="val">https://prod.api.example.com</span></span>/users
+Authorization: Bearer <span class="var secret"><span class="raw">@@apiKey@@</span><span class="val">••••••••••••</span></span>
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com"
+}</pre>
+            <div class="sources">
+              <span
+                class="src"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>jsonr-config.json · prod</span>
+              <span
+                class="src lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>~/.secrets/jsonr-prod.json</span>
+            </div>
+          </div>
+
+          <div class="wire" aria-hidden="true"><span class="pkt"></span></div>
+
+          <div class="card term">
+            <div
+              class="bar"><span>terminal</span><span class="chip">-s 201 smoke test</span></div>
+            <pre><span class="prompt">$</span> <span class="cmd" id="cmd"></span>
+<span class="out" id="o1"><span class="dim">→ POST https://prod.api.example.com/users</span></span><span class="out" id="o2"><span class="dim">  Authorization: Bearer <span class="mask">*****</span></span></span><span class="out" id="o3"><span class="ok">201 Created</span> <span class="dim">· 84 ms · status matches 201</span></span><span class="out" id="o4">{
+  "id": 1042,
+  "name": "John Doe",
+  "email": "john.doe@example.com"
+}</span></pre>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i style="background: var(--accent-soft); border: 1px solid var(--accent);"></i>variable from config</span>
+          <span><i style="background: var(--secret-soft); border: 1px solid var(--secret);"></i>secret, masked in every log</span>
+        </div>
+      </section>
+
+      <section class="points">
+        <div class="point">
+          <h3>Requests as files</h3>
+          <p>One <code>.http</code> file per request. Commit them next to the code, share them with the team.</p>
+        </div>
+        <div class="point">
+          <h3>Environments</h3>
+          <p><code>-e prod</code> swaps base URLs, headers and secrets. Config files merge from your home folder down to the project.</p>
+        </div>
+        <div class="point">
+          <h3>Smoke tests</h3>
+          <p><code>-s 201</code> checks the status, <code>-t "ok"</code> checks the body. Non-zero exit on mismatch, so CI can run it.</p>
+        </div>
+        <div class="point">
+          <h3>Chaining</h3>
+          <p><code>jsonr run script.js</code> gives you a <code>jsonr()</code> function to pass one response into the next request.</p>
+        </div>
+      </section>
+
+      <section class="secrets">
+        <div>
+          <h2>Built for AI agents that should never see your keys.</h2>
+          <p>An agent can run <code class="name">jsonr</code> against real APIs while the API key stays in a file it never reads.</p>
+          <ul>
+            <li><strong>Secrets live outside the repo</strong> in a JSON file referenced from <code>jsonr-config.json</code>.</li>
+            <li><strong>Every log is scrubbed.</strong> Any secret value that shows up in output, including <code>--debug</code>, is replaced with <code>*****</code>.</li>
+            <li><strong>The command is safe to paste.</strong> <code>jsonr create-user.http -e prod</code> contains no credential, so it can sit in a prompt, a script or a chat.</li>
+          </ul>
+        </div>
+        <div class="flow" aria-label="How secrets flow">
+          <div class="row">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="14" rx="2" />
+              <path d="M8 20h8M12 18v2" />
+            </svg>
+            <div><b>Agent runs</b><code>jsonr create-user.http -e prod</code></div>
+          </div>
+          <div class="row locked">
+            <svg viewBox="0 0 24 24">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+            <div><b>jsonr reads the secret locally</b><code>~/.secrets/jsonr-prod.json → { "apiKey": "<span class="mask">prod_…</span>" }</code></div>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 12h16M14 6l6 6-6 6" />
+            </svg>
+            <div><b>Request goes out with the real key</b><code>Authorization: Bearer prod_ApiKey123</code></div>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
+              <path d="M3 3l18 18" />
+            </svg>
+            <div><b>Agent sees the response only</b><code>Authorization: Bearer <span class="mask">*****</span></code></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="install">
+        <h2>Install</h2>
+        <div class="cmd-box">
+          <code
+            id="install-cmd">curl -fsSL sobanieca.github.io/jsonr/install.sh | bash</code>
+          <button type="button" id="copy-btn">Copy</button>
+        </div>
+        <p>Or with Deno: <code>deno install -g -f -r -n jsonr --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE jsr:@sobanieca/jsonr</code>. Run <code>jsonr --help</code> to read everything in about five minutes.</p>
+      </section>
+
+      <footer>
+        <span><code class="name">jsonr</code> · MIT license</span>
+        <a href="https://jsr.io/@sobanieca/jsonr" target="_blank"
+          rel="noopener">jsr:@sobanieca/jsonr</a>
+        <a href="https://github.com/sobanieca/jsonr/releases/latest"
+          target="_blank" rel="noopener">Binaries for Linux and macOS</a>
+      </footer>
+    </div>
+
+    <script>
+    (function () {
+      var demo = document.getElementById("demo");
+      var cmdEl = document.getElementById("cmd");
+      var outs = ["o1", "o2", "o3", "o4"].map(function (id) {
+        return document.getElementById(id);
+      });
+      var command = "jsonr create-user.http -e prod";
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var timers = [];
+
+      function later(fn, ms) {
+        timers.push(setTimeout(fn, ms));
+      }
+      function showOut(i) {
+        outs[i].classList.add("show");
+      }
+
+      function finalState() {
+        cmdEl.textContent = command;
+        demo.classList.add("resolved", "done");
+        outs.forEach(function (o) {
+          o.classList.add("show");
+        });
+      }
+
+      function run() {
+        timers.forEach(clearTimeout);
+        timers = [];
+        demo.className = "demo";
+        cmdEl.textContent = "";
+        outs.forEach(function (o) {
+          o.classList.remove("show");
+        });
+
+        var i = 0;
+        function type() {
+          if (i <= command.length) {
+            cmdEl.textContent = command.slice(0, i++);
+            later(type, 45 + Math.random() * 40);
+          } else {
+            later(resolve, 450);
+          }
+        }
+        function resolve() {
+          demo.classList.add("resolved", "done");
+          later(function () {
+            showOut(0);
+          }, 250);
+          later(function () {
+            showOut(1);
+          }, 500);
+          later(send, 900);
+        }
+        function send() {
+          demo.classList.add("sending");
+          later(function () {
+            demo.classList.remove("sending");
+            demo.classList.add("received");
+            showOut(2);
+            later(function () {
+              showOut(3);
+            }, 250);
+          }, 800);
+          later(run, 6200);
+        }
+        type();
+      }
+
+      if (reduce) finalState();
+      else run();
+
+      var btn = document.getElementById("copy-btn");
+      var cmd = document.getElementById("install-cmd");
+      btn.addEventListener("click", function () {
+        var text = cmd.textContent;
+        function done() {
+          btn.textContent = "Copied";
+          setTimeout(function () {
+            btn.textContent = "Copy";
+          }, 1600);
+        }
+        function fallback() {
+          var range = document.createRange();
+          range.selectNodeContents(cmd);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallback);
+        } else fallback();
+      });
+    })();
+    </script>
+  </body>
+</html>

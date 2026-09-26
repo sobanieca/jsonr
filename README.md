@@ -1,3 +1,5 @@
+Website: https://sobanieca.github.io/jsonr/
+
 # About
 
 - :pager: Tired of UI HTTP clients forcing sign-in just to create a workspace

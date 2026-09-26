@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a change to `jsonr`.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before you write this up, please keep the goal of the project in mind. `jsonr` is a small CLI for sending JSON HTTP requests and writing simple smoke tests.
+        It is deliberately small: the help text should stay readable in about five minutes, and it is not meant to cover every edge case. Features that most users would not need day to day are likely to be declined, even when they are well made.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do today, and what gets in the way?
+      description: Describe the situation rather than the solution. A concrete example helps a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like `jsonr` to do?
+      description: Keep it to the smallest change that solves the problem above.
+    validations:
+      required: true
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Fit with the project
+      options:
+        - label: I checked the README and the help command, and this is not already possible.
+          required: true
+        - label: I believe most users of `jsonr` would benefit from this, not only my setup.
+          required: true
