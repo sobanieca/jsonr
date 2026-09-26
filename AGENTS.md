@@ -157,6 +157,12 @@ The project uses JavaScript with JSDoc type annotations:
 - Secrets from secrets files are automatically masked in logs
 - Color output can be disabled with `NO_COLOR=1` environment variable
 
+## Landing Page
+
+The landing page lives in `docs/index.html`. Every time you introduce a new
+feature or change existing behavior, update the landing page as well, so it
+always reflects the current feature set.
+
 ## Publishing
 
 The package is published to JSR as `@sobanieca/jsonr`. Precompiled binaries are
