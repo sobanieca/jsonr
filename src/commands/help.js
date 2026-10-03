@@ -62,11 +62,13 @@ Commands:
               Usage: jsonr skill
                      jsonr skill --init
 
-              With --init: Creates a project skill so the agent can be invoked with /jsonr
+              With --init: Creates a skill so the agent can be invoked with /jsonr
                           (Claude Code, Cursor) or $jsonr (Codex). The skill is written to
-                          .agents/skills/jsonr/SKILL.md and .claude/skills/jsonr/SKILL.md in
-                          the nearest directory that has AGENTS.md or CLAUDE.md (or the git
-                          root), so it works in monorepos and nested projects.
+                          .agents/skills/jsonr/SKILL.md and .claude/skills/jsonr/SKILL.md.
+                          Inside a git repository (searched up to the home directory) it
+                          goes to the git root, so the agent sees it in every folder of the
+                          repository. Outside a git repository it goes to the home
+                          directory, so every agent sees it in all projects.
 
   update      Display instructions for updating jsonr to the latest version.
               Usage: jsonr update [--deno]

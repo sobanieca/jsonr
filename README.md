@@ -185,9 +185,11 @@ jsonr skill --init
 ```
 
 This writes `SKILL.md` to `.agents/skills/jsonr/` (Codex, Cursor) and
-`.claude/skills/jsonr/` (Claude Code, Cursor) in the nearest directory that has
-`AGENTS.md` or `CLAUDE.md`, falling back to the git root. It works in monorepos
-and nested projects. Then:
+`.claude/skills/jsonr/` (Claude Code, Cursor). Inside a git repository the skill
+goes to the git root, so the agent sees it in every folder of the repository,
+monorepo packages included. Outside a git repository the skill goes to your home
+directory (`~/.agents/skills/jsonr/` and `~/.claude/skills/jsonr/`), so agents
+see it in every project. Then:
 
 ```
 /jsonr send the create-user request against prod and check it returns 201

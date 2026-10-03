@@ -3,7 +3,6 @@ import { deps } from "../deps.js";
 import help from "./help.js";
 
 const SKILL_NAME = "jsonr";
-const AGENT_FILES = ["AGENTS.md", "agents.md", "CLAUDE.md", "claude.md"];
 const SKILL_TARGETS = [
   { dir: ".agents/skills", readBy: "Codex, Cursor" },
   { dir: ".claude/skills", readBy: "Claude Code, Cursor" },
@@ -47,8 +46,9 @@ masked in all output. Never ask for them and never put them in a command.
 const agentInstructions = `
 jsonr - instructions for AI agents
 
-  Run 'jsonr skill --init' to create a project skill so you can invoke it
-  with /jsonr (Claude Code, Cursor) or $jsonr (Codex).
+  Run 'jsonr skill --init' to create a skill so you can invoke it with
+  /jsonr (Claude Code, Cursor) or $jsonr (Codex). Inside a git repository
+  the skill is created in the repository, otherwise in the home directory.
 
   Secrets (API keys, tokens) are resolved by jsonr from config and secrets
   files and are masked in output. Never ask for them and never put them
@@ -66,51 +66,61 @@ const exists = (path) => {
   }
 };
 
-const hasAgentMarker = (dir) =>
-  AGENT_FILES.some((file) => exists(deps.join(dir, file))) ||
-  SKILL_TARGETS.some((target) => exists(deps.join(dir, target.dir)));
+const homeDir = () => Deno.env.get("HOME") || Deno.env.get("USERPROFILE");
 
 /**
- * Nearest directory (from cwd up) that holds AGENTS.md, CLAUDE.md or an
- * existing skills folder. Stops at the git root, otherwise falls back to cwd.
+ * Inside a git repository (searched from cwd up to the home directory): the
+ * git root. Outside a repository: the home directory, where Claude Code,
+ * Codex, Cursor and other agents read user-level skills.
  */
-export const findSkillRoot = (start = Deno.cwd()) => {
-  const home = Deno.env.get("HOME") || Deno.env.get("USERPROFILE") || "";
+export const findSkillRoot = (start = Deno.cwd(), home = homeDir()) => {
   let dir = start;
   while (true) {
-    if (hasAgentMarker(dir)) return { dir, reason: "agent instructions" };
-    if (exists(deps.join(dir, ".git"))) return { dir, reason: "git root" };
-    const parent = deps.dirname(dir);
-    if (dir === home || parent === dir) {
-      return { dir: start, reason: "current directory" };
+    if (exists(deps.join(dir, ".git"))) {
+      return { dir, reason: "git root", global: false };
     }
+    const parent = deps.dirname(dir);
+    if (dir === home || parent === dir) break;
     dir = parent;
   }
+  if (!home) {
+    logger.error(
+      "ERROR: Not in a git repository and the home directory is unknown (set HOME).",
+    );
+    Deno.exit(1);
+  }
+  return { dir: home, reason: "not in a git repository", global: true };
 };
 
 const createSkill = async () => {
   const root = findSkillRoot();
-  const created = [];
+  const files = SKILL_TARGETS.map((target) => ({
+    target,
+    path: deps.join(target.dir, SKILL_NAME, "SKILL.md"),
+  }));
 
-  for (const target of SKILL_TARGETS) {
-    const skillDir = deps.join(root.dir, target.dir, SKILL_NAME);
-    const skillFile = deps.join(skillDir, "SKILL.md");
+  for (const { path } of files) {
+    const skillFile = deps.join(root.dir, path);
     if (exists(skillFile)) {
       logger.error(
         `ERROR: ${skillFile} already exists. Delete it first if you want to regenerate it.`,
       );
       Deno.exit(1);
     }
-    await Deno.mkdir(skillDir, { recursive: true });
-    await Deno.writeTextFile(skillFile, skillContent);
-    created.push({
-      path: deps.join(target.dir, SKILL_NAME, "SKILL.md"),
-      target,
-    });
   }
 
-  logger.info(`Project root: ${root.dir} (${root.reason})`);
-  for (const { path, target } of created) {
+  for (const { path } of files) {
+    const skillFile = deps.join(root.dir, path);
+    await Deno.mkdir(deps.dirname(skillFile), { recursive: true });
+    await Deno.writeTextFile(skillFile, skillContent);
+  }
+
+  logger.info(
+    root.global
+      ? `Not in a git repository - installing for all projects in ${root.dir}`
+      : `Project root: ${root.dir} (${root.reason})`,
+  );
+  for (const { path, target } of files) {
     logger.info(`Created ${path}  (${target.readBy})`);
   }
   logger.info("");

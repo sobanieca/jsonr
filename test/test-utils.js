@@ -1,11 +1,12 @@
 import { assertSnapshot } from "jsr:@std/testing@1.0.20/snapshot";
 
-export const run = async (cmd, cwd) => {
+export const run = async (cmd, cwd, env) => {
   const command = new Deno.Command("sh", {
     args: ["-c", cmd],
     stdout: "piped",
     stderr: "piped",
     cwd: cwd,
+    env,
   });
 
   const { code, stdout, stderr } = await command.output();

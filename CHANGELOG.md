@@ -1,9 +1,9 @@
 # 4.7.0
 
 - Added `skill` command: `jsonr skill` prints instructions for AI agents,
-  `jsonr skill --init` creates a project skill (`/jsonr` in Claude Code and
-  Cursor, `$jsonr` in Codex) in the nearest directory with `AGENTS.md` or
-  `CLAUDE.md`
+  `jsonr skill --init` creates a skill (`/jsonr` in Claude Code and Cursor,
+  `$jsonr` in Codex). Inside a git repository it goes to the git root, outside a
+  git repository to the home directory
 
 # 4.6.0
 

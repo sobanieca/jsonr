@@ -146,8 +146,8 @@ const startTestApi = async () => {
 
 Deno.test("jsonr skill --init", async (t) => {
   const projectRoot = Deno.cwd().replace("/test", "");
-  const jsonr = (cmd, cwd) =>
-    run(cmd.replace("jsonr", `deno run -A ${projectRoot}/main.js`), cwd);
+  const jsonr = (cmd, cwd, env) =>
+    run(cmd.replace("jsonr", `deno run -A ${projectRoot}/main.js`), cwd, env);
   const normalize = (text, dir) => text.replaceAll(dir, "<tmp>");
 
   const repo = await Deno.makeTempDir();
@@ -156,33 +156,25 @@ Deno.test("jsonr skill --init", async (t) => {
   await Deno.writeTextFile(`${repo}/packages/app/AGENTS.md`, "# app\n");
 
   try {
-    await t.step("skill lands next to the nearest AGENTS.md", async () => {
+    await t.step("skill lands at the git root from a package", async () => {
       const result = await jsonr(
         "jsonr skill --init",
         `${repo}/packages/app/src`,
       );
       const skill = await Deno.readTextFile(
-        `${repo}/packages/app/.agents/skills/jsonr/SKILL.md`,
+        `${repo}/.agents/skills/jsonr/SKILL.md`,
       );
       const claudeSkill = await Deno.readTextFile(
-        `${repo}/packages/app/.claude/skills/jsonr/SKILL.md`,
+        `${repo}/.claude/skills/jsonr/SKILL.md`,
       );
-      await assertSnapshot(t, {
-        code: result.code,
-        output: normalize(result.output, repo),
-        sameContent: skill === claudeSkill,
-        skill,
-      });
-    });
-
-    await t.step("skill lands at the git root without AGENTS.md", async () => {
-      const result = await jsonr("jsonr skill --init", `${repo}/packages`);
-      const exists = await Deno.stat(`${repo}/.claude/skills/jsonr/SKILL.md`)
+      const inPackage = await Deno.stat(`${repo}/packages/app/.claude`)
         .then(() => true, () => false);
       await assertSnapshot(t, {
         code: result.code,
         output: normalize(result.output, repo),
-        exists,
+        sameContent: skill === claudeSkill,
+        inPackage,
+        skill,
       });
     });
 
@@ -195,5 +187,35 @@ Deno.test("jsonr skill --init", async (t) => {
     });
   } finally {
     await Deno.remove(repo, { recursive: true });
+  }
+
+  const root = await Deno.makeTempDir();
+  const home = `${root}/home`;
+  await Deno.mkdir(`${root}/.git`);
+  await Deno.mkdir(`${home}/notes`, { recursive: true });
+  await Deno.writeTextFile(`${home}/notes/AGENTS.md`, "# notes\n");
+
+  try {
+    await t.step("skill lands in home outside a git repository", async () => {
+      const result = await jsonr("jsonr skill --init", `${home}/notes`, {
+        HOME: home,
+      });
+      const skill = await Deno.readTextFile(
+        `${home}/.agents/skills/jsonr/SKILL.md`,
+      );
+      const claudeSkill = await Deno.readTextFile(
+        `${home}/.claude/skills/jsonr/SKILL.md`,
+      );
+      const inNotes = await Deno.stat(`${home}/notes/.claude`)
+        .then(() => true, () => false);
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, root),
+        sameContent: skill === claudeSkill,
+        inNotes,
+      });
+    });
+  } finally {
+    await Deno.remove(root, { recursive: true });
   }
 });
