@@ -12,6 +12,9 @@
   prints a notice when one is available (`JSONR_NO_UPDATE_CHECK=1` disables it)
 - Added `--insecure` flag to skip TLS certificate verification (replaces
   running with Deno's `--unsafely-ignore-certificate-errors`)
+- Breaking change: errors (e.g. connection refused, invalid URL, script
+  errors) now exit with code 1 instead of 0, so smoke test scripts and CI
+  detect them
 - Fixed input variable values containing `$` (e.g. `$&`) being mangled during
   substitution
 - Fixed `--js` leaving a key unquoted when the same `, key:` text appeared

@@ -1,5 +1,5 @@
 $ jsonr get-missing-vars.http --ignore-input-validation
-exit code: 0
+exit code: 1
 --- stdout
 GET @@nonExistingBaseUrl@@/sample?query=@@query@@...
 Invalid URL: 'http://@@nonExistingBaseUrl@@/sample?query=@@query@@'

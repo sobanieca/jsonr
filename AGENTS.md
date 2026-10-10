@@ -43,8 +43,8 @@ cargo api                 # Start the test API server on port 3000
 3. **Command dispatch** - help, version, update, run, config, skill, otherwise
    a request is sent (`src/request.rs`).
 
-Errors returned by commands are logged and jsonr exits with code 0; failed
-assertions (`-s`, `-t`), missing files and missing variables exit with 1.
+Errors returned by commands are logged and jsonr exits with code 1, as do
+failed assertions (`-s`, `-t`), missing files and missing variables.
 
 ### Modules
 

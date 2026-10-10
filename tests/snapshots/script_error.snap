@@ -1,5 +1,5 @@
 $ jsonr run failing.js
-exit code: 0
+exit code: 1
 --- stdout
 imported
 Failed to execute script: boom

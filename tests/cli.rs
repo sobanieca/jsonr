@@ -330,3 +330,17 @@ fn update_replaces_binary() {
     let cached = std::fs::read_to_string(cache.join("jsonr/latest-version")).unwrap();
     assert!(cached.ends_with("\n99.0.0\n"), "{cached}");
 }
+
+#[test]
+fn request_error_exits_with_failure() {
+    // Nothing listens on port 1, so the connection is refused.
+    let output = run("jsonr http://127.0.0.1:1/", &support::fixtures(), &[]);
+    assert_eq!(output.code, 1, "{}", output.stdout);
+    assert!(
+        output
+            .stdout
+            .contains("error sending request for url (http://127.0.0.1:1/)"),
+        "{}",
+        output.stdout
+    );
+}

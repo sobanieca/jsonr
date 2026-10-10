@@ -54,10 +54,14 @@ fn main() {
         request::send_request(&mut args).map(|_| ())
     };
 
-    if let Err(message) = result {
-        logger::error(&message);
-    }
+    let code = match result {
+        Ok(()) => 0,
+        Err(message) => {
+            logger::error(&message);
+            1
+        }
+    };
 
     update::notify(update_check);
-    std::process::exit(0);
+    std::process::exit(code);
 }
