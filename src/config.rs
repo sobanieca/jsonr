@@ -250,6 +250,16 @@ fn collect_environment_names(configs: &[Object]) -> Vec<String> {
     names
 }
 
+/// Adds config values for keys not set on the command line, so `-i` and `-h`
+/// values take precedence over config files.
+fn fill_missing(target: &mut Object, values: &Object) {
+    for (key, value) in values.iter() {
+        if !target.contains_key(key) {
+            target.insert(key.clone(), value.clone());
+        }
+    }
+}
+
 fn apply_config_to_args(args: &Object, config: &Object) -> Object {
     let mut enriched = args.clone();
 
@@ -268,7 +278,7 @@ fn apply_config_to_args(args: &Object, config: &Object) -> Object {
             "inputVariables" => {
                 let mut all = value.as_object().cloned().unwrap_or_default();
                 all.assign(&secrets);
-                enriched.object_entry("inputVariables").assign(&all);
+                fill_missing(enriched.object_entry("inputVariables"), &all);
                 logger::debug(format!(
                     "Applied {} input variables from config ({} from secrets)",
                     all.len(),
@@ -277,10 +287,14 @@ fn apply_config_to_args(args: &Object, config: &Object) -> Object {
             }
             "headers" if value.as_object().is_some() => {
                 let headers = value.as_object().unwrap();
-                enriched.object_entry("headers").assign(headers);
+                fill_missing(enriched.object_entry("headers"), headers);
                 logger::debug(format!("Applied {} headers from config", headers.len()));
             }
-            "headers" => enriched.insert(key.clone(), value.clone()),
+            "headers" => {
+                if !enriched.contains_key(key) {
+                    enriched.insert(key.clone(), value.clone());
+                }
+            }
             _ => match enriched.get(key) {
                 None => {
                     logger::debug(format!(
@@ -306,7 +320,7 @@ fn apply_config_to_args(args: &Object, config: &Object) -> Object {
     }
 
     if !secrets.is_empty() && !config.is_truthy("inputVariables") {
-        enriched.object_entry("inputVariables").assign(&secrets);
+        fill_missing(enriched.object_entry("inputVariables"), &secrets);
         logger::debug(format!(
             "Applied {} variables from secrets file",
             secrets.len()

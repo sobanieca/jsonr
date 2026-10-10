@@ -15,6 +15,9 @@
 - Breaking change: errors (e.g. connection refused, invalid URL, script
   errors) now exit with code 1 instead of 0, so smoke test scripts and CI
   detect them
+- Fixed `-i` and `-h` values being overridden by `inputVariables`, secrets and
+  `headers` from `jsonr-config.json`. Command line values now take precedence,
+  as documented
 - Fixed input variable values containing `$` (e.g. `$&`) being mangled during
   substitution
 - Fixed `--js` leaving a key unquoted when the same `, key:` text appeared

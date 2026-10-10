@@ -12,11 +12,12 @@ pub fn matches(args: &Object) -> bool {
             .is_some_and(|path| path.ends_with(".js") && Path::new(&path).exists())
 }
 
-pub fn execute(args: &Object) -> Result<(), String> {
+/// `cli_args` are the command line arguments before config was applied.
+pub fn execute(args: &Object, cli_args: &Object) -> Result<(), String> {
     if args.is_truthy("init") {
         init(args)
     } else {
-        execute_script(args)
+        execute_script(args, cli_args)
     }
 }
 
@@ -33,7 +34,7 @@ fn init(args: &Object) -> Result<(), String> {
     Ok(())
 }
 
-fn execute_script(args: &Object) -> Result<(), String> {
+fn execute_script(args: &Object, cli_args: &Object) -> Result<(), String> {
     let script_path = if is_command(args, "run") {
         positional(args, 1)
     } else {
@@ -46,6 +47,6 @@ fn execute_script(args: &Object) -> Result<(), String> {
     }
 
     logger::debug(format!("Executing script: {script_path}"));
-    script::run_script(Path::new(&script_path), args)
+    script::run_script(Path::new(&script_path), args, cli_args)
         .map_err(|err| format!("Failed to execute script: {err}"))
 }

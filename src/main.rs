@@ -19,11 +19,11 @@ fn main() {
     let raw: Vec<String> = std::env::args().skip(1).collect();
     logger::init(raw.iter().any(|arg| arg == "--debug"));
 
-    let args = args::parse(&raw);
+    let cli_args = args::parse(&raw);
     logger::debug("Args provided:");
-    logger::debug_value(&Value::Object(args.clone()));
+    logger::debug_value(&Value::Object(cli_args.clone()));
 
-    let mut args = config::load_and_apply_config(args);
+    let mut args = config::load_and_apply_config(cli_args.clone());
     logger::debug("Args after applying config:");
     logger::debug_value(&Value::Object(args.clone()));
 
@@ -44,7 +44,7 @@ fn main() {
     } else if is_command(&args, "update") {
         update::execute()
     } else if commands::run::matches(&args) {
-        commands::run::execute(&args)
+        commands::run::execute(&args, &cli_args)
     } else if commands::config::matches(&args) {
         commands::config::execute(&args);
         Ok(())

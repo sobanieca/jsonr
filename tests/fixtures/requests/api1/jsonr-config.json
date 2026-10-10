@@ -8,6 +8,12 @@
         "x-env-header": "from-environment"
       },
       "secrets": "environments/test-secrets.json"
+    },
+    "staging": {
+      "inputVariables": {
+        "baseUrl": "http://localhost:3000/staging"
+      },
+      "secrets": "environments/staging-secrets.json"
     }
   },
   "defaults": {

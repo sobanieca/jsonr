@@ -14,7 +14,9 @@ use std::path::{Path, PathBuf};
 
 const PRELUDE: &str = include_str!("script_prelude.js");
 
-pub fn run_script(path: &Path, args: &Object) -> Result<(), String> {
+/// Runs a script. `args` have config applied, `cli_args` are the command line
+/// arguments used to resolve an `environment` passed to `jsonr()`.
+pub fn run_script(path: &Path, args: &Object, cli_args: &Object) -> Result<(), String> {
     let absolute = config::resolve(path);
     let source = std::fs::read(&absolute).map_err(|err| err.to_string())?;
 
@@ -23,7 +25,7 @@ pub fn run_script(path: &Path, args: &Object) -> Result<(), String> {
     let context = Context::full(&runtime).map_err(|err| err.to_string())?;
 
     context.with(|ctx| -> Result<(), String> {
-        install_natives(&ctx, args.clone()).map_err(|err| err.to_string())?;
+        install_natives(&ctx, args.clone(), cli_args.clone()).map_err(|err| err.to_string())?;
         ctx.eval::<(), _>(PRELUDE)
             .catch(&ctx)
             .map_err(|err| caught_message(&err))?;
@@ -68,11 +70,11 @@ fn caught_message(err: &CaughtError<'_>) -> String {
     }
 }
 
-fn install_natives<'js>(ctx: &Ctx<'js>, args: Object) -> rquickjs::Result<()> {
+fn install_natives<'js>(ctx: &Ctx<'js>, args: Object, cli_args: Object) -> rquickjs::Result<()> {
     let send = Function::new(
         ctx.clone(),
         move |ctx: Ctx<'js>, url_or_file: String, options: String| -> rquickjs::Result<String> {
-            match send(&args, url_or_file, &options) {
+            match send(&args, &cli_args, url_or_file, &options) {
                 Ok(response) => Ok(response),
                 Err(message) => Err(rquickjs::Exception::throw_message(&ctx, &message)),
             }
@@ -88,7 +90,12 @@ fn install_natives<'js>(ctx: &Ctx<'js>, args: Object) -> rquickjs::Result<()> {
 }
 
 /// Implements `jsonr(urlOrFile, options)` on top of the CLI request logic.
-fn send(args: &Object, url_or_file: String, options: &str) -> Result<String, String> {
+fn send(
+    args: &Object,
+    cli_args: &Object,
+    url_or_file: String,
+    options: &str,
+) -> Result<String, String> {
     let options = match json::parse(options) {
         Ok(Value::Object(options)) => options,
         _ => Object::new(),
@@ -101,7 +108,7 @@ fn send(args: &Object, url_or_file: String, options: &str) -> Result<String, Str
         && args.get_str("environment") != Some(environment)
         && !environment.ends_with(".json")
     {
-        let mut with_environment = args.clone();
+        let mut with_environment = cli_args.clone();
         with_environment.insert("environment", Value::String(environment.clone()));
         base = config::load_and_apply_config(with_environment);
     }

@@ -142,6 +142,21 @@ snapshot_test!(
     API1
 );
 snapshot_test!(
+    cli_values_override_config,
+    "jsonr -e test get-user.http -i 'baseUrl: http://cli.example' -i 'userId: 1' -i 'tenant: cli-tenant' -h 'traceId: from-cli' -h 'x-env-header: from-cli' --dry",
+    API1
+);
+snapshot_test!(
+    config_values_used_when_not_on_cli,
+    "jsonr -e test get-user.http -i 'userId: 1' --dry",
+    API1
+);
+snapshot_test!(
+    run_script_environment_overrides_cli_environment,
+    "jsonr run jsonr-script-env-overrides-cli.js -e staging",
+    API1
+);
+snapshot_test!(
     run_script_console,
     "jsonr run jsonr-script-console.js",
     API1
