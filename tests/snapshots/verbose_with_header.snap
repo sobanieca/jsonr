@@ -1,0 +1,17 @@
+$ jsonr -e test -h 'X-SampleHeader: abc' -v get.http
+exit code: 0
+--- stdout
+GET http://localhost:3000/sample...
+Request:
+Content-Type: application/json
+X-SampleHeader: abc
+traceId: main
+
+Response:
+
+content-length: *
+content-type: application/json
+date: *
+{ id: "sample-get" }
+200 - OK obtained in *ms
+--- stderr

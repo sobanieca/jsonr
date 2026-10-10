@@ -1,0 +1,5 @@
+$ jsonr nonexistent.http
+exit code: 1
+--- stdout
+ERROR: File not found: nonexistent.http
+--- stderr

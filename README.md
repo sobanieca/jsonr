@@ -200,7 +200,7 @@ see it in every project. Then:
 For complete documentation of all available options and detailed usage
 instructions run `jsonr --help` or view the help text at:
 
-https://sobanieca.github.io/jsonr/src/commands/help.js
+https://sobanieca.github.io/jsonr/help.txt
 
 This URL is particularly useful when working with AI assistants or LLMs - you
 can provide this link to give them comprehensive information about jsonr's
@@ -208,29 +208,10 @@ capabilities and command-line options.
 
 ## Installation
 
-### Option 1: Install via Deno (Recommended)
+`jsonr` is a single binary for Linux and macOS (x64 and arm64). No runtime is
+needed.
 
-> Prerequisites
->
-> Deno runtime environment `https://deno.com`
-
-```bash
-deno install -g --allow-write --allow-net --allow-read --allow-env=HOME,USERPROFILE -f -r -n jsonr jsr:@sobanieca/jsonr
-```
-
-**Permissions:**
-
-- `--allow-write` - Required for writing response bodies to files (`-o` flag)
-  and creating config/script files
-- `--allow-net` - Required for making HTTP requests
-- `--allow-read` - Required for reading `.http` files and config files
-- `--allow-env=HOME,USERPROFILE` - Required for finding `jsonr-config.json`
-  files in your home directory hierarchy
-
-### Option 2: Quick Install Script (Standalone Binary)
-
-If you don't have Deno installed, you can install the pre-compiled binary with a
-single command:
+### Option 1: Quick Install Script (Recommended)
 
 ```bash
 curl -fsSL sobanieca.github.io/jsonr/install.sh | bash
@@ -245,9 +226,9 @@ To install to a custom location:
 curl -fsSL sobanieca.github.io/jsonr/install.sh | INSTALL_DIR=~/bin bash
 ```
 
-### Option 3: Manual Binary Installation
+### Option 2: Manual Binary Installation
 
-Download the latest pre-compiled binary for your operating system from the
+Download the latest binary for your operating system from the
 [releases page](https://github.com/sobanieca/jsonr/releases/latest):
 
 **Example for Linux x64:**
@@ -261,9 +242,25 @@ sudo mv jsonr /usr/local/bin/
 Available binaries: `jsonr-linux-x64`, `jsonr-linux-arm64`, `jsonr-macos-x64`,
 `jsonr-macos-arm64`
 
+### Migrating from the Deno version (4.x)
+
+Versions up to 4.x were distributed for Deno (`jsr:@sobanieca/jsonr`). Remove
+the Deno installation with `deno uninstall -g jsonr` and install the binary as
+described above. `.http` files, `jsonr-config.json` files and secrets work
+unchanged. Scripts run with `jsonr run` now use a built-in JavaScript engine:
+plain JavaScript with `jsonr()` and `console` works as before, but Deno APIs
+(`Deno.*`, `fetch`, `jsr:`/`npm:` imports) are not available.
+
 ## Updating
 
-Use `jsonr update` command and follow presented instructions to update.
+```bash
+jsonr update
+```
+
+This downloads the latest release and replaces the binary. If `jsonr` is
+installed in a system directory (like `/usr/local/bin`) run
+`sudo jsonr update`. `jsonr` checks for new versions once a day and prints a
+notice when one is available (set `JSONR_NO_UPDATE_CHECK=1` to disable it).
 
 ## Hints
 
@@ -289,15 +286,11 @@ jsonr my-api-request.http | grep -E '"(id|name|email)"' -C 2
 - SSL Certificate Issues
 
 If your requests are failing due to certificate validation errors (and you trust
-target server) you can run `temporary` command like:
+target server), use the `--insecure` flag to skip certificate verification:
 
-`deno run --allow-net --unsafely-ignore-certificate-errors jsr:@sobanieca/jsonr ...`
-
-It will display warning about disable ssl verification, but you should be able
-to perform requests. If you work frequently with such unsafe servers you can
-consider introducing `jsonr-unsafe` sitting next to your main `jsonr` instance:
-
-`deno install -n jsonr-unsafe -g -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write --allow-env=HOME,USERPROFILE jsr:@sobanieca/jsonr`
+```bash
+jsonr --insecure https://self-signed.example.com/users
+```
 
 - If you want to disable colors (at least for main log messages), you can use:
 

@@ -1,0 +1,20 @@
+[package]
+name = "jsonr"
+version = "5.0.0"
+edition = "2024"
+description = "CLI tool for interacting with JSON HTTP APIs and writing simple smoke tests"
+license = "MIT"
+repository = "https://github.com/sobanieca/jsonr"
+publish = false
+
+[dependencies]
+rquickjs = { version = "0.14.0", features = ["loader"] }
+ureq = { version = "3.4.2", default-features = false, features = ["rustls"] }
+
+[workspace]
+members = ["xtask"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

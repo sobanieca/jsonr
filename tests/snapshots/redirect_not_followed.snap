@@ -1,0 +1,9 @@
+$ jsonr http://localhost:3000/redirect
+exit code: 0
+--- stdout
+GET http://localhost:3000/redirect...
+Response:
+
+No response body returned from server
+302 - Found obtained in *ms
+--- stderr

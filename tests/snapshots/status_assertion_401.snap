@@ -1,0 +1,9 @@
+$ jsonr -e test get-auth-401.http -s 401
+exit code: 0
+--- stdout
+GET http://localhost:3000/auth-required...
+Response:
+
+No response body returned from server
+401 - Unauthorized obtained in *ms
+--- stderr

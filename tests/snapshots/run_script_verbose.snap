@@ -1,0 +1,18 @@
+$ jsonr run jsonr-script.js -v
+exit code: 0
+--- stdout
+GET http://localhost:3000/sample...
+Request:
+Content-Type: application/json
+traceId: main
+
+Response:
+
+content-length: *
+content-type: application/json
+date: *
+{ id: "sample-get" }
+200 - OK obtained in *ms
+Response: { id: "sample-get" }
+Status: 200
+--- stderr

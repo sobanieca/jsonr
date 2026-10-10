@@ -1,0 +1,9 @@
+$ jsonr -e test delete.http
+exit code: 0
+--- stdout
+DELETE http://localhost:3000/sample...
+Response:
+
+No response body returned from server
+204 - No Content obtained in *ms
+--- stderr

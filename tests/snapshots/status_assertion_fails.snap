@@ -1,0 +1,10 @@
+$ jsonr -e test put.http -s 303
+exit code: 1
+--- stdout
+PUT http://localhost:3000/sample...
+Response:
+
+{ id: "sample-put", name: "test" }
+200 - OK obtained in *ms
+ERROR: Response status code (200) doesn't match expected value (303)
+--- stderr

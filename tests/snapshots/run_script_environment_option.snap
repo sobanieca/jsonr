@@ -1,0 +1,20 @@
+$ jsonr run jsonr-script-env-option.js -v
+exit code: 0
+--- stdout
+GET http://localhost:3000/users/42...
+Request:
+Content-Type: application/json
+traceId: api1
+x-tenant: *****
+x-env-header: from-environment
+
+Response:
+
+content-length: *
+content-type: application/json
+date: *
+{ id: "42" }
+200 - OK obtained in *ms
+Response: { id: "42" }
+Status: 200
+--- stderr

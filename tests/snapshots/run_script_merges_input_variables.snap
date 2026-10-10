@@ -1,0 +1,11 @@
+$ jsonr run jsonr-script-merge-input-vars.js -e test
+exit code: 0
+--- stdout
+GET http://localhost:3000/users/42...
+Response:
+
+{ id: "42" }
+200 - OK obtained in *ms
+Response: { id: "42" }
+Status: 200
+--- stderr

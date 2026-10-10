@@ -1,0 +1,10 @@
+$ jsonr -e test get.http --dry
+exit code: 0
+--- stdout
+GET http://localhost:3000/sample...
+Request:
+Content-Type: application/json
+traceId: main
+
+Dry mode: Request not sent
+--- stderr

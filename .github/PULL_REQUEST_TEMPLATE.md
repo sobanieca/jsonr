@@ -12,7 +12,7 @@ this change fits that goal, or why it is a fix rather than a feature.
 
 ## Checklist
 
-- [ ] `deno task check` passes locally
+- [ ] `cargo verify` passes locally
 - [ ] Help text and README are updated if behaviour changed
 - [ ] No new dependency, or the reason for it is explained above
 - [ ] No secrets, connection strings or keys in tests, fixtures or logs

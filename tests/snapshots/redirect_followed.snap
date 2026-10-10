@@ -1,0 +1,9 @@
+$ jsonr http://localhost:3000/redirect -f
+exit code: 0
+--- stdout
+GET http://localhost:3000/redirect...
+Response:
+
+{ msg: "redirect-target" }
+200 - OK obtained in *ms
+--- stderr
