@@ -1,0 +1,46 @@
+$ jsonr run jsonr-script-console.js
+exit code: 0
+--- stdout
+GET http://localhost:3000/echo-headers...
+Response:
+
+{
+  "content-type": "application/json",
+  traceid: "api1",
+  "x-env-header": "from-environment",
+  "x-tenant": "*****"
+}
+200 - OK obtained in *ms
+Body: {
+  "content-type": "application/json",
+  traceid: "api1",
+  "x-env-header": "from-environment",
+  "x-tenant": "secret-tenant-value"
+} status 200
+{
+  nested: {
+    deeper: { deepest: { tooDeep: { hidden: true } } }
+  },
+  list: [
+     1,  2, 3, 4,  5,
+     6,  7, 8, 9, 10,
+    11, 12
+  ],
+  words: [
+    "alpha",   "beta",
+    "gamma",   "delta",
+    "epsilon", "zeta",
+    "eta"
+  ],
+  empty: {},
+  nothing: null,
+  missing: undefined,
+  "needs-quotes": `single ' and "double"`,
+  fn: [Function: named],
+  arrow: [Function: arrow]
+}
+jsonr is 5 years and 3 days, 0.5% sure [ 1 ]
+[ undefined, null, -0, 1e+21, 1e-7, 10n ]
+text 42 true
+application/json false
+--- stderr

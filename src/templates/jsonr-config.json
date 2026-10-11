@@ -1,0 +1,29 @@
+{
+  // For detailed documentation about all configuration options, run: jsonr --help
+
+  "environments": {
+    "prod": {
+      "inputVariables": {
+        "baseUrl": "https://api.example.com",
+        "apiVersion": "v1"
+      },
+      "secrets": "~/.secret/prod-secrets.json"
+    },
+    "dev": {
+      "inputVariables": {
+        "baseUrl": "https://dev-api.example.com",
+        "apiVersion": "v1"
+      },
+      "secrets": "~/.secret/dev-secrets.json"
+    }
+  },
+
+  "defaults": {
+    "inputVariables": {
+      "baseUrl": "http://localhost:3000"
+    },
+    "headers": {
+      "X-Request-Source": "jsonr-cli"
+    }
+  }
+}

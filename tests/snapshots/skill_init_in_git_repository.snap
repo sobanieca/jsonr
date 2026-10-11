@@ -1,0 +1,44 @@
+$ jsonr skill --init
+exit code: 0
+--- stdout
+Project root: <tmp> (git root)
+Created .agents/skills/jsonr/SKILL.md  (Codex, Cursor)
+Created .claude/skills/jsonr/SKILL.md  (Claude Code, Cursor)
+
+Try: /jsonr send the create-user request against prod
+--- stderr
+
+--- SKILL.md
+---
+name: jsonr
+description: Send HTTP requests to JSON APIs and run API smoke tests with the jsonr CLI. Use when asked to call an endpoint, test an API, send a request from a .http file, or chain requests in a script.
+---
+
+# jsonr
+
+`jsonr` sends HTTP requests from `.http` files or straight from the command
+line. API keys and tokens come from the user's config and secrets files and are
+masked in all output. Never ask for them and never put them in a command.
+
+## Workflow
+
+1. Run `jsonr skill` once to read the full reference (commands, flags, config
+   and `.http` file format).
+2. Look for `.http` files and `jsonr-config.json` in the repository. Run
+   `jsonr config` to see the environments that are available.
+3. Prefer `.http` files: `jsonr path/to/request.http -e <environment>`. For
+   one-off calls use `jsonr -m POST -b '{"key": "value"}' <url>`.
+4. Provide variables with `-i "name: value"`. A missing variable stops the
+   request and lists what is needed.
+5. For smoke tests assert with `-s <status>` and `-t <text>`. A non-zero
+   exit code means the assertion failed.
+6. Use `--dry` to print the request without sending it when unsure.
+7. To chain requests, `jsonr run --init` creates a script template. Run it
+   with `jsonr run script.js`.
+
+## Rules
+
+- Do not pass secrets on the command line. Use an environment (`-e`) that
+  references a secrets file.
+- Save large responses with `-o response.json` instead of printing them.
+- Ask before sending requests that change data on production environments.

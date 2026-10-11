@@ -1,0 +1,11 @@
+$ jsonr run jsonr-script-with-url-var.js -e test
+exit code: 0
+--- stdout
+GET http://localhost:3000/sample...
+Response:
+
+{ id: "sample-get" }
+200 - OK obtained in *ms
+Response: { id: "sample-get" }
+Status: 200
+--- stderr

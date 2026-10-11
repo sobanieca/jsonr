@@ -1,0 +1,9 @@
+$ jsonr -e test get.http
+exit code: 0
+--- stdout
+GET http://localhost:3000/sample...
+Response:
+
+{ id: "sample-get" }
+200 - OK obtained in *ms
+--- stderr

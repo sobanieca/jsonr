@@ -1,0 +1,9 @@
+$ jsonr http://localhost:3000/sample -o response.json && cat response.json
+exit code: 0
+--- stdout
+GET http://localhost:3000/sample...
+Response:
+
+Response body written to file response.json
+200 - OK obtained in *ms
+{"id":"sample-get"}--- stderr

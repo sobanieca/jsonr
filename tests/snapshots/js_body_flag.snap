@@ -1,0 +1,9 @@
+$ jsonr --js -m POST -b '{ name: "test", count: 8 }' localhost:3000/sample
+exit code: 0
+--- stdout
+POST localhost:3000/sample...
+Response:
+
+{ id: "sample-post" }
+200 - OK obtained in *ms
+--- stderr

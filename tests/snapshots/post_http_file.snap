@@ -1,0 +1,9 @@
+$ jsonr -e test post.http
+exit code: 0
+--- stdout
+POST http://localhost:3000/sample...
+Response:
+
+{ id: "sample-post" }
+200 - OK obtained in *ms
+--- stderr

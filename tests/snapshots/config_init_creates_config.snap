@@ -1,0 +1,37 @@
+$ jsonr config --init && cat jsonr-config.json && jsonr config --init
+exit code: 1
+--- stdout
+Created jsonr-config.json in the current directory
+
+Edit this file to customize your environments and defaults.
+{
+  // For detailed documentation about all configuration options, run: jsonr --help
+
+  "environments": {
+    "prod": {
+      "inputVariables": {
+        "baseUrl": "https://api.example.com",
+        "apiVersion": "v1"
+      },
+      "secrets": "~/.secret/prod-secrets.json"
+    },
+    "dev": {
+      "inputVariables": {
+        "baseUrl": "https://dev-api.example.com",
+        "apiVersion": "v1"
+      },
+      "secrets": "~/.secret/dev-secrets.json"
+    }
+  },
+
+  "defaults": {
+    "inputVariables": {
+      "baseUrl": "http://localhost:3000"
+    },
+    "headers": {
+      "X-Request-Source": "jsonr-cli"
+    }
+  }
+}
+ERROR: jsonr-config.json already exists in the current directory. Delete it first if you want to regenerate it.
+--- stderr

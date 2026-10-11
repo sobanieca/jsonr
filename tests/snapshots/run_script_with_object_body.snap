@@ -1,0 +1,11 @@
+$ jsonr run jsonr-script-with-object-body.js
+exit code: 0
+--- stdout
+PUT http://localhost:3000/sample...
+Response:
+
+{ id: "sample-put", name: "test-object", count: 42 }
+200 - OK obtained in *ms
+Response: { id: "sample-put", name: "test-object", count: 42 }
+Status: 200
+--- stderr

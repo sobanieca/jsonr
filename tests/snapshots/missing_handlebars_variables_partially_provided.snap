@@ -1,0 +1,5 @@
+$ jsonr get-missing-vars-handlebars.http -i 'query: test'
+exit code: 1
+--- stdout
+ERROR: Missing required input variable(s): nonExistingBaseUrl. Provide them via -i flag or jsonr-config.json. Did you forget to specify environment with -e flag?
+--- stderr

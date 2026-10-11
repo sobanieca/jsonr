@@ -1,0 +1,11 @@
+# Development tasks (previously `deno task ...`).
+[alias]
+xtask = "run --quiet --package xtask --"
+# Run jsonr from source: cargo jsonr <args>
+jsonr = "run --quiet --package jsonr --"
+# Formatting, lints and tests: run before committing.
+verify = "xtask verify"
+# Accept new CLI test output in tests/snapshots.
+update-snapshots = "xtask update-snapshots"
+# Start the test API server on port 3000.
+api = "xtask api"

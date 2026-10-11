@@ -1,0 +1,12 @@
+
+jsonr - instructions for AI agents
+
+  Run 'jsonr skill --init' to create a skill so you can invoke it with
+  /jsonr (Claude Code, Cursor) or $jsonr (Codex). Inside a git repository
+  the skill is created in the repository, otherwise in the home directory.
+
+  Secrets (API keys, tokens) are resolved by jsonr from config and secrets
+  files and are masked in output. Never ask for them and never put them
+  into commands. Use '-e <environment>' instead.
+
+  Full reference follows.

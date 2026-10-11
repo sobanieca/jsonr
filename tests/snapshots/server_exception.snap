@@ -1,0 +1,9 @@
+$ jsonr -e test exception.http
+exit code: 0
+--- stdout
+GET http://localhost:3000/exception...
+Response:
+
+"Internal Server Error"
+500 - Internal Server Error obtained in *ms
+--- stderr

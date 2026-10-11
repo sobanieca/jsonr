@@ -1,0 +1,20 @@
+$ jsonr run jsonr-script-env-overrides-cli.js -e staging
+exit code: 0
+--- stdout
+GET http://localhost:3000/echo-headers...
+Response:
+
+{
+  "content-type": "application/json",
+  traceid: "api1",
+  "x-env-header": "from-environment",
+  "x-tenant": "*****"
+}
+200 - OK obtained in *ms
+Response: {
+  "content-type": "application/json",
+  traceid: "api1",
+  "x-env-header": "from-environment",
+  "x-tenant": "secret-tenant-value"
+}
+--- stderr

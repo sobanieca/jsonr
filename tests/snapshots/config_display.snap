@@ -1,0 +1,20 @@
+$ jsonr config
+exit code: 0
+--- stdout
+Merged configuration:
+
+{
+  help: false,
+  debug: false,
+  init: false,
+  omitDefaultContentTypeHeader: false,
+  verbose: false,
+  raw: false,
+  followRedirects: true,
+  js: false,
+  dry: false,
+  ignoreInputValidation: false,
+  insecure: false,
+  headers: { traceId: "api1", "x-tenant": "@@tenant@@" }
+}
+--- stderr

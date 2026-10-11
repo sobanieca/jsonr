@@ -1,0 +1,5 @@
+$ jsonr skill --init
+exit code: 1
+--- stdout
+ERROR: <tmp>/.agents/skills/jsonr/SKILL.md already exists. Delete it first if you want to regenerate it.
+--- stderr

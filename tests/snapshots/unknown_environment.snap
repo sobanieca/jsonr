@@ -1,0 +1,7 @@
+$ jsonr -e nonExistentEnv get.http
+exit code: 1
+--- stdout
+ERROR: Environment 'nonExistentEnv' not found in any jsonr-config.json files.
+Available environments: test
+Run 'jsonr --help' for details on configuration files.
+--- stderr

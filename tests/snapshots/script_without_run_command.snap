@@ -1,0 +1,11 @@
+$ jsonr jsonr-script.js -e test
+exit code: 0
+--- stdout
+GET http://localhost:3000/auth-required...
+Response:
+
+{ id: "sample-post" }
+200 - OK obtained in *ms
+Response: { id: "sample-post" }
+Status: 200
+--- stderr

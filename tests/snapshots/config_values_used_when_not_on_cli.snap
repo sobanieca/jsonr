@@ -1,0 +1,12 @@
+$ jsonr -e test get-user.http -i 'userId: 1' --dry
+exit code: 0
+--- stdout
+GET http://localhost:3000/users/1...
+Request:
+Content-Type: application/json
+traceId: api1
+x-tenant: *****
+x-env-header: from-environment
+
+Dry mode: Request not sent
+--- stderr

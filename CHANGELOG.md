@@ -1,3 +1,28 @@
+# 5.0.0
+
+- Breaking change: `jsonr` is rewritten in Rust and distributed only as a
+  standalone binary. The Deno/JSR package (`jsr:@sobanieca/jsonr`) is no longer
+  published. Install with `curl -fsSL sobanieca.github.io/jsonr/install.sh | bash`
+- Breaking change: scripts run with `jsonr run` use a built-in JavaScript engine
+  (QuickJS). `jsonr()`, `console` and standard JavaScript work as before, Deno
+  APIs (`Deno.*`, `fetch`, `jsr:`/`npm:` imports) are not available. Relative
+  imports of local files are supported
+- `jsonr update` now downloads the latest release and replaces the binary
+  (`--deno` option removed). jsonr checks for a new version once a day and
+  prints a notice when one is available (`JSONR_NO_UPDATE_CHECK=1` disables it)
+- Added `--insecure` flag to skip TLS certificate verification (replaces
+  running with Deno's `--unsafely-ignore-certificate-errors`)
+- Breaking change: errors (e.g. connection refused, invalid URL, script
+  errors) now exit with code 1 instead of 0, so smoke test scripts and CI
+  detect them
+- Fixed `-i` and `-h` values being overridden by `inputVariables`, secrets and
+  `headers` from `jsonr-config.json`. Command line values now take precedence,
+  as documented
+- Fixed input variable values containing `$` (e.g. `$&`) being mangled during
+  substitution
+- Fixed `--js` leaving a key unquoted when the same `, key:` text appeared
+  earlier inside a string value
+
 # 4.7.0
 
 - Added `skill` command: `jsonr skill` prints instructions for AI agents,

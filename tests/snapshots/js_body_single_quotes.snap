@@ -1,0 +1,9 @@
+$ jsonr --js -m PUT -b "{ name: 'test' }" localhost:3000/sample
+exit code: 0
+--- stdout
+PUT localhost:3000/sample...
+Response:
+
+{ id: "sample-put", name: "test" }
+200 - OK obtained in *ms
+--- stderr

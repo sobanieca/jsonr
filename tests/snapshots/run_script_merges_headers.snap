@@ -1,0 +1,33 @@
+$ jsonr run jsonr-script-merge-headers.js -e test -v
+exit code: 0
+--- stdout
+GET http://localhost:3000/echo-headers...
+Request:
+Content-Type: application/json
+traceId: api1
+x-tenant: *****
+x-env-header: from-environment
+x-custom: script-value
+
+Response:
+
+content-length: *
+content-type: application/json
+date: *
+{
+  "content-type": "application/json",
+  traceid: "api1",
+  "x-custom": "script-value",
+  "x-env-header": "from-environment",
+  "x-tenant": "*****"
+}
+200 - OK obtained in *ms
+Response: {
+  "content-type": "application/json",
+  traceid: "api1",
+  "x-custom": "script-value",
+  "x-env-header": "from-environment",
+  "x-tenant": "secret-tenant-value"
+}
+Status: 200
+--- stderr

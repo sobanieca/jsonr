@@ -1,0 +1,28 @@
+// Run with: jsonr run jsonr-script.js
+
+const response = await jsonr('{{urlOrFile}}', {
+  headers: { "Authorization": "Bearer token" },
+  environment: "prod",
+  inputVariables: { "key": "value" },
+  status: 200,
+  text: "success",
+  method: "POST",
+  body: '{"data":"example"}',
+  verbose: true,
+  raw: false,
+  followRedirects: false,
+  output: "./response.json",
+  omitDefaultContentTypeHeader: false,
+  js: false,
+  dry: false
+});
+
+console.log("Status:", response.status);
+console.log("Status Text:", response.statusText);
+console.log("Elapsed:", response.elapsed, "ms");
+console.log("Body:", response.body);
+
+for (const [key, value] of response.headers.entries()) {
+  console.log(`Header ${key}: ${value}`);
+}
+

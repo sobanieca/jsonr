@@ -1,0 +1,12 @@
+$ jsonr -e test get-user.http -i 'baseUrl: http://cli.example' -i 'userId: 1' -i 'tenant: cli-tenant' -h 'traceId: from-cli' -h 'x-env-header: from-cli' --dry
+exit code: 0
+--- stdout
+GET http://cli.example/users/1...
+Request:
+Content-Type: application/json
+traceId: from-cli
+x-env-header: from-cli
+x-tenant: cli-tenant
+
+Dry mode: Request not sent
+--- stderr

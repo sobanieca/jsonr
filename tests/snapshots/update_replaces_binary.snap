@@ -1,0 +1,7 @@
+$ jsonr update
+exit code: 0
+--- stdout
+Checking for updates...
+Updating jsonr 5.0.0 -> 99.0.0...
+jsonr has been updated to 99.0.0
+--- stderr

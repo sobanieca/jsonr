@@ -1,0 +1,9 @@
+$ jsonr skill --init
+exit code: 0
+--- stdout
+Not in a git repository - installing for all projects in <tmp>/home
+Created .agents/skills/jsonr/SKILL.md  (Codex, Cursor)
+Created .claude/skills/jsonr/SKILL.md  (Claude Code, Cursor)
+
+Try: /jsonr send the create-user request against prod
+--- stderr
