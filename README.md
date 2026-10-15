@@ -218,12 +218,19 @@ curl -fsSL sobanieca.github.io/jsonr/install.sh | bash
 ```
 
 This script automatically detects your OS and architecture (Linux/macOS,
-x64/arm64) and installs the appropriate binary to `/usr/local/bin`.
-
-To install to a custom location:
+x64/arm64) and installs the appropriate binary to `/usr/local/bin`, for all users. If you
+can't write to `/usr/local/bin`, the script stops with an error. Run it with
+`sudo`:
 
 ```bash
-curl -fsSL sobanieca.github.io/jsonr/install.sh | INSTALL_DIR=~/bin bash
+curl -fsSL sobanieca.github.io/jsonr/install.sh | sudo bash
+```
+
+Or install to a custom location: set `INSTALL_DIR` to a directory that is on
+your `PATH`:
+
+```bash
+curl -fsSL sobanieca.github.io/jsonr/install.sh | INSTALL_DIR=~/.local/bin bash
 ```
 
 ### Option 2: Manual Binary Installation
