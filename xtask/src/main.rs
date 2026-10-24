@@ -9,10 +9,25 @@ mod test_api;
 
 use std::process::{Command, ExitCode};
 
+fn is_package_variable_of_xtask(name: &str) -> bool {
+    name.starts_with("CARGO_PKG_")
+        || name.starts_with("CARGO_MANIFEST_")
+        || matches!(
+            name,
+            "CARGO_CRATE_NAME" | "CARGO_BIN_NAME" | "CARGO_PRIMARY_PACKAGE"
+        )
+}
+
 fn cargo(args: &[&str], env: &[(&str, &str)]) -> bool {
     println!("> cargo {}", args.join(" "));
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_string());
-    Command::new(cargo)
+    let mut command = Command::new(cargo);
+    for (name, _) in std::env::vars_os() {
+        if name.to_str().is_some_and(is_package_variable_of_xtask) {
+            command.env_remove(name);
+        }
+    }
+    command
         .args(args)
         .envs(env.iter().copied())
         .status()
