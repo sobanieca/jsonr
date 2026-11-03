@@ -8,6 +8,7 @@ use crate::json::{self, Object, Value};
 use crate::logger;
 use std::io::{IsTerminal, Read};
 use std::time::Instant;
+use ureq::config::IpFamily;
 use ureq::tls::TlsConfig;
 
 pub struct Response {
@@ -253,6 +254,13 @@ pub fn send_request(args: &mut Object) -> Result<Option<Response>, String> {
         format!("http://{}", request.url)
     };
 
+    let ip_family = match (args.is_truthy("ipv4"), args.is_truthy("ipv6")) {
+        (true, true) => return Err("Use either --ipv4 or --ipv6, not both.".to_string()),
+        (true, false) => IpFamily::Ipv4Only,
+        (false, true) => IpFamily::Ipv6Only,
+        (false, false) => IpFamily::Any,
+    };
+
     let started = Instant::now();
     let mut response = fetch(
         &request,
@@ -260,6 +268,7 @@ pub fn send_request(args: &mut Object) -> Result<Option<Response>, String> {
         body,
         args.is_truthy("followRedirects"),
         args.is_truthy("insecure"),
+        ip_family,
     )?;
     let elapsed = started.elapsed().as_millis();
 
@@ -365,6 +374,7 @@ fn fetch(
     body: Option<String>,
     follow_redirects: bool,
     insecure: bool,
+    ip_family: IpFamily,
 ) -> Result<ureq::http::Response<ureq::Body>, String> {
     use ureq::http;
 
@@ -396,6 +406,7 @@ fn fetch(
         .redirect_auth_headers(ureq::config::RedirectAuthHeaders::SameHost)
         .user_agent(format!("jsonr/{}", crate::VERSION))
         .tls_config(TlsConfig::builder().disable_verification(insecure).build())
+        .ip_family(ip_family)
         .build()
         .new_agent();
 

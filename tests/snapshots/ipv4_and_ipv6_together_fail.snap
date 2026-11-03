@@ -1,0 +1,6 @@
+$ jsonr --ipv4 --ipv6 http://localhost:3000/sample
+exit code: 1
+--- stdout
+GET http://localhost:3000/sample...
+Use either --ipv4 or --ipv6, not both.
+--- stderr

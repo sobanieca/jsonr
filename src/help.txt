@@ -42,6 +42,8 @@ Commands:
                 omitDefaultContentTypeHeader - Skip default Content-Type header (boolean)
                 js                          - Treat body as JS object literal (boolean)
                 dry                         - Print request without sending (boolean)
+                ipv4                        - Connect over IPv4 only (boolean)
+                ipv6                        - Connect over IPv6 only (boolean)
 
               Response object properties:
                 status                      - HTTP status code (number)
@@ -176,6 +178,8 @@ Supported configuration keys (use camelCase for property names):
   omitDefaultContentTypeHeader  Omit default Content-Type header (true/false)
   js                    Treat body as JavaScript object literal (true/false)
   insecure              Skip TLS certificate verification (true/false)
+  ipv4                  Connect over IPv4 only (true/false)
+  ipv6                  Connect over IPv6 only (true/false)
 
 How configuration files work:
 
@@ -379,6 +383,27 @@ path to .http file name or url
   Skip TLS certificate verification.
 
   Use it only for servers you trust, for example local servers with self-signed certificates.
+
+--ipv4
+
+  Connect over IPv4 only.
+
+  By default jsonr connects over IPv4 or IPv6, whichever the host name resolves to. Use --ipv4 to resolve
+  and connect over IPv4 only, for example to test how a server treats IPv4 clients (rate limits per
+  IP address, geolocation). The request fails when the host has no IPv4 address.
+
+  EXAMPLE
+  jsonr --ipv4 https://myapi.com/values
+
+--ipv6
+
+  Connect over IPv6 only.
+
+  Like --ipv4, for IPv6: the request fails when the host has no IPv6 address, or when this machine has no
+  IPv6 connectivity. Use either --ipv4 or --ipv6, not both.
+
+  EXAMPLE
+  jsonr --ipv6 https://myapi.com/values
 
 --debug
 

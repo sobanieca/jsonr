@@ -17,6 +17,8 @@ const BOOLEANS: &[&str] = &[
     "dry",
     "ignore-input-validation",
     "insecure",
+    "ipv4",
+    "ipv6",
 ];
 
 const STRINGS: &[&str] = &[
@@ -569,9 +571,22 @@ mod tests {
                 r#""s":"200","status":"200","inputVariables":{"a":"1","b":"2:3"},"headers":{"X":"y"},"#,
                 r#""help":false,"debug":false,"init":false,"omitDefaultContentTypeHeader":false,"#,
                 r#""raw":false,"r":false,"followRedirects":false,"f":false,"js":false,"dry":false,"#,
-                r#""ignoreInputValidation":false,"insecure":false,"--":[]}"#
+                r#""ignoreInputValidation":false,"insecure":false,"ipv4":false,"ipv6":false,"#,
+                r#""--":[]}"#
             )
         );
+    }
+
+    #[test]
+    fn parses_ip_family_flags() {
+        let parsed = parse_str(&["--ipv4", "localhost:3000"]);
+        assert!(parsed.contains(r#""_":["localhost:3000"]"#), "{parsed}");
+        assert!(parsed.contains(r#""ipv4":true"#), "{parsed}");
+        assert!(parsed.contains(r#""ipv6":false"#), "{parsed}");
+        let parsed = parse_str(&["--ipv6", "localhost:3000"]);
+        assert!(parsed.contains(r#""_":["localhost:3000"]"#), "{parsed}");
+        assert!(parsed.contains(r#""ipv6":true"#), "{parsed}");
+        assert!(parsed.contains(r#""ipv4":false"#), "{parsed}");
     }
 
     #[test]

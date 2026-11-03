@@ -1,3 +1,9 @@
+# 5.1.0
+
+- Added `--ipv4` and `--ipv6` flags to connect over IPv4 or IPv6 only, like
+  curl's `-4` / `-6`. Also available as `ipv4` / `ipv6` options of `jsonr()`
+  in scripts and in `jsonr-config.json`
+
 # 5.0.0
 
 - Breaking change: `jsonr` is rewritten in Rust and distributed only as a

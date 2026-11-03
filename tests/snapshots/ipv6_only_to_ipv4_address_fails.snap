@@ -1,0 +1,6 @@
+$ jsonr --ipv6 http://127.0.0.1:3000/sample
+exit code: 1
+--- stdout
+GET http://127.0.0.1:3000/sample...
+error sending request for url (http://127.0.0.1:3000/sample): host not found
+--- stderr

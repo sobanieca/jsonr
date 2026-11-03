@@ -69,6 +69,15 @@ snapshot_test!(
     "jsonr http://localhost:3000/redirect"
 );
 snapshot_test!(redirect_followed, "jsonr http://localhost:3000/redirect -f");
+snapshot_test!(ipv4_only, "jsonr --ipv4 http://localhost:3000/sample");
+snapshot_test!(
+    ipv6_only_to_ipv4_address_fails,
+    "jsonr --ipv6 http://127.0.0.1:3000/sample"
+);
+snapshot_test!(
+    ipv4_and_ipv6_together_fail,
+    "jsonr --ipv4 --ipv6 http://localhost:3000/sample"
+);
 snapshot_test!(js_body_from_file, "jsonr -e test --js post-js.http", API2);
 snapshot_test!(
     js_body_flag,
