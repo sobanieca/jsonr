@@ -1,4 +1,4 @@
-Website: https://sobanieca.github.io/jsonr/
+Website: https://adam.sobaniec.com/jsonr/
 
 # About
 
@@ -200,7 +200,7 @@ see it in every project. Then:
 For complete documentation of all available options and detailed usage
 instructions run `jsonr --help` or view the help text at:
 
-https://sobanieca.github.io/jsonr/help.txt
+https://adam.sobaniec.com/jsonr/help.txt
 
 This URL is particularly useful when working with AI assistants or LLMs - you
 can provide this link to give them comprehensive information about jsonr's
@@ -214,7 +214,7 @@ needed.
 ### Option 1: Quick Install Script (Recommended)
 
 ```bash
-curl -fsSL sobanieca.github.io/jsonr/install.sh | bash
+curl -fsSL adam.sobaniec.com/jsonr/install.sh | bash
 ```
 
 This script automatically detects your OS and architecture (Linux/macOS,
@@ -223,14 +223,14 @@ can't write to `/usr/local/bin`, the script stops with an error. Run it with
 `sudo`:
 
 ```bash
-curl -fsSL sobanieca.github.io/jsonr/install.sh | sudo bash
+curl -fsSL adam.sobaniec.com/jsonr/install.sh | sudo bash
 ```
 
 Or install to a custom location: set `INSTALL_DIR` to a directory that is on
 your `PATH`:
 
 ```bash
-curl -fsSL sobanieca.github.io/jsonr/install.sh | INSTALL_DIR=~/.local/bin bash
+curl -fsSL adam.sobaniec.com/jsonr/install.sh | INSTALL_DIR=~/.local/bin bash
 ```
 
 ### Option 2: Manual Binary Installation

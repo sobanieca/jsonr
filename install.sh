@@ -12,7 +12,7 @@ NC='\033[0m' # No Color
 REPO="sobanieca/jsonr"
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 BINARY_NAME="jsonr"
-SCRIPT_URL="sobanieca.github.io/jsonr/install.sh"
+SCRIPT_URL="adam.sobaniec.com/jsonr/install.sh"
 
 usage() {
   cat <<USAGE

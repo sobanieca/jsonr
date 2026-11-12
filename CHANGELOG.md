@@ -8,7 +8,7 @@
 
 - Breaking change: `jsonr` is rewritten in Rust and distributed only as a
   standalone binary. The Deno/JSR package (`jsr:@sobanieca/jsonr`) is no longer
-  published. Install with `curl -fsSL sobanieca.github.io/jsonr/install.sh | bash`
+  published. Install with `curl -fsSL adam.sobaniec.com/jsonr/install.sh | bash`
 - Breaking change: scripts run with `jsonr run` use a built-in JavaScript engine
   (QuickJS). `jsonr()`, `console` and standard JavaScript work as before, Deno
   APIs (`Deno.*`, `fetch`, `jsr:`/`npm:` imports) are not available. Relative
