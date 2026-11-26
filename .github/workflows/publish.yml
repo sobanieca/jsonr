@@ -46,9 +46,24 @@ jobs:
         env:
           CC_x86_64_unknown_linux_musl: musl-gcc
           CC_aarch64_unknown_linux_musl: musl-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
         run: |
+          # Rust links x86_64 musl binaries as static-pie, but aarch64 ones at a fixed address
+          # (ET_EXEC). Termux runs programs through Android's linker64, which only loads
+          # position-independent executables ("unexpected e_type: 2"), so link the aarch64
+          # binary as static-pie: musl-gcc adds musl's self-relocating rcrt1.o, and Rust's
+          # self-contained folder still provides libunwind.a and libc.a.
+          if [ "${{ matrix.target }}" = aarch64-unknown-linux-musl ]; then
+            self_contained="$(rustc --print sysroot)/lib/rustlib/${{ matrix.target }}/lib/self-contained"
+            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C link-self-contained=no -L native=${self_contained} -C link-arg=-static-pie"
+          fi
           cargo build --release --locked --target ${{ matrix.target }}
           cp target/${{ matrix.target }}/release/jsonr ${{ matrix.asset }}
+          if [ "${{ runner.os }}" = Linux ]; then
+            file ${{ matrix.asset }}
+            file ${{ matrix.asset }} | grep -q 'static-pie linked' || { echo "${{ matrix.asset }} is not static-pie"; exit 1; }
+            ./${{ matrix.asset }} --version
+          fi
       - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.asset }}

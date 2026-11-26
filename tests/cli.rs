@@ -325,14 +325,13 @@ fn update_replaces_binary() {
     let binary = dir.path().join("jsonr");
     std::fs::copy(env!("CARGO_BIN_EXE_jsonr"), &binary).unwrap();
 
-    let cache = dir.path().join("cache");
     let command = "jsonr update";
     let output = support::run_with_path(
         command,
         dir.path(),
         &[
             ("JSONR_RELEASES_URL", "http://localhost:3000/fake-releases"),
-            ("XDG_CACHE_HOME", &cache.display().to_string()),
+            ("HOME", &dir.path().display().to_string()),
         ],
         dir.path(),
     );
@@ -351,7 +350,7 @@ fn update_replaces_binary() {
         })
         .collect();
     assert!(leftovers.is_empty());
-    let cached = std::fs::read_to_string(cache.join("jsonr/latest-version")).unwrap();
+    let cached = std::fs::read_to_string(dir.path().join(".jsonr/latest-version")).unwrap();
     assert!(cached.ends_with("\n99.0.0\n"), "{cached}");
 }
 

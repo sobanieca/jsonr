@@ -61,7 +61,6 @@ pub fn run_with_path(command: &str, cwd: &Path, env: &[(&str, &str)], bin: &Path
         .env("HOME", fixtures())
         .env("JSONR_NO_UPDATE_CHECK", "1")
         .env_remove("NO_COLOR")
-        .env_remove("XDG_CACHE_HOME")
         .stdin(Stdio::null());
     for (key, value) in env {
         cmd.env(key, value);

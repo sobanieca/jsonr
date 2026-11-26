@@ -1,3 +1,14 @@
+# 5.1.2
+
+- The daily update check is kept in `~/.jsonr` instead of `~/.cache/jsonr`
+
+# 5.1.1
+
+- The install script installs jsonr to `~/.jsonr/bin`, with no `sudo` needed,
+  and asks to add that folder to `PATH` in your shell's startup file
+- The arm64 Linux binary is a static-pie executable, so it also runs in Termux
+  on Android
+
 # 5.1.0
 
 - Added `--ipv4` and `--ipv6` flags to connect over IPv4 or IPv6 only, like

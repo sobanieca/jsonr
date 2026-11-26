@@ -1,6 +1,6 @@
 [package]
 name = "jsonr"
-version = "5.1.0"
+version = "5.1.2"
 edition = "2024"
 description = "CLI tool for interacting with JSON HTTP APIs and writing simple smoke tests"
 license = "MIT"
