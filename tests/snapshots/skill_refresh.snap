@@ -1,0 +1,6 @@
+$ jsonr skill --refresh
+exit code: 0
+--- stdout
+Updated skills:
+  <tmp>/home/repo/.claude/skills/jsonr/SKILL.md
+--- stderr

@@ -1,0 +1,9 @@
+$ jsonr skill --init
+exit code: 0
+--- stdout
+Project root: <tmp> (git root)
+Updated .agents/skills/jsonr/SKILL.md  (Codex, Cursor)
+Updated .claude/skills/jsonr/SKILL.md  (Claude Code, Cursor)
+
+Try: /jsonr send the create-user request against prod
+--- stderr

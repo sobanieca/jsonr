@@ -208,7 +208,10 @@ fn route(request: &Request) -> Response {
                 status: 200,
                 reason: "OK",
                 headers: vec![("content-type", "application/octet-stream".to_string())],
-                body: format!("#!/bin/sh\necho {FAKE_RELEASE_VERSION}\n").into_bytes(),
+                body: format!(
+                    "#!/bin/sh\nif [ \"$1\" = version ]; then echo {FAKE_RELEASE_VERSION}; fi\n"
+                )
+                .into_bytes(),
             }
         }
         ("GET", path) if path.starts_with("/users/") => Response::json(format!(

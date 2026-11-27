@@ -3,6 +3,7 @@
 
 mod support;
 
+use std::path::Path;
 use support::{
     TempDir, assert_snapshot, external_binary, format_output, run, snapshot, start_server,
 };
@@ -264,13 +265,17 @@ fn script_error() {
 fn skill_init_in_git_repository() {
     let repo = TempDir::new("skill-repo");
     let root = repo.path();
+    let home = root.join("home");
     std::fs::create_dir_all(root.join(".git")).unwrap();
     std::fs::create_dir_all(root.join("packages/app/src")).unwrap();
+    std::fs::create_dir_all(&home).unwrap();
     std::fs::write(root.join("packages/app/AGENTS.md"), "# app\n").unwrap();
+    let env = [("HOME", home.display().to_string())];
+    let env: Vec<(&str, &str)> = env.iter().map(|(k, v)| (*k, v.as_str())).collect();
 
     let normalize = |s: String| s.replace(&root.display().to_string(), "<tmp>");
     let command = "jsonr skill --init";
-    let output = run(command, &root.join("packages/app/src"), &[]);
+    let output = run(command, &root.join("packages/app/src"), &env);
     let skill = std::fs::read_to_string(root.join(".agents/skills/jsonr/SKILL.md")).unwrap();
     let claude_skill = std::fs::read_to_string(root.join(".claude/skills/jsonr/SKILL.md")).unwrap();
     assert_eq!(skill, claude_skill);
@@ -283,11 +288,73 @@ fn skill_init_in_git_repository() {
         ),
     );
 
-    let output = run(command, &root.join("packages"), &[]);
+    std::fs::write(root.join(".claude/skills/jsonr/SKILL.md"), "edited\n").unwrap();
+    let output = run(command, &root.join("packages"), &env);
     assert_snapshot(
-        "skill_init_refuses_to_overwrite",
+        "skill_init_overwrites",
         &normalize(format_output(command, &output)),
     );
+    assert_eq!(
+        std::fs::read_to_string(root.join(".claude/skills/jsonr/SKILL.md")).unwrap(),
+        skill
+    );
+}
+
+#[test]
+fn skill_refresh_rewrites_generated_skills() {
+    let dir = TempDir::new("skill-refresh");
+    let root = dir.path();
+    let home = root.join("home");
+    let repo = home.join("repo");
+    let empty = home.join("empty");
+    let other = home.join("other");
+    for repo in [&repo, &empty, &other] {
+        std::fs::create_dir_all(repo.join(".git")).unwrap();
+    }
+    std::fs::create_dir_all(repo.join("src")).unwrap();
+    let env = [("HOME", home.display().to_string())];
+    let env: Vec<(&str, &str)> = env.iter().map(|(k, v)| (*k, v.as_str())).collect();
+    for cwd in [&repo, &other, &home] {
+        assert_eq!(run("jsonr skill --init", cwd, &env).code, 0);
+    }
+    let skill = std::fs::read_to_string(home.join(".claude/skills/jsonr/SKILL.md")).unwrap();
+    let marker = skill
+        .lines()
+        .find(|l| l.starts_with("<!-- Generated"))
+        .unwrap();
+    let stale = format!("---\nname: jsonr\n---\n{marker}\nold text\n");
+    let claude = |root: &Path| root.join(".claude/skills/jsonr/SKILL.md");
+    for root in [&repo, &other, &home] {
+        std::fs::write(claude(root), &stale).unwrap();
+    }
+    std::fs::write(repo.join(".agents/skills/jsonr/SKILL.md"), "my own skill\n").unwrap();
+
+    // In a repository with the skill: only that skill.
+    let command = "jsonr skill --refresh";
+    let output = run(command, &repo.join("src"), &env);
+    assert_snapshot(
+        "skill_refresh",
+        &format_output(command, &output).replace(&root.display().to_string(), "<tmp>"),
+    );
+    assert_eq!(std::fs::read_to_string(claude(&repo)).unwrap(), skill);
+    assert_eq!(
+        std::fs::read_to_string(repo.join(".agents/skills/jsonr/SKILL.md")).unwrap(),
+        "my own skill\n"
+    );
+    assert_eq!(std::fs::read_to_string(claude(&home)).unwrap(), stale);
+    assert_eq!(std::fs::read_to_string(claude(&other)).unwrap(), stale);
+
+    // In a repository without the skill: the skill in the home directory.
+    let output = run(command, &empty, &env);
+    assert_eq!(
+        format_output(command, &output),
+        format!(
+            "$ {command}\nexit code: 0\n--- stdout\nUpdated skills:\n  {}\n--- stderr\n",
+            claude(&home).display()
+        )
+    );
+    assert_eq!(std::fs::read_to_string(claude(&other)).unwrap(), stale);
+    assert_eq!(run(command, &home, &env).stdout, "");
 }
 
 #[test]
